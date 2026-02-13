@@ -1,1 +1,11 @@
 .DS_Store
+__pycache__/
+*.pyc
+.env
+/output/daily/*.html
+/output/cv/*
+/output/documents/*
+/output/web/*
+!/output/**/.gitkeep
+/memory/session-log.jsonl
+/tmp/

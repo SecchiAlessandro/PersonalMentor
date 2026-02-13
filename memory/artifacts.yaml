@@ -1,0 +1,11 @@
+# PersonalMentor — Artifact Registry
+# Tracks all generated artifacts with metadata
+
+artifacts: []
+  # - id: ""
+  #   type: "daily-newspaper"  # daily-newspaper, cv, document, web
+  #   path: ""
+  #   created_at: ""
+  #   sections: []
+  #   item_count: 0
+  #   sources_used: []
