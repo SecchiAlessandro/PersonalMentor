@@ -1,0 +1,18 @@
+# PersonalMentor — Learned Preferences
+# Preferences inferred from usage patterns (updated automatically)
+
+content_preferences:
+  liked_topics: []
+  disliked_topics: []
+  preferred_sources: []
+  ignored_sources: []
+
+design_preferences:
+  feedback: []
+
+reading_patterns:
+  avg_items_read: 0
+  preferred_sections: []
+  skipped_sections: []
+
+last_updated: ""

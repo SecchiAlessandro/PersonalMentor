@@ -1,0 +1,26 @@
+# PersonalMentor — Experience & Skills
+# Populated during onboarding via profile-manager skill
+
+work_history: []
+  # - company: ""
+  #   role: ""
+  #   period: ""
+  #   highlights: []
+
+education: []
+  # - institution: ""
+  #   degree: ""
+  #   field: ""
+  #   year: ""
+
+projects: []
+  # - name: ""
+  #   description: ""
+  #   technologies: []
+  #   url: ""
+
+skills:
+  technical: []
+  languages: []
+  tools: []
+  soft_skills: []

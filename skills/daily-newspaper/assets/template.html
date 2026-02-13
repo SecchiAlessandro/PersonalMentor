@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="{{language}}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PersonalMentor Daily — {{date}}</title>
+  <style>
+    /* === RESET === */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* === THEME VARIABLES (replaced at render time) === */
+    :root {
+      --color-bg: {{theme_bg}};
+      --color-surface: {{theme_surface}};
+      --color-primary: {{theme_primary}};
+      --color-secondary: {{theme_secondary}};
+      --color-accent: {{theme_accent}};
+      --color-text: {{theme_text}};
+      --color-text-muted: {{theme_text_muted}};
+      --color-border: {{theme_border}};
+      --font-heading: {{theme_font_heading}};
+      --font-body: {{theme_font_body}};
+    }
+
+    /* === BASE === */
+    body {
+      font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* === HEADER === */
+    .newspaper-header {
+      border-bottom: 3px solid var(--color-primary);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .newspaper-header h1 {
+      font-family: var(--font-heading), Georgia, serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      letter-spacing: -0.02em;
+    }
+    .newspaper-header .greeting {
+      font-size: 1.1rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+    .newspaper-header .date-line {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      margin-top: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* === SECTIONS === */
+    .section {
+      margin-bottom: 2.5rem;
+    }
+    .section-title {
+      font-family: var(--font-heading), Georgia, serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* === ITEMS === */
+    .item {
+      background: var(--color-surface);
+      border-left: 3px solid var(--color-accent);
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .item-title {
+      font-family: var(--font-heading), Georgia, serif;
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+    .item-title a {
+      color: var(--color-text);
+      text-decoration: none;
+    }
+    .item-title a:hover {
+      color: var(--color-primary);
+      text-decoration: underline;
+    }
+    .item-meta {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.35rem;
+    }
+    .item-meta .source { font-weight: 600; }
+    .item-meta .tag {
+      display: inline-block;
+      background: var(--color-primary);
+      color: var(--color-bg);
+      padding: 0.1em 0.5em;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-left: 0.5rem;
+    }
+    .item-summary {
+      font-size: 0.9rem;
+      color: var(--color-text);
+      line-height: 1.5;
+    }
+
+    /* === JOB ITEMS === */
+    .job-item {
+      background: var(--color-surface);
+      border-left: 3px solid var(--color-secondary);
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .match-score {
+      display: inline-block;
+      background: var(--color-secondary);
+      color: var(--color-bg);
+      padding: 0.15em 0.6em;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* === CALENDAR & BIRTHDAYS (side-by-side on desktop) === */
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 600px) {
+      .two-column { grid-template-columns: 1fr; }
+    }
+
+    .calendar-item, .birthday-item {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--color-border);
+      font-size: 0.9rem;
+    }
+    .calendar-item:last-child, .birthday-item:last-child {
+      border-bottom: none;
+    }
+    .calendar-time {
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-right: 0.5rem;
+    }
+
+    /* === FOOTER === */
+    .newspaper-footer {
+      border-top: 1px solid var(--color-border);
+      padding-top: 1rem;
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-align: center;
+    }
+    .newspaper-footer a {
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+
+    /* === EMPTY STATE === */
+    .empty-state {
+      color: var(--color-text-muted);
+      font-style: italic;
+      padding: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="newspaper-header">
+    <h1>PersonalMentor Daily</h1>
+    <div class="greeting">Good evening, {{user_name}}</div>
+    <div class="date-line">{{date_formatted}}</div>
+  </header>
+
+  <!-- TOP STORIES -->
+  {{#section_top_stories}}
+  <section class="section" id="top-stories">
+    <h2 class="section-title">Top Stories</h2>
+    {{#items}}
+    <div class="item">
+      <div class="item-title"><a href="{{url}}" target="_blank">{{title}}</a></div>
+      <div class="item-meta">
+        <span class="source">{{source}}</span>
+        <span class="tag">{{category}}</span>
+      </div>
+      <div class="item-summary">{{summary}}</div>
+    </div>
+    {{/items}}
+    {{^items}}<p class="empty-state">No stories available today.</p>{{/items}}
+  </section>
+  {{/section_top_stories}}
+
+  <!-- JOBS FOR YOU + CALENDAR & BIRTHDAYS -->
+  {{#section_jobs_calendar}}
+  <div class="two-column">
+    <section class="section" id="jobs">
+      <h2 class="section-title">Jobs For You</h2>
+      {{#jobs}}
+      <div class="job-item">
+        <div class="item-title"><a href="{{url}}" target="_blank">{{title}}</a></div>
+        <div class="item-meta">
+          <span class="source">{{company}}</span> · {{location}}
+          <span class="match-score">{{match_score}}% match</span>
+        </div>
+      </div>
+      {{/jobs}}
+      {{^jobs}}<p class="empty-state">No matching jobs today.</p>{{/jobs}}
+    </section>
+
+    <div>
+      <section class="section" id="calendar">
+        <h2 class="section-title">Today's Calendar</h2>
+        {{#calendar}}
+        <div class="calendar-item">
+          <span class="calendar-time">{{time}}</span> {{title}}
+        </div>
+        {{/calendar}}
+        {{^calendar}}<p class="empty-state">No events on your calendar.</p>{{/calendar}}
+      </section>
+
+      <section class="section" id="birthdays">
+        <h2 class="section-title">Birthdays</h2>
+        {{#birthdays}}
+        <div class="birthday-item">{{name}} {{note}}</div>
+        {{/birthdays}}
+        {{^birthdays}}<p class="empty-state">No birthdays this week.</p>{{/birthdays}}
+      </section>
+    </div>
+  </div>
+  {{/section_jobs_calendar}}
+
+  <!-- EVENTS NEAR YOU -->
+  {{#section_events}}
+  <section class="section" id="events">
+    <h2 class="section-title">Events Near You</h2>
+    {{#items}}
+    <div class="item">
+      <div class="item-title"><a href="{{url}}" target="_blank">{{title}}</a></div>
+      <div class="item-meta">
+        <span class="source">{{date}}</span> · {{location}}
+        <span class="tag">{{type}}</span>
+      </div>
+    </div>
+    {{/items}}
+    {{^items}}<p class="empty-state">No upcoming events found.</p>{{/items}}
+  </section>
+  {{/section_events}}
+
+  <!-- SKILL SPOTLIGHT -->
+  {{#section_skills}}
+  <section class="section" id="skills">
+    <h2 class="section-title">Skill Spotlight</h2>
+    {{#items}}
+    <div class="item">
+      <div class="item-title"><a href="{{url}}" target="_blank">{{title}}</a></div>
+      <div class="item-meta"><span class="source">{{source}}</span></div>
+      <div class="item-summary">{{summary}}</div>
+    </div>
+    {{/items}}
+    {{^items}}<p class="empty-state">No skill highlights today.</p>{{/items}}
+  </section>
+  {{/section_skills}}
+
+  <!-- INDUSTRY PULSE -->
+  {{#section_pulse}}
+  <section class="section" id="pulse">
+    <h2 class="section-title">Industry Pulse</h2>
+    {{#items}}
+    <div class="item">
+      <div class="item-title"><a href="{{url}}" target="_blank">{{title}}</a></div>
+      <div class="item-meta">
+        <span class="source">{{source}}</span>
+        <span class="tag">{{category}}</span>
+      </div>
+      <div class="item-summary">{{summary}}</div>
+    </div>
+    {{/items}}
+    {{^items}}<p class="empty-state">No industry updates today.</p>{{/items}}
+  </section>
+  {{/section_pulse}}
+
+  <!-- READING LIST -->
+  {{#section_reading}}
+  <section class="section" id="reading">
+    <h2 class="section-title">Reading List</h2>
+    {{#items}}
+    <div class="item">
+      <div class="item-title"><a href="{{url}}" target="_blank">{{title}}</a></div>
+      <div class="item-meta"><span class="source">{{source}}</span></div>
+      <div class="item-summary">{{summary}}</div>
+    </div>
+    {{/items}}
+    {{^items}}<p class="empty-state">No reading suggestions today.</p>{{/items}}
+  </section>
+  {{/section_reading}}
+
+  <!-- FOOTER -->
+  <footer class="newspaper-footer">
+    PersonalMentor Daily · Generated {{generated_at}} · <a href="{{archive_url}}">Browse Archive</a>
+  </footer>
+
+</body>
+</html>

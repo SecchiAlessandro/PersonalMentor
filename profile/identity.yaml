@@ -1,0 +1,12 @@
+# PersonalMentor — User Identity
+# Populated during onboarding via profile-manager skill
+
+name: ""
+title: ""
+location: ""
+bio: ""
+contact:
+  email: ""
+  linkedin: ""
+  website: ""
+  github: ""

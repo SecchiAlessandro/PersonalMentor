@@ -1,0 +1,24 @@
+# PersonalMentor — User Preferences
+# Populated during onboarding via profile-manager skill
+
+design:
+  theme: "modern-minimalist"  # theme-factory theme name
+  colors: []
+
+writing:
+  tone: "conversational"      # formal, conversational, technical
+  length: "concise"           # concise, detailed
+  language: "en"              # en, it, de, etc.
+
+daily_artifact:
+  delivery_time: "20:00"
+  sections_enabled:
+    - top-stories
+    - jobs-for-you
+    - todays-calendar
+    - birthdays
+    - events-near-you
+    - skill-spotlight
+    - industry-pulse
+    - reading-list
+  max_items_per_section: 5

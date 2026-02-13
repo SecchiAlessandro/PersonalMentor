@@ -1,0 +1,14 @@
+# PersonalMentor — Content Sources
+# Configure RSS feeds, job boards, and event sources to monitor
+
+rss_feeds: []
+  # - url: "https://example.com/feed.xml"
+  #   category: "tech"  # news, tech, industry, research, etc.
+
+job_boards: []
+  # - url: "https://example.com/jobs"
+  #   search_terms: []
+
+event_sources: []
+  # - url: "https://example.com/events"
+  #   location_filter: ""
