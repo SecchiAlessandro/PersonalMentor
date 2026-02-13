@@ -1,0 +1,166 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Candidate CV Data",
+  "description": "JSON structure for CV rendering with EZ_Template_docxtpl.docx",
+  "type": "object",
+  "required": ["full_name"],
+  "properties": {
+    "full_name": {
+      "type": "string",
+      "description": "Full name of the candidate",
+      "example": "Laura Schmidt"
+    },
+    "nationality": {
+      "type": "string",
+      "description": "Nationality and work permit status",
+      "example": "German, C Permit"
+    },
+    "availability": {
+      "type": "string",
+      "description": "When the candidate can start",
+      "example": "Two weeks notice"
+    },
+    "languages": {
+      "type": "string",
+      "description": "Language proficiencies with levels",
+      "example": "German (Native), English (C1), French (B2)"
+    },
+    "location": {
+      "type": "string",
+      "description": "Current location",
+      "example": "Basel, Switzerland"
+    },
+    "highlights": {
+      "type": "array",
+      "description": "2-4 key career highlights as brief bullet points",
+      "items": { "type": "string" },
+      "example": [
+        "Architected cloud-native platform serving 2M+ users with 99.9% uptime",
+        "Reduced infrastructure costs by 35% through Kubernetes optimization"
+      ]
+    },
+    "experience": {
+      "type": "array",
+      "description": "Work experience entries, most recent first",
+      "items": {
+        "type": "object",
+        "required": ["period", "company", "title"],
+        "properties": {
+          "period": {
+            "type": "string",
+            "description": "Employment period",
+            "example": "Mar 2021 - Present"
+          },
+          "company": {
+            "type": "string",
+            "description": "Company name",
+            "example": "Roche Diagnostics"
+          },
+          "location": {
+            "type": "string",
+            "description": "Job location",
+            "example": "Basel, Switzerland"
+          },
+          "title": {
+            "type": "string",
+            "description": "Job title",
+            "example": "DevOps Engineer"
+          },
+          "summary": {
+            "type": "string",
+            "description": "Brief role summary (optional)",
+            "example": "Leading infrastructure automation and cloud migration initiatives"
+          },
+          "bullets": {
+            "type": "array",
+            "description": "Achievement bullet points",
+            "items": { "type": "string" },
+            "example": [
+              "Implemented Infrastructure as Code using Terraform and Ansible",
+              "Established monitoring stack with Prometheus and Grafana improving incident response by 70%"
+            ]
+          }
+        }
+      }
+    },
+    "education": {
+      "type": "array",
+      "description": "Educational qualifications",
+      "items": {
+        "type": "object",
+        "required": ["period", "degree", "school"],
+        "properties": {
+          "period": {
+            "type": "string",
+            "description": "Study period",
+            "example": "2014 - 2018"
+          },
+          "degree": {
+            "type": "string",
+            "description": "Degree obtained",
+            "example": "BSc. Computer Science"
+          },
+          "school": {
+            "type": "string",
+            "description": "Institution name",
+            "example": "Technical University of Munich"
+          },
+          "specialization": {
+            "type": "string",
+            "description": "Area of specialization (optional)",
+            "example": "Distributed Systems"
+          }
+        }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "description": "Technical skills",
+      "items": { "type": "string" },
+      "example": ["Python", "Kubernetes", "AWS", "Terraform", "Jenkins", "PostgreSQL"]
+    },
+    "projects": {
+      "type": "array",
+      "description": "Notable personal or side projects (optional)",
+      "items": { "type": "string" },
+      "example": [
+        "Created open-source Kubernetes operator with 500+ GitHub stars"
+      ]
+    },
+    "awards": {
+      "type": "array",
+      "description": "Awards and recognitions (optional)",
+      "items": {
+        "type": "object",
+        "required": ["year", "title"],
+        "properties": {
+          "year": {
+            "type": "string",
+            "description": "Year received",
+            "example": "2022"
+          },
+          "title": {
+            "type": "string",
+            "description": "Award name",
+            "example": "Cloud Excellence Award"
+          },
+          "description": {
+            "type": "string",
+            "description": "Brief description",
+            "example": "Recognized for outstanding cloud architecture and cost optimization."
+          },
+          "url": {
+            "type": "string",
+            "description": "Link to award info",
+            "example": "https://example.com/awards/cloud-excellence-2022"
+          }
+        }
+      }
+    },
+    "hobbies": {
+      "type": "string",
+      "description": "Personal interests and hobbies",
+      "example": "Mountain biking, Open-source contributions, Chess"
+    }
+  }
+}
