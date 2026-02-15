@@ -1,11 +1,393 @@
-# PersonalMentor — Artifact Registry
-# Tracks all generated artifacts with metadata
-
-artifacts: []
-  # - id: ""
-  #   type: "daily-newspaper"  # daily-newspaper, cv, document, web
-  #   path: ""
-  #   created_at: ""
-  #   sections: []
-  #   item_count: 0
-  #   sources_used: []
+artifacts:
+- id: 6e42851c
+  type: daily-newspaper
+  path: output/daily/2026-02-13.html
+  created_at: '2026-02-13T17:47:58.620490+00:00'
+  sections:
+  - top-stories
+  - jobs
+  - calendar
+  - birthdays
+  - events
+  - skills
+  - pulse
+  - reading
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+- id: 39f1c157
+  type: daily-newspaper
+  path: output/daily/2026-02-13.html
+  created_at: '2026-02-13T17:54:31.745778+00:00'
+  sections:
+  - top-stories
+  - jobs
+  - calendar
+  - birthdays
+  - events
+  - skills
+  - pulse
+  - reading
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+- id: fd664db3
+  type: daily-newspaper
+  path: output/daily/2026-02-13.html
+  created_at: '2026-02-13T18:10:33.507868+00:00'
+  sections:
+  - top-stories
+  - jobs
+  - calendar
+  - birthdays
+  - events
+  - skills
+  - pulse
+  - reading
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+- id: 45b41c05
+  type: daily-newspaper
+  path: output/daily/2026-02-13.html
+  created_at: '2026-02-13T18:12:40.350287+00:00'
+  sections:
+  - top-stories
+  - jobs
+  - calendar
+  - birthdays
+  - events
+  - skills
+  - pulse
+  - reading
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+- id: 315ce9e1
+  type: daily-newspaper
+  path: output/daily/2026-02-13.html
+  created_at: '2026-02-13T18:14:47.149091+00:00'
+  sections:
+  - top-stories
+  - jobs
+  - calendar
+  - birthdays
+  - events
+  - skills
+  - pulse
+  - reading
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+- id: fa9b7aea
+  type: daily-newspaper
+  path: output/daily/2026-02-13.html
+  created_at: '2026-02-13T18:18:50.302696+00:00'
+  sections:
+  - top-stories
+  - jobs
+  - calendar
+  - birthdays
+  - events
+  - skills
+  - pulse
+  - reading
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+- id: d7d2facf
+  type: daily-newspaper
+  path: output/daily/2026-02-13.html
+  created_at: '2026-02-13T18:20:25.084414+00:00'
+  sections:
+  - top-stories
+  - jobs
+  - calendar
+  - birthdays
+  - events
+  - skills
+  - pulse
+  - reading
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+- id: 6722de14
+  type: daily-newspaper
+  path: output/daily/2026-02-13.html
+  created_at: '2026-02-13T21:57:01.693363+00:00'
+  sections:
+  - top-stories
+  - jobs
+  - calendar
+  - birthdays
+  - events
+  - skills
+  - pulse
+  - reading
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+- id: 31c5f5b0
+  type: daily-newspaper
+  path: output/daily/2026-02-13.html
+  created_at: '2026-02-13T22:32:30.705875+00:00'
+  sections:
+  - top-stories
+  - jobs
+  - calendar
+  - birthdays
+  - events
+  - skills
+  - pulse
+  - reading
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+- id: a53b1fc0
+  type: daily-newspaper
+  path: output/daily/2026-02-13.html
+  created_at: '2026-02-13T22:35:34.933857+00:00'
+  sections:
+  - top-stories
+  - jobs
+  - calendar
+  - birthdays
+  - events
+  - skills
+  - pulse
+  - reading
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+- id: 49fe996a
+  type: daily-newspaper
+  path: output/daily/2026-02-13.html
+  created_at: '2026-02-13T22:41:28.114283+00:00'
+  sections:
+  - top-stories
+  - jobs
+  - calendar
+  - birthdays
+  - events
+  - skills
+  - pulse
+  - reading
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+- id: ea55b55a
+  type: daily-newspaper
+  path: output/daily/2026-02-13.html
+  created_at: '2026-02-13T22:42:23.516905+00:00'
+  sections:
+  - top-stories
+  - jobs
+  - calendar
+  - birthdays
+  - events
+  - skills
+  - pulse
+  - reading
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+- id: 4ebe2f6f
+  type: daily-newspaper
+  path: output/daily/2026-02-13.html
+  created_at: '2026-02-13T22:57:51.413515+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - calendar-birthdays
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+- id: 59b0046c
+  type: daily-newspaper
+  path: output/daily/2026-02-13.html
+  created_at: '2026-02-13T23:00:16.383147+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - calendar-birthdays
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+- id: b9e9092c
+  type: daily-newspaper
+  path: output/daily/2026-02-14.html
+  created_at: '2026-02-14T08:59:21.803396+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - calendar-birthdays
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+- id: 24ae1a24
+  type: daily-newspaper
+  path: output/daily/2026-02-14.html
+  created_at: '2026-02-14T09:14:47.908331+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - calendar-birthdays
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+- id: 120fc286
+  type: daily-newspaper
+  path: output/daily/2026-02-14.html
+  created_at: '2026-02-14T09:42:43.912634+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini
+- id: f83548ac
+  type: daily-newspaper
+  path: output/daily/2026-02-14.html
+  created_at: '2026-02-14T09:44:31.453573+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini
+- id: 0d804aa1
+  type: daily-newspaper
+  path: output/daily/2026-02-14.html
+  created_at: '2026-02-14T09:47:31.226206+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini
+- id: 049f5f19
+  type: daily-newspaper
+  path: output/daily/2026-02-15.html
+  created_at: '2026-02-15T06:31:13.839902+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini
+- id: 4a5a2332
+  type: daily-newspaper
+  path: output/daily/2026-02-15.html
+  created_at: '2026-02-15T10:49:44.014426+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini
+- id: 13d7199f
+  type: daily-newspaper
+  path: output/daily/2026-02-15.html
+  created_at: '2026-02-15T11:45:51.686513+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini

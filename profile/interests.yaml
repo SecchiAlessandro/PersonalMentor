@@ -1,17 +1,57 @@
 # PersonalMentor — Interests & Topics
-# Populated during onboarding via profile-manager skill
 
 professional:
-  []
-  # - topic: ""
-  #   weight: 5  # 1-10 relevance priority
+  - topic: "Energy market and electricity market design"
+    weight: 10
+  - topic: "Energy policy and regulation"
+    weight: 10
+  - topic: "AI/ML applied to energy systems"
+    weight: 9
+  - topic: "Innovation management and strategy"
+    weight: 9
+  - topic: "Electricity trading and market operations"
+    weight: 8
+  - topic: "LLM applications and multi-agent systems"
+    weight: 7
+  - topic: "Power systems and grid modernization"
+    weight: 7
 
-industries: []
+industries:
+  - "Big Tech (Google, Microsoft, Amazon, Apple, Meta)"
+  - "Energy & Utilities"
+  - "Artificial Intelligence"
+  - "Cleantech / Climate Tech"
+  - "Management Consulting / Strategy"
 
-personal: []
+personal:
+  - "Volleyball"
+  - "Piano (classical, neo-classical)"
+  - "Mentoring (NOVA Talent, Lead The Feature)"
+  - "Hiking and cycling"
+  - "Startups and hackathons"
 
 job_search:
-  active: false
-  target_roles: []
-  target_locations: []
+  active: true
+  target_roles:
+    - "Energy Market Analyst / Strategist"
+    - "Energy Policy Advisor"
+    - "Innovation Manager (Energy / AI)"
+    - "Strategy Consultant (Energy / Tech)"
+    - "AI/ML Engineer (Energy)"
+    - "Electricity Market Operations"
+  preferred_companies:
+    - "Google"
+    - "Microsoft"
+    - "Amazon"
+    - "Apple"
+    - "Meta"
+    - "McKinsey"
+    - "BCG"
+    - "Axpo"
+    - "Alpiq"
+    - "BKW"
+    - "Swissgrid"
+  target_locations:
+    - "Switzerland"
+    - "Remote"
   salary_range: ""

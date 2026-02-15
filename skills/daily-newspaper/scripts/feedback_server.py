@@ -1,0 +1,186 @@
+#!/usr/bin/env python3
+"""Minimal HTTP server for receiving daily newspaper feedback.
+
+Listens on localhost:9847. Accepts POST /api/feedback with JSON body.
+Appends entries to memory/feedback.jsonl and logs via log_action.py.
+Auto-shuts down after 2 hours of inactivity.
+"""
+
+import json
+import os
+import signal
+import subprocess
+import sys
+import threading
+import time
+from datetime import datetime, timezone
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+PORT = 9847
+PID_FILE = "/tmp/pm_feedback_server.pid"
+INACTIVITY_TIMEOUT = 2 * 60 * 60  # 2 hours in seconds
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "..", ".."))
+FEEDBACK_FILE = os.path.join(PROJECT_ROOT, "memory", "feedback.jsonl")
+LOG_ACTION = os.path.join(PROJECT_ROOT, "skills", "memory-manager", "scripts", "log_action.py")
+
+# Global timer for auto-shutdown
+_shutdown_timer = None
+_timer_lock = threading.Lock()
+
+
+def reset_inactivity_timer():
+    """Reset the auto-shutdown timer on activity."""
+    global _shutdown_timer
+    with _timer_lock:
+        if _shutdown_timer is not None:
+            _shutdown_timer.cancel()
+        _shutdown_timer = threading.Timer(INACTIVITY_TIMEOUT, auto_shutdown)
+        _shutdown_timer.daemon = True
+        _shutdown_timer.start()
+
+
+def auto_shutdown():
+    """Shut down the server after inactivity timeout."""
+    print(f"[{datetime.now().isoformat()}] No activity for {INACTIVITY_TIMEOUT}s, shutting down.")
+    cleanup_pid()
+    os._exit(0)
+
+
+def write_pid():
+    """Write PID file, exit if another instance is running."""
+    if os.path.exists(PID_FILE):
+        try:
+            with open(PID_FILE, "r") as f:
+                old_pid = int(f.read().strip())
+            # Check if that process is still alive
+            os.kill(old_pid, 0)
+            print(f"ERROR: Feedback server already running (PID {old_pid})")
+            sys.exit(1)
+        except (OSError, ValueError):
+            # Process not running or invalid PID, clean up stale file
+            pass
+    with open(PID_FILE, "w") as f:
+        f.write(str(os.getpid()))
+
+
+def cleanup_pid():
+    """Remove PID file."""
+    try:
+        os.remove(PID_FILE)
+    except OSError:
+        pass
+
+
+class FeedbackHandler(BaseHTTPRequestHandler):
+    """Handle feedback API requests."""
+
+    def log_message(self, format, *args):
+        """Suppress default request logging."""
+        pass
+
+    def _set_cors_headers(self):
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+
+    def _send_json(self, status, data):
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self._set_cors_headers()
+        self.end_headers()
+        self.wfile.write(json.dumps(data).encode())
+
+    def do_OPTIONS(self):
+        """Handle CORS preflight."""
+        self.send_response(204)
+        self._set_cors_headers()
+        self.end_headers()
+
+    def do_GET(self):
+        """Health check endpoint."""
+        if self.path == "/health":
+            self._send_json(200, {"status": "ok", "pid": os.getpid()})
+        else:
+            self._send_json(404, {"error": "not found"})
+
+    def do_POST(self):
+        """Receive feedback."""
+        reset_inactivity_timer()
+
+        if self.path != "/api/feedback":
+            self._send_json(404, {"error": "not found"})
+            return
+
+        try:
+            length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(length)
+            data = json.loads(body)
+        except (json.JSONDecodeError, ValueError):
+            self._send_json(400, {"error": "invalid JSON"})
+            return
+
+        # Validate required fields
+        rating = data.get("rating")
+        if rating is not None and (not isinstance(rating, (int, float)) or not 1 <= rating <= 5):
+            self._send_json(400, {"error": "rating must be 1-5"})
+            return
+
+        # Build feedback entry
+        entry = {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "date": data.get("date", datetime.now(timezone.utc).strftime("%Y-%m-%d")),
+            "rating": rating,
+            "section_ratings": data.get("section_ratings", {}),
+            "comment": data.get("comment", ""),
+        }
+
+        # Append to feedback.jsonl
+        os.makedirs(os.path.dirname(FEEDBACK_FILE), exist_ok=True)
+        with open(FEEDBACK_FILE, "a") as f:
+            f.write(json.dumps(entry) + "\n")
+
+        # Log via log_action.py
+        try:
+            subprocess.run(
+                [
+                    sys.executable, LOG_ACTION,
+                    "--action", "feedback_received",
+                    "--detail", f"Rating {rating}/5 for {entry['date']}",
+                ],
+                capture_output=True,
+                timeout=5,
+            )
+        except Exception:
+            pass  # Don't fail the request if logging fails
+
+        print(f"[{entry['timestamp']}] Feedback received: {rating}/5 for {entry['date']}")
+        self._send_json(200, {"status": "ok"})
+
+
+def main():
+    write_pid()
+
+    # Clean up on exit
+    signal.signal(signal.SIGTERM, lambda *_: (cleanup_pid(), sys.exit(0)))
+    signal.signal(signal.SIGINT, lambda *_: (cleanup_pid(), sys.exit(0)))
+
+    reset_inactivity_timer()
+
+    server = HTTPServer(("127.0.0.1", PORT), FeedbackHandler)
+    print(f"Feedback server listening on http://localhost:{PORT}")
+    print(f"PID: {os.getpid()} (file: {PID_FILE})")
+    print(f"Auto-shutdown after {INACTIVITY_TIMEOUT // 3600}h of inactivity")
+
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        cleanup_pid()
+        server.server_close()
+
+
+if __name__ == "__main__":
+    main()

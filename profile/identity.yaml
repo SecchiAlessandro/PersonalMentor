@@ -1,12 +1,11 @@
 # PersonalMentor — User Identity
-# Populated during onboarding via profile-manager skill
 
-name: ""
-title: ""
-location: ""
-bio: ""
+name: "Alessandro Secchi"
+title: "Control Software Engineer"
+location: "Baden, Switzerland"
+bio: "Control Software Engineer at Hitachi Energy, on a mission to accelerate the energy transition by combining AI with domain expertise in power systems. Co-founded EMS, awarded Hitachi Sustainability Inspiration of the Year (2025), and passionate about bridging energy and artificial intelligence."
 contact:
-  email: ""
-  linkedin: ""
-  website: ""
-  github: ""
+  email: "asecchi@ethz.ch"
+  linkedin: "https://linkedin.com/in/secchialessandro/"
+  website: "https://alessandrosecchi.com"
+  github: "https://github.com/SecchiAlessandro"

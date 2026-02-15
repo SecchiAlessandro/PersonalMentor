@@ -5,26 +5,26 @@
 
 ## User Identity
 
-- **Name:** (not yet configured — run onboarding)
-- **Title:** —
-- **Location:** —
-- **Key facts:** —
+- **Name:** Alessandro Secchi
+- **Title:** Control Software Engineer at Hitachi Energy
+- **Location:** Baden, Switzerland
+- **Key facts:** ETH Zurich MAS in Management & Economics (2024-2026), MSc EE from Politecnico di Milano (summa cum laude), co-founded EMS, Hitachi Sustainability Inspiration of the Year 2025, builds AI tools for energy (EnergyForecaster, LumadaAI)
 
 ## Preferences
 
-- **Theme:** Modern Minimalist (default)
+- **Theme:** Tech Innovation
 - **Tone:** conversational
 - **Language:** en
-- **Delivery time:** 20:00
+- **Delivery time:** 07:00
 
 ## Recent Artifacts
 
-_No artifacts generated yet._
+- `output/daily/2026-02-13.html` — First daily newspaper (empty, pre-onboarding)
 
 ## Active Goals
 
-- Complete onboarding (import CV, parse website, run interview)
-- Generate first daily newspaper
+- Actively searching for AI/ML + Energy hybrid roles (Switzerland / Remote)
+- Generate daily newspaper with real content from RSS feeds
 
 ## Known Opinions / Quirks
 

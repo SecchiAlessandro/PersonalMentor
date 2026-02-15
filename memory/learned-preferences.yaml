@@ -1,18 +1,25 @@
-# PersonalMentor — Learned Preferences
-# Preferences inferred from usage patterns (updated automatically)
-
 content_preferences:
   liked_topics: []
   disliked_topics: []
   preferred_sources: []
   ignored_sources: []
-
 design_preferences:
   feedback: []
-
 reading_patterns:
   avg_items_read: 0
-  preferred_sections: []
-  skipped_sections: []
-
-last_updated: ""
+  preferred_sections:
+  - calendar
+  - german
+  skipped_sections:
+  - events
+  - jobs
+  - news
+  section_item_counts:
+    news: 1
+    jobs: 1
+    events: 1
+    calendar: 5
+    german: 5
+last_updated: '2026-02-15T11:54:16.796228+00:00'
+overall_avg_rating: 3.0
+total_feedback_count: 1

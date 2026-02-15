@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PersonalMentor Daily — {{date}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     /* === RESET === */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,14 +33,24 @@
       line-height: 1.6;
       max-width: 860px;
       margin: 0 auto;
-      padding: 2rem 1.5rem;
+      padding: 2.5rem 1.5rem;
     }
 
     /* === HEADER === */
     .newspaper-header {
-      border-bottom: 3px solid var(--color-primary);
+      position: relative;
       padding-bottom: 1.5rem;
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .newspaper-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-accent), var(--color-secondary), transparent);
+      border-radius: 2px;
     }
     .newspaper-header h1 {
       font-family: var(--font-heading), Georgia, serif;
@@ -55,8 +68,7 @@
       font-size: 0.85rem;
       color: var(--color-text-muted);
       margin-top: 0.5rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.02em;
     }
 
     /* === SECTIONS === */
@@ -65,11 +77,10 @@
     }
     .section-title {
       font-family: var(--font-heading), Georgia, serif;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: var(--color-primary);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: -0.01em;
       border-bottom: 1px solid var(--color-border);
       padding-bottom: 0.5rem;
       margin-bottom: 1rem;
@@ -81,6 +92,13 @@
       border-left: 3px solid var(--color-accent);
       padding: 1rem 1.25rem;
       margin-bottom: 0.75rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .item:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transform: translateY(-1px);
     }
     .item-title {
       font-family: var(--font-heading), Georgia, serif;
@@ -93,7 +111,7 @@
       text-decoration: none;
     }
     .item-title a:hover {
-      color: var(--color-primary);
+      color: var(--color-accent);
       text-decoration: underline;
     }
     .item-meta {
@@ -109,9 +127,9 @@
       padding: 0.1em 0.5em;
       font-size: 0.7rem;
       font-weight: 600;
-      text-transform: uppercase;
       letter-spacing: 0.03em;
       margin-left: 0.5rem;
+      border-radius: 4px;
     }
     .item-summary {
       font-size: 0.9rem;
@@ -125,32 +143,31 @@
       border-left: 3px solid var(--color-secondary);
       padding: 1rem 1.25rem;
       margin-bottom: 0.75rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .job-item:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transform: translateY(-1px);
     }
     .match-score {
       display: inline-block;
       background: var(--color-secondary);
-      color: var(--color-bg);
+      color: #ffffff;
       padding: 0.15em 0.6em;
       font-size: 0.75rem;
       font-weight: 700;
+      border-radius: 4px;
     }
 
-    /* === CALENDAR & BIRTHDAYS (side-by-side on desktop) === */
-    .two-column {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-    }
-    @media (max-width: 600px) {
-      .two-column { grid-template-columns: 1fr; }
-    }
-
-    .calendar-item, .birthday-item {
+    /* === CALENDAR === */
+    .calendar-item {
       padding: 0.6rem 0;
       border-bottom: 1px solid var(--color-border);
       font-size: 0.9rem;
     }
-    .calendar-item:last-child, .birthday-item:last-child {
+    .calendar-item:last-child {
       border-bottom: none;
     }
     .calendar-time {
@@ -159,18 +176,187 @@
       margin-right: 0.5rem;
     }
 
+    /* === GERMAN SENTENCE OF THE DAY === */
+    .german-card {
+      background: var(--color-surface);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      padding: 1.5rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      border-left: 3px solid var(--color-accent);
+      transition: box-shadow 0.2s ease;
+    }
+    .german-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .german-card-image {
+      flex-shrink: 0;
+      width: 200px;
+      height: 200px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+    .german-card-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+    .german-sentence {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      line-height: 1.4;
+    }
+    .german-translation {
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 600px) {
+      .german-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .german-card-image {
+        width: 160px;
+        height: 160px;
+      }
+    }
+
+    /* === FEEDBACK === */
+    .feedback-card {
+      background: var(--color-surface);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .feedback-overall {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .feedback-label {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--color-text);
+      min-width: 60px;
+    }
+    .star-rating {
+      display: flex;
+      gap: 0.25rem;
+      cursor: pointer;
+    }
+    .star-rating .star {
+      font-size: 1.75rem;
+      color: var(--color-border);
+      transition: color 0.15s;
+      user-select: none;
+    }
+    .star-rating .star.active,
+    .star-rating .star.hover {
+      color: #f59e0b;
+    }
+    .feedback-sections {
+      margin-bottom: 1.25rem;
+    }
+    .feedback-section-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.35rem 0;
+    }
+    .feedback-section-row span {
+      font-size: 0.85rem;
+      color: var(--color-text);
+      min-width: 80px;
+    }
+    .thumb {
+      background: none;
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 0.2rem 0.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .thumb:hover {
+      border-color: var(--color-accent);
+    }
+    .thumb.active {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+    }
+    .feedback-comment {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      resize: vertical;
+      min-height: 48px;
+      margin-bottom: 1rem;
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+    .feedback-comment::placeholder {
+      color: var(--color-text-muted);
+    }
+    .feedback-submit {
+      display: block;
+      width: 100%;
+      padding: 0.6rem;
+      background: var(--color-accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .feedback-submit:hover {
+      opacity: 0.9;
+    }
+    .feedback-submit:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+    .feedback-status {
+      text-align: center;
+      font-size: 0.85rem;
+      margin-top: 0.75rem;
+      min-height: 1.2em;
+    }
+    .feedback-status.success { color: #16a34a; }
+    .feedback-status.error { color: #dc2626; }
+
     /* === FOOTER === */
     .newspaper-footer {
       border-top: 1px solid var(--color-border);
-      padding-top: 1rem;
-      margin-top: 2rem;
+      padding-top: 1.25rem;
+      margin-top: 2.5rem;
       font-size: 0.8rem;
       color: var(--color-text-muted);
       text-align: center;
     }
     .newspaper-footer a {
-      color: var(--color-primary);
+      color: var(--color-accent);
       text-decoration: none;
+    }
+    .newspaper-footer a:hover {
+      text-decoration: underline;
     }
 
     /* === EMPTY STATE === */
@@ -186,136 +372,137 @@
   <!-- HEADER -->
   <header class="newspaper-header">
     <h1>PersonalMentor Daily</h1>
-    <div class="greeting">Good evening, {{user_name}}</div>
+    <div class="greeting">Good morning, {{user_name}}</div>
     <div class="date-line">{{date_formatted}}</div>
   </header>
 
-  <!-- TOP STORIES -->
-  {{#section_top_stories}}
-  <section class="section" id="top-stories">
-    <h2 class="section-title">Top Stories</h2>
-    {{#items}}
-    <div class="item">
-      <div class="item-title"><a href="{{url}}" target="_blank">{{title}}</a></div>
-      <div class="item-meta">
-        <span class="source">{{source}}</span>
-        <span class="tag">{{category}}</span>
-      </div>
-      <div class="item-summary">{{summary}}</div>
-    </div>
-    {{/items}}
-    {{^items}}<p class="empty-state">No stories available today.</p>{{/items}}
+  <!-- NEWS -->
+  <section class="section" id="news">
+    <h2 class="section-title">News</h2>
+    {{news_content}}
   </section>
-  {{/section_top_stories}}
 
-  <!-- JOBS FOR YOU + CALENDAR & BIRTHDAYS -->
-  {{#section_jobs_calendar}}
-  <div class="two-column">
-    <section class="section" id="jobs">
-      <h2 class="section-title">Jobs For You</h2>
-      {{#jobs}}
-      <div class="job-item">
-        <div class="item-title"><a href="{{url}}" target="_blank">{{title}}</a></div>
-        <div class="item-meta">
-          <span class="source">{{company}}</span> · {{location}}
-          <span class="match-score">{{match_score}}% match</span>
-        </div>
-      </div>
-      {{/jobs}}
-      {{^jobs}}<p class="empty-state">No matching jobs today.</p>{{/jobs}}
-    </section>
+  <!-- JOBS -->
+  <section class="section" id="jobs">
+    <h2 class="section-title">Jobs</h2>
+    {{jobs_content}}
+  </section>
 
-    <div>
-      <section class="section" id="calendar">
-        <h2 class="section-title">Today's Calendar</h2>
-        {{#calendar}}
-        <div class="calendar-item">
-          <span class="calendar-time">{{time}}</span> {{title}}
-        </div>
-        {{/calendar}}
-        {{^calendar}}<p class="empty-state">No events on your calendar.</p>{{/calendar}}
-      </section>
-
-      <section class="section" id="birthdays">
-        <h2 class="section-title">Birthdays</h2>
-        {{#birthdays}}
-        <div class="birthday-item">{{name}} {{note}}</div>
-        {{/birthdays}}
-        {{^birthdays}}<p class="empty-state">No birthdays this week.</p>{{/birthdays}}
-      </section>
-    </div>
-  </div>
-  {{/section_jobs_calendar}}
-
-  <!-- EVENTS NEAR YOU -->
-  {{#section_events}}
+  <!-- EVENTS -->
   <section class="section" id="events">
-    <h2 class="section-title">Events Near You</h2>
-    {{#items}}
-    <div class="item">
-      <div class="item-title"><a href="{{url}}" target="_blank">{{title}}</a></div>
-      <div class="item-meta">
-        <span class="source">{{date}}</span> · {{location}}
-        <span class="tag">{{type}}</span>
-      </div>
-    </div>
-    {{/items}}
-    {{^items}}<p class="empty-state">No upcoming events found.</p>{{/items}}
+    <h2 class="section-title">Events</h2>
+    {{events_content}}
   </section>
-  {{/section_events}}
 
-  <!-- SKILL SPOTLIGHT -->
-  {{#section_skills}}
-  <section class="section" id="skills">
-    <h2 class="section-title">Skill Spotlight</h2>
-    {{#items}}
-    <div class="item">
-      <div class="item-title"><a href="{{url}}" target="_blank">{{title}}</a></div>
-      <div class="item-meta"><span class="source">{{source}}</span></div>
-      <div class="item-summary">{{summary}}</div>
-    </div>
-    {{/items}}
-    {{^items}}<p class="empty-state">No skill highlights today.</p>{{/items}}
+  <!-- CALENDAR EVENTS -->
+  <section class="section" id="calendar-events">
+    <h2 class="section-title">Calendar Events</h2>
+    {{calendar_content}}
   </section>
-  {{/section_skills}}
 
-  <!-- INDUSTRY PULSE -->
-  {{#section_pulse}}
-  <section class="section" id="pulse">
-    <h2 class="section-title">Industry Pulse</h2>
-    {{#items}}
-    <div class="item">
-      <div class="item-title"><a href="{{url}}" target="_blank">{{title}}</a></div>
-      <div class="item-meta">
-        <span class="source">{{source}}</span>
-        <span class="tag">{{category}}</span>
-      </div>
-      <div class="item-summary">{{summary}}</div>
-    </div>
-    {{/items}}
-    {{^items}}<p class="empty-state">No industry updates today.</p>{{/items}}
+  <!-- GERMAN SENTENCE OF THE DAY -->
+  <section class="section" id="german-sentence">
+    <h2 class="section-title">German Sentence of the Day</h2>
+    {{german_content}}
   </section>
-  {{/section_pulse}}
 
-  <!-- READING LIST -->
-  {{#section_reading}}
-  <section class="section" id="reading">
-    <h2 class="section-title">Reading List</h2>
-    {{#items}}
-    <div class="item">
-      <div class="item-title"><a href="{{url}}" target="_blank">{{title}}</a></div>
-      <div class="item-meta"><span class="source">{{source}}</span></div>
-      <div class="item-summary">{{summary}}</div>
-    </div>
-    {{/items}}
-    {{^items}}<p class="empty-state">No reading suggestions today.</p>{{/items}}
-  </section>
-  {{/section_reading}}
+  <!-- FEEDBACK -->
+  {{feedback_content}}
 
   <!-- FOOTER -->
   <footer class="newspaper-footer">
     PersonalMentor Daily · Generated {{generated_at}} · <a href="{{archive_url}}">Browse Archive</a>
   </footer>
+
+  <script>
+  (function() {
+    var feedbackData = { date: '{{date}}', rating: null, section_ratings: {}, comment: '' };
+    var submitted = false;
+
+    // Star rating
+    var stars = document.querySelectorAll('.star-rating .star');
+    stars.forEach(function(star, i) {
+      star.addEventListener('mouseenter', function() {
+        if (submitted) return;
+        stars.forEach(function(s, j) { s.classList.toggle('hover', j <= i); });
+      });
+      star.addEventListener('mouseleave', function() {
+        stars.forEach(function(s) { s.classList.remove('hover'); });
+      });
+      star.addEventListener('click', function() {
+        if (submitted) return;
+        feedbackData.rating = i + 1;
+        stars.forEach(function(s, j) { s.classList.toggle('active', j <= i); });
+      });
+    });
+
+    // Thumb buttons
+    document.querySelectorAll('.feedback-section-row').forEach(function(row) {
+      var section = row.getAttribute('data-section');
+      var thumbs = row.querySelectorAll('.thumb');
+      thumbs.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          if (submitted) return;
+          var isUp = btn.classList.contains('up');
+          var wasActive = btn.classList.contains('active');
+          thumbs.forEach(function(t) { t.classList.remove('active'); });
+          if (wasActive) {
+            delete feedbackData.section_ratings[section];
+          } else {
+            btn.classList.add('active');
+            feedbackData.section_ratings[section] = isUp ? 4 : 2;
+          }
+        });
+      });
+    });
+
+    // Comment
+    var commentEl = document.querySelector('.feedback-comment');
+    if (commentEl) {
+      commentEl.addEventListener('input', function() {
+        feedbackData.comment = commentEl.value;
+      });
+    }
+
+    // Submit
+    var submitBtn = document.querySelector('.feedback-submit');
+    var statusEl = document.querySelector('.feedback-status');
+    if (submitBtn) {
+      submitBtn.addEventListener('click', function() {
+        if (submitted) return;
+        if (feedbackData.rating === null) {
+          statusEl.className = 'feedback-status error';
+          statusEl.textContent = 'Please select an overall star rating first.';
+          return;
+        }
+        submitBtn.disabled = true;
+        statusEl.className = 'feedback-status';
+        statusEl.textContent = 'Submitting...';
+
+        fetch('http://localhost:9847/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(feedbackData)
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (data.status === 'ok') {
+            submitted = true;
+            statusEl.className = 'feedback-status success';
+            statusEl.textContent = 'Thanks for your feedback!';
+          } else {
+            throw new Error(data.error || 'Unknown error');
+          }
+        })
+        .catch(function(err) {
+          submitBtn.disabled = false;
+          statusEl.className = 'feedback-status error';
+          statusEl.textContent = 'Could not reach feedback server. Start it with: python3 feedback_server.py';
+        });
+      });
+    }
+  })();
+  </script>
 
 </body>
 </html>

@@ -4,7 +4,6 @@
 import argparse
 import json
 import os
-import re
 import sys
 from datetime import datetime, timezone
 
@@ -15,7 +14,9 @@ except ImportError:
     sys.exit(1)
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "..", ".."))
 TEMPLATE_PATH = os.path.join(SCRIPT_DIR, "..", "assets", "template.html")
+LEARNED_PREFS_PATH = os.path.join(PROJECT_ROOT, "memory", "learned-preferences.yaml")
 
 # Default theme (Modern Minimalist) — overridden by user preference
 DEFAULT_THEME = {
@@ -88,7 +89,29 @@ THEMES = {
         "text_muted": "#8a82a6", "border": "#2d2d5e",
         "font_heading": "'Cinzel', serif", "font_body": "'Quicksand', sans-serif",
     },
+    "clean-modern": {
+        "bg": "#f9fafb", "surface": "#ffffff", "primary": "#1e293b",
+        "secondary": "#0ea5e9", "accent": "#6366f1", "text": "#1e293b",
+        "text_muted": "#64748b", "border": "#e2e8f0",
+        "font_heading": "'Inter', sans-serif", "font_body": "'Inter', sans-serif",
+    },
 }
+
+MAX_ITEMS = 3  # default, overridden by learned-preferences per section
+
+
+def load_learned_preferences():
+    """Load learned-preferences.yaml and return section item counts."""
+    if not os.path.exists(LEARNED_PREFS_PATH):
+        return {}
+    with open(LEARNED_PREFS_PATH, "r") as f:
+        prefs = yaml.safe_load(f) or {}
+    return prefs.get("reading_patterns", {}).get("section_item_counts", {})
+
+
+def get_max_items(section, section_item_counts):
+    """Get max items for a section, using learned preference or default."""
+    return section_item_counts.get(section, MAX_ITEMS)
 
 
 def load_yaml(filepath):
@@ -108,53 +131,28 @@ def load_json(filepath):
     return data if isinstance(data, list) else []
 
 
+def load_json_obj(filepath):
+    """Load a JSON file, return empty dict if missing."""
+    if not os.path.exists(filepath):
+        return {}
+    with open(filepath, "r") as f:
+        data = json.load(f)
+    return data if isinstance(data, dict) else {}
+
+
 def get_theme(preferences):
     """Get theme colors from preferences."""
     theme_name = preferences.get("design", {}).get("theme", "modern-minimalist")
     return THEMES.get(theme_name, DEFAULT_THEME)
 
 
-def categorize_articles(articles, interests):
-    """Split articles into sections based on category and topic relevance."""
-    professional_topics = [t.get("topic", "").lower() for t in (interests.get("professional") or [])]
-    industries = [i.lower() for i in (interests.get("industries") or [])]
-
-    top_stories = []
-    skill_items = []
-    pulse_items = []
-    reading_items = []
-
-    for article in articles:
-        cat = article.get("category", "").lower()
-        title_lower = article.get("title", "").lower()
-        summary_lower = article.get("summary", "").lower()
-        combined = f"{title_lower} {summary_lower}"
-
-        # Categorize based on keywords and category
-        if any(kw in combined for kw in ["learn", "course", "tutorial", "skill", "certification"]):
-            skill_items.append(article)
-        elif any(kw in combined for kw in ["funding", "launch", "startup", "market", "ipo", "acquisition"]):
-            pulse_items.append(article)
-        elif cat in ("research", "longread", "opinion", "essay"):
-            reading_items.append(article)
-        else:
-            top_stories.append(article)
-
-    return {
-        "top_stories": top_stories,
-        "skill_items": skill_items,
-        "pulse_items": pulse_items,
-        "reading_items": reading_items,
-    }
-
-
-def render_items_html(items, max_items=5):
-    """Render a list of article items to HTML."""
-    if not items:
-        return '<p class="empty-state">No content available today.</p>'
+def render_news_html(articles, max_items=MAX_ITEMS):
+    """Render RSS articles to HTML."""
+    if not articles:
+        return '<p class="empty-state">No news available today.</p>'
 
     html_parts = []
-    for item in items[:max_items]:
+    for item in articles[:max_items]:
         url = item.get("url", "#")
         title = item.get("title", "Untitled")
         source = item.get("source", "Unknown")
@@ -175,7 +173,7 @@ def render_items_html(items, max_items=5):
     return "\n".join(html_parts)
 
 
-def render_jobs_html(jobs, max_items=5):
+def render_jobs_html(jobs, max_items=MAX_ITEMS):
     """Render job listings to HTML."""
     if not jobs:
         return '<p class="empty-state">No matching jobs today.</p>'
@@ -188,18 +186,18 @@ def render_jobs_html(jobs, max_items=5):
         location = job.get("location", "")
         score = int(job.get("match_score", 0) * 100)
 
-        html_parts.append(f'''      <div class="job-item">
-        <div class="item-title"><a href="{url}" target="_blank">{title}</a></div>
-        <div class="item-meta">
-          <span class="source">{company}</span> · {location}
-          <span class="match-score">{score}% match</span>
-        </div>
-      </div>''')
+        html_parts.append(f'''    <div class="job-item">
+      <div class="item-title"><a href="{url}" target="_blank">{title}</a></div>
+      <div class="item-meta">
+        <span class="source">{company}</span> · {location}
+        <span class="match-score">{score}% match</span>
+      </div>
+    </div>''')
 
     return "\n".join(html_parts)
 
 
-def render_events_html(events, max_items=5):
+def render_events_html(events, max_items=MAX_ITEMS):
     """Render events to HTML."""
     if not events:
         return '<p class="empty-state">No upcoming events found.</p>'
@@ -223,70 +221,123 @@ def render_events_html(events, max_items=5):
     return "\n".join(html_parts)
 
 
-def render_calendar_html(events):
+def render_calendar_html(events, max_items=MAX_ITEMS):
     """Render calendar events to HTML."""
     if not events:
-        return '<p class="empty-state">No events on your calendar.</p>'
+        return '<p class="empty-state">No events on your calendar today.</p>'
 
     html_parts = []
-    for event in events:
+    for event in events[:max_items]:
         time_str = event.get("time", "")
         title = event.get("title", "Untitled")
-        html_parts.append(f'''        <div class="calendar-item">
-          <span class="calendar-time">{time_str}</span> {title}
-        </div>''')
+        html_parts.append(f'''    <div class="calendar-item">
+      <span class="calendar-time">{time_str}</span> {title}
+    </div>''')
 
     return "\n".join(html_parts)
 
 
-def render_birthdays_html(birthdays):
-    """Render birthdays to HTML."""
-    if not birthdays:
-        return '<p class="empty-state">No birthdays this week.</p>'
+def render_german_html(german_data):
+    """Render German Sentence of the Day to HTML."""
+    if not german_data:
+        return '<p class="empty-state">No German sentence today.</p>'
 
-    html_parts = []
-    for b in birthdays:
-        name = b.get("name", "")
-        note = b.get("note", "")
-        html_parts.append(f'        <div class="birthday-item">{name} {note}</div>')
+    german = german_data.get("german", "")
+    english = german_data.get("english", "")
+    image_b64 = german_data.get("image_base64")
 
-    return "\n".join(html_parts)
+    image_html = ""
+    if image_b64:
+        mime = german_data.get("image_mime", "image/png")
+        image_html = f'<img class="german-card-image" src="data:{mime};base64,{image_b64}" alt="Illustration">'
+
+    return f'''    <div class="german-card">
+      {image_html}
+      <div class="german-card-text">
+        <div class="german-sentence">{german}</div>
+        <div class="german-translation">{english}</div>
+      </div>
+    </div>'''
+
+
+def render_feedback_html(active_sections):
+    """Render the feedback section with per-section thumb rows for active sections.
+
+    active_sections: list of (key, label) for sections that have content.
+    """
+    section_rows = []
+    for key, label in active_sections:
+        section_rows.append(
+            f'      <div class="feedback-section-row" data-section="{key}">'
+            f'<span>{label}</span> '
+            f'<button class="thumb up">&#128077;</button> '
+            f'<button class="thumb down">&#128078;</button>'
+            f'</div>'
+        )
+
+    rows_html = "\n".join(section_rows) if section_rows else ""
+
+    return f'''  <section class="section" id="feedback">
+    <h2 class="section-title">Rate Today's Edition</h2>
+    <div class="feedback-card">
+      <div class="feedback-overall">
+        <span class="feedback-label">Overall</span>
+        <div class="star-rating" data-target="overall">
+          <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+        </div>
+      </div>
+      <div class="feedback-sections">
+{rows_html}
+      </div>
+      <textarea class="feedback-comment" placeholder="Any thoughts? (optional)"></textarea>
+      <button class="feedback-submit">Submit Feedback</button>
+      <div class="feedback-status"></div>
+    </div>
+  </section>'''
 
 
 def build_html(template, profile, content, theme):
     """Build the final HTML by replacing template placeholders."""
     identity = profile.get("identity", {})
     preferences = profile.get("preferences", {})
-    interests = profile.get("interests", {})
 
     user_name = identity.get("name", "there")
     language = preferences.get("writing", {}).get("language", "en")
     now = datetime.now(timezone.utc)
     date_str = now.strftime("%Y-%m-%d")
     date_formatted = now.strftime("%A, %B %d, %Y")
-    max_items = preferences.get("daily_artifact", {}).get("max_items_per_section", 5)
-    enabled = preferences.get("daily_artifact", {}).get("sections_enabled", [])
 
-    # Categorize RSS articles into sections
     articles = content.get("articles", [])
-    categorized = categorize_articles(articles, interests)
-
     jobs = content.get("jobs", [])
     events = content.get("events", [])
     calendar = content.get("calendar", [])
-    birthdays = content.get("birthdays", [])
+    german = content.get("german", {})
 
-    # Build section HTML blocks
-    top_stories_html = render_items_html(categorized["top_stories"], max_items)
-    jobs_html = render_jobs_html(jobs, max_items)
-    calendar_html = render_calendar_html(calendar)
-    birthdays_html = render_birthdays_html(birthdays)
-    events_html = render_events_html(events, max_items)
-    skills_html = render_items_html(categorized["skill_items"], max_items)
-    pulse_html = render_items_html(categorized["pulse_items"], max_items)
-    reading_html = render_items_html(categorized["reading_items"], max_items)
+    # Load learned preferences for per-section item counts
+    section_item_counts = load_learned_preferences()
 
-    # Replace theme variables
+    # Render section content with per-section max items
+    news_html = render_news_html(articles, get_max_items("news", section_item_counts))
+    jobs_html = render_jobs_html(jobs, get_max_items("jobs", section_item_counts))
+    events_html = render_events_html(events, get_max_items("events", section_item_counts))
+    calendar_html = render_calendar_html(calendar, get_max_items("calendar", section_item_counts))
+    german_html = render_german_html(german)
+
+    # Determine which sections have content (for feedback thumbs)
+    active_sections = []
+    if articles:
+        active_sections.append(("news", "News"))
+    if jobs:
+        active_sections.append(("jobs", "Jobs"))
+    if events:
+        active_sections.append(("events", "Events"))
+    if calendar:
+        active_sections.append(("calendar", "Calendar"))
+    if german:
+        active_sections.append(("german", "German"))
+    feedback_html = render_feedback_html(active_sections)
+
+    # Replace all placeholders
     html = template
     html = html.replace("{{language}}", language)
     html = html.replace("{{date}}", date_str)
@@ -305,79 +356,13 @@ def build_html(template, profile, content, theme):
     html = html.replace("{{generated_at}}", now.strftime("%Y-%m-%d %H:%M UTC"))
     html = html.replace("{{archive_url}}", "../daily/")
 
-    # Replace section blocks — use simple conditional replacement
-    def replace_section(html, section_id, enabled_list, content_html):
-        """Replace mustache-style section blocks."""
-        pattern = r'\{\{#section_' + section_id + r'\}\}(.*?)\{\{/section_' + section_id + r'\}\}'
-        if not enabled_list or section_id_to_slug(section_id) in enabled_list:
-            # Keep section, inject content
-            match = re.search(pattern, html, re.DOTALL)
-            if match:
-                section_template = match.group(1)
-                # Replace item placeholders with rendered HTML
-                return html[:match.start()] + inject_content(section_template, section_id, content_html) + html[match.end():]
-        else:
-            # Remove section
-            return re.sub(pattern, "", html, flags=re.DOTALL)
-        return html
-
-    def section_id_to_slug(sid):
-        mapping = {
-            "top_stories": "top-stories",
-            "jobs_calendar": "jobs-for-you",
-            "events": "events-near-you",
-            "skills": "skill-spotlight",
-            "pulse": "industry-pulse",
-            "reading": "reading-list",
-        }
-        return mapping.get(sid, sid)
-
-    def inject_content(template_block, section_id, content_html):
-        """Replace mustache item loops with rendered HTML."""
-        # Remove mustache loop markers and replace with rendered content
-        # Clean up mustache syntax and inject HTML
-        result = template_block
-        # Remove all mustache tags and replace the section content area
-        result = re.sub(r'\{\{#\w+\}\}.*?\{\{/\w+\}\}', '', result, flags=re.DOTALL)
-        result = re.sub(r'\{\{\^\w+\}\}.*?\{\{/\w+\}\}', '', result, flags=re.DOTALL)
-        result = re.sub(r'\{\{[^}]+\}\}', '', result)
-
-        # Find the section body and inject content
-        # Insert content after section-title
-        title_end = result.find("</h2>")
-        if title_end != -1:
-            result = result[:title_end + 5] + "\n" + content_html + "\n" + result[title_end + 5:]
-
-        return result
-
-    # For the two-column jobs+calendar section, handle specially
-    jobs_cal_pattern = r'\{\{#section_jobs_calendar\}\}(.*?)\{\{/section_jobs_calendar\}\}'
-    jobs_cal_match = re.search(jobs_cal_pattern, html, re.DOTALL)
-    if jobs_cal_match:
-        jobs_cal_block = f'''  <div class="two-column">
-    <section class="section" id="jobs">
-      <h2 class="section-title">Jobs For You</h2>
-{jobs_html}
-    </section>
-    <div>
-      <section class="section" id="calendar">
-        <h2 class="section-title">Today\'s Calendar</h2>
-{calendar_html}
-      </section>
-      <section class="section" id="birthdays">
-        <h2 class="section-title">Birthdays</h2>
-{birthdays_html}
-      </section>
-    </div>
-  </div>'''
-        html = html[:jobs_cal_match.start()] + jobs_cal_block + html[jobs_cal_match.end():]
-
-    # Replace remaining sections
-    html = replace_section(html, "top_stories", enabled, top_stories_html)
-    html = replace_section(html, "events", enabled, events_html)
-    html = replace_section(html, "skills", enabled, skills_html)
-    html = replace_section(html, "pulse", enabled, pulse_html)
-    html = replace_section(html, "reading", enabled, reading_html)
+    # Replace section content placeholders
+    html = html.replace("{{news_content}}", news_html)
+    html = html.replace("{{jobs_content}}", jobs_html)
+    html = html.replace("{{events_content}}", events_html)
+    html = html.replace("{{calendar_content}}", calendar_html)
+    html = html.replace("{{german_content}}", german_html)
+    html = html.replace("{{feedback_content}}", feedback_html)
 
     return html
 
@@ -388,7 +373,7 @@ def main():
     parser.add_argument("--content-dir", required=True, help="Path to content JSON files directory")
     parser.add_argument("--output", required=True, help="Output HTML file path")
     parser.add_argument("--calendar-json", default="", help="Optional: calendar events JSON file")
-    parser.add_argument("--birthdays-json", default="", help="Optional: birthdays JSON file")
+    parser.add_argument("--german-json", default="", help="Optional: German sentence JSON file")
     args = parser.parse_args()
 
     # Load profile
@@ -406,7 +391,7 @@ def main():
         "jobs": load_json(os.path.join(args.content_dir, "jobs.json")),
         "events": load_json(os.path.join(args.content_dir, "events.json")),
         "calendar": load_json(args.calendar_json) if args.calendar_json else [],
-        "birthdays": load_json(args.birthdays_json) if args.birthdays_json else [],
+        "german": load_json_obj(args.german_json) if args.german_json else {},
     }
 
     # Get theme
@@ -427,14 +412,16 @@ def main():
     total_items = (
         len(content["articles"]) + len(content["jobs"]) +
         len(content["events"]) + len(content["calendar"]) +
-        len(content["birthdays"])
+        (1 if content["german"] else 0)
     )
     print(f"Generated daily newspaper: {args.output}")
     print(f"  Theme: {profile['preferences'].get('design', {}).get('theme', 'modern-minimalist')}")
     print(f"  Total content items: {total_items}")
-    print(f"  Articles: {len(content['articles'])}")
-    print(f"  Jobs: {len(content['jobs'])}")
-    print(f"  Events: {len(content['events'])}")
+    print(f"  Articles: {len(content['articles'])} (showing max {MAX_ITEMS})")
+    print(f"  Jobs: {len(content['jobs'])} (showing max {MAX_ITEMS})")
+    print(f"  Events: {len(content['events'])} (showing max {MAX_ITEMS})")
+    print(f"  Calendar: {len(content['calendar'])}")
+    print(f"  German: {'yes' if content['german'] else 'no'}")
 
 
 if __name__ == "__main__":

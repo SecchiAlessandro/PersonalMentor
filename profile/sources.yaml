@@ -1,14 +1,99 @@
 # PersonalMentor — Content Sources
-# Configure RSS feeds, job boards, and event sources to monitor
 
-rss_feeds: []
-  # - url: "https://example.com/feed.xml"
-  #   category: "tech"  # news, tech, industry, research, etc.
+rss_feeds:
+  # AI & Machine Learning
+  - url: "https://www.technologyreview.com/feed/"
+    category: "ai"
+  - url: "https://openai.com/blog/rss.xml"
+    category: "ai"
+  - url: "https://deepmind.google/blog/rss.xml"
+    category: "ai"
 
-job_boards: []
-  # - url: "https://example.com/jobs"
-  #   search_terms: []
+  # Energy Markets, Policy & Electricity
+  - url: "https://cleantechnica.com/feed/"
+    category: "energy"
+  - url: "https://www.canarymedia.com/rss.rss"
+    category: "energy"
+  - url: "https://energycentral.com/feed"
+    category: "energy_market"
+  - url: "https://www.utilitydive.com/feeds/news/"
+    category: "energy_market"
+  - url: "https://www.power-eng.com/feed/"
+    category: "energy_market"
+  - url: "https://www.iea.org/rss/news.xml"
+    category: "energy_policy"
+  - url: "https://euractiv.com/sections/energy/feed/"
+    category: "energy_policy"
+  - url: "https://www.montelnews.com/rss"
+    category: "electricity_market"
 
-event_sources: []
-  # - url: "https://example.com/events"
-  #   location_filter: ""
+  # Tech General
+  - url: "https://feeds.arstechnica.com/arstechnica/technology-lab"
+    category: "tech"
+  - url: "https://hnrss.org/frontpage"
+    category: "tech"
+  - url: "https://techcrunch.com/feed/"
+    category: "tech"
+  - url: "https://spectrum.ieee.org/feeds/feed.rss"
+    category: "tech"
+
+  # Switzerland / Europe
+  - url: "https://cdn.prod.swi-services.ch/rss/eng/rssxml/latest-news/rss"
+    category: "news"
+
+job_boards:
+  # datacareer.ch — Swiss data/AI jobs (HTML scraping)
+  - url: "https://www.datacareer.ch/categories/AI/"
+    type: "html"
+    site: "datacareer"
+    search_terms: ["AI", "machine learning", "energy"]
+  - url: "https://www.datacareer.ch/categories/machinelearning/"
+    type: "html"
+    site: "datacareer"
+    search_terms: ["machine learning", "deep learning"]
+  - url: "https://www.datacareer.ch/categories/data-engineering/"
+    type: "html"
+    site: "datacareer"
+    search_terms: ["data engineering", "ETL", "pipeline"]
+
+  # LinkedIn — Zurich energy/AI/strategy jobs (guest HTML API)
+  - url: "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=energy+market+analyst&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0"
+    type: "html"
+    site: "linkedin"
+    search_terms: ["energy market", "electricity market", "energy trading"]
+  - url: "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=energy+policy+strategy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0"
+    type: "html"
+    site: "linkedin"
+    search_terms: ["energy policy", "strategy", "innovation"]
+  - url: "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=AI+engineer+energy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0"
+    type: "html"
+    site: "linkedin"
+    search_terms: ["AI", "energy", "machine learning"]
+  - url: "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=innovation+manager&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0"
+    type: "html"
+    site: "linkedin"
+    search_terms: ["innovation", "strategy", "management"]
+
+  # SwissDevJobs — Swiss tech jobs (RSS feed, filter client-side)
+  - url: "https://swissdevjobs.ch/rss"
+    type: "rss"
+    filter_keywords: ["AI", "machine learning", "energy", "strategy", "innovation", "market", "policy"]
+
+event_sources:
+  # Energy Markets & Policy
+  - url: "http://www.wikicfp.com/cfp/call?conference=energy%20market&skip=1"
+    location_filter: ""
+  - url: "http://www.wikicfp.com/cfp/call?conference=electricity%20market&skip=1"
+    location_filter: ""
+  - url: "http://www.wikicfp.com/cfp/call?conference=energy%20policy&skip=1"
+    location_filter: ""
+  # AI & Innovation
+  - url: "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1"
+    location_filter: ""
+  - url: "http://www.wikicfp.com/cfp/call?conference=innovation%20management&skip=1"
+    location_filter: ""
+  # Switzerland-specific
+  - url: "https://www.swissaisummit.com/"
+    location_filter: "Switzerland"
+  - url: "https://www.european-utility-week.com/"
+    location_filter: ""
