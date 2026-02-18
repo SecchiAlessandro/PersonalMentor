@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PersonalMentor</title>
+  <script>
+    // Redirect to today's newspaper
+    const today = new Date().toISOString().slice(0, 10);
+    window.location.href = `output/daily/${today}.html`;
+  </script>
+</head>
+<body>
+  <p>Redirecting to today's newspaper...</p>
+</body>
+</html>
