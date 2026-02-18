@@ -3,7 +3,7 @@
 __pycache__/
 *.pyc
 .env
-/output/daily/*.html
+# /output/daily/*.html  # allowed — pushed daily by run_daily.sh
 /output/cv/*
 /output/documents/*
 /output/web/*

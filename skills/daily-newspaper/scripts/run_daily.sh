@@ -183,6 +183,21 @@ python3 "${PROJECT_ROOT}/skills/memory-manager/scripts/log_action.py" \
 find /tmp -maxdepth 1 -name "pm_daily_*" ! -name "pm_daily_${TODAY}" -type d -mtime +3 -exec rm -rf {} + 2>/dev/null || true
 echo "DEBUG: Content dir preserved at ${CONTENT_DIR}"
 
+# Push daily output to GitHub
+echo "[10] Pushing to GitHub..."
+cd "${PROJECT_ROOT}"
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  git add "output/daily/${TODAY}.html"
+  if git diff --cached --quiet; then
+    echo "  No new changes to push."
+  else
+    git commit -m "Daily newspaper ${TODAY}"
+    git push origin main && echo "  Pushed to GitHub." || echo "  WARNING: git push failed."
+  fi
+else
+  echo "  Not a git repo — skipping."
+fi
+
 echo ""
 echo "=== Done ==="
 echo "Output: ${OUTPUT_FILE}"
