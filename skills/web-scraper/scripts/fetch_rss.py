@@ -75,17 +75,24 @@ def main():
             json.dump([], f)
         return
 
-    all_articles = []
-    for feed_config in rss_feeds:
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    def _fetch_one(feed_config):
         url = feed_config.get("url", "")
         category = feed_config.get("category", "general")
         if not url:
-            continue
-
+            return []
         print(f"Fetching: {url} ({category})")
-        articles = fetch_feed(url, category)
-        all_articles.extend(articles[:args.max_per_feed])
-        time.sleep(1)  # Rate limiting between feeds
+        return fetch_feed(url, category)[:args.max_per_feed]
+
+    all_articles = []
+    with ThreadPoolExecutor(max_workers=6) as pool:
+        futures = {pool.submit(_fetch_one, fc): fc for fc in rss_feeds}
+        for fut in as_completed(futures):
+            try:
+                all_articles.extend(fut.result())
+            except Exception as e:
+                print(f"WARNING: feed fetch error: {e}", file=sys.stderr)
 
     # Sort by published date (newest first)
     all_articles.sort(key=lambda x: x.get("published", ""), reverse=True)

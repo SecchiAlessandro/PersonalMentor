@@ -1,0 +1,16 @@
+# PersonalMentor — Python Dependencies
+
+# Core
+pyyaml>=6.0
+requests>=2.31
+beautifulsoup4>=4.12
+
+# CV parsing (onboarding)
+pypdf>=4.0
+python-docx>=1.1
+
+# Templating (Jinja2-cv skill)
+docxtpl>=0.16
+
+# Google AI (German sentence generation)
+google-genai>=1.0

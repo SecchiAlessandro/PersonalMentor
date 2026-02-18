@@ -25,6 +25,8 @@ PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "..", ".."))
 FEEDBACK_FILE = os.path.join(PROJECT_ROOT, "memory", "feedback.jsonl")
 LOG_ACTION = os.path.join(PROJECT_ROOT, "skills", "memory-manager", "scripts", "log_action.py")
 
+from onboard_handler import handle_onboard, handle_scrape_website, handle_generate, serve_welcome_page
+
 # Global timer for auto-shutdown
 _shutdown_timer = None
 _timer_lock = threading.Lock()
@@ -92,6 +94,29 @@ class FeedbackHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps(data).encode())
 
+    def _handle_profile_status(self):
+        """Check if a profile exists and return name + delivery time."""
+        identity_path = os.path.join(PROJECT_ROOT, "profile", "identity.yaml")
+        try:
+            import yaml
+            with open(identity_path) as f:
+                data = yaml.safe_load(f) or {}
+            name = (data.get("name") or "").strip()
+            if name:
+                prefs_path = os.path.join(PROJECT_ROOT, "profile", "preferences.yaml")
+                delivery = "07:00"
+                try:
+                    with open(prefs_path) as f:
+                        prefs = yaml.safe_load(f) or {}
+                    delivery = prefs.get("daily_artifact", {}).get("delivery_time", delivery)
+                except Exception:
+                    pass
+                self._send_json(200, {"exists": True, "name": name, "delivery_time": delivery})
+                return
+        except Exception:
+            pass
+        self._send_json(200, {"exists": False})
+
     def do_OPTIONS(self):
         """Handle CORS preflight."""
         self.send_response(204)
@@ -99,17 +124,30 @@ class FeedbackHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        """Health check endpoint."""
-        if self.path == "/health":
+        """Route GET requests."""
+        if self.path == "/" or self.path == "/welcome":
+            serve_welcome_page(self)
+        elif self.path == "/health":
             self._send_json(200, {"status": "ok", "pid": os.getpid()})
+        elif self.path == "/api/profile-status":
+            self._handle_profile_status()
         else:
             self._send_json(404, {"error": "not found"})
 
     def do_POST(self):
-        """Receive feedback."""
+        """Route POST requests."""
         reset_inactivity_timer()
 
-        if self.path != "/api/feedback":
+        if self.path == "/api/onboard":
+            handle_onboard(self)
+            return
+        elif self.path == "/api/scrape-website":
+            handle_scrape_website(self)
+            return
+        elif self.path == "/api/generate":
+            handle_generate(self)
+            return
+        elif self.path != "/api/feedback":
             self._send_json(404, {"error": "not found"})
             return
 

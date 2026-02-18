@@ -25,7 +25,7 @@ PREFS_FILE = os.path.join(PROJECT_ROOT, "memory", "learned-preferences.yaml")
 
 # Default item counts per section
 DEFAULT_ITEM_COUNT = 3
-MIN_ITEM_COUNT = 1
+MIN_ITEM_COUNT = 2
 MAX_ITEM_COUNT = 7
 
 # Thresholds

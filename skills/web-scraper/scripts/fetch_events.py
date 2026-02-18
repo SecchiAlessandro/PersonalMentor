@@ -262,21 +262,28 @@ def main():
             json.dump([], f)
         return
 
-    all_events = []
-    for source in event_sources:
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    def _fetch_one(source):
         url = source.get("url", "")
         location_filter = source.get("location_filter", "")
         source_type = source.get("type", "html")
         if not url:
-            continue
-
+            return []
         print(f"Fetching events ({source_type}): {url}")
         if source_type == "api":
-            events = fetch_api_events(url, location_filter)
+            return fetch_api_events(url, location_filter)
         else:
-            events = fetch_event_source(url, location_filter)
-        all_events.extend(events)
-        time.sleep(2)  # Rate limiting
+            return fetch_event_source(url, location_filter)
+
+    all_events = []
+    with ThreadPoolExecutor(max_workers=6) as pool:
+        futures = {pool.submit(_fetch_one, s): s for s in event_sources}
+        for fut in as_completed(futures):
+            try:
+                all_events.extend(fut.result())
+            except Exception as e:
+                print(f"WARNING: event fetch error: {e}", file=sys.stderr)
 
     # Sort by date
     all_events.sort(key=lambda x: x.get("date", ""))

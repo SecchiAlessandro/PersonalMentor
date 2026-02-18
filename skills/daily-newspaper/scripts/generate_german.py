@@ -28,8 +28,8 @@ except ImportError:
     print("ERROR: Pillow not installed. Run: pip install Pillow", file=sys.stderr)
     sys.exit(1)
 
-MODEL = "gemini-2.0-flash"
-IMAGE_MODEL = "gemini-2.5-flash-image"
+TEXT_MODELS = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.5-flash-lite"]
+IMAGE_MODELS = ["gemini-2.5-flash-image", "gemini-3-pro-image-preview", "gemini-2.5-flash"]
 
 
 def build_client():
@@ -42,7 +42,10 @@ def build_client():
 
 
 def generate_sentence(client, today_str):
-    """Generate a German sentence with translation and image prompt."""
+    """Generate a German sentence with translation and image prompt.
+
+    Tries each model in TEXT_MODELS until one succeeds.
+    """
     prompt = f"""Today is {today_str}. Generate a useful German sentence for a language learner (A1-B1 level).
 
 Requirements:
@@ -53,46 +56,62 @@ Requirements:
 Respond in EXACTLY this JSON format (no markdown, no code fences):
 {{"german": "Die deutsche Satz hier", "english": "The English translation here", "image_prompt": "A short visual description of the sentence's meaning, suitable for generating an illustration (e.g. 'a person greeting a friend at a cafe')"}}"""
 
-    response = client.models.generate_content(
-        model=MODEL,
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            response_modalities=["TEXT"],
-            temperature=1.0,
-        ),
-    )
+    last_error = None
+    for model in TEXT_MODELS:
+        try:
+            print(f"  Trying model: {model}")
+            response = client.models.generate_content(
+                model=model,
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_modalities=["TEXT"],
+                    temperature=1.0,
+                ),
+            )
 
-    text = response.text.strip()
-    # Strip markdown code fences if present
-    if text.startswith("```"):
-        text = text.split("\n", 1)[1] if "\n" in text else text[3:]
-        if text.endswith("```"):
-            text = text[:-3].strip()
+            text = response.text.strip()
+            # Strip markdown code fences if present
+            if text.startswith("```"):
+                text = text.split("\n", 1)[1] if "\n" in text else text[3:]
+                if text.endswith("```"):
+                    text = text[:-3].strip()
 
-    return json.loads(text)
+            return json.loads(text)
+        except Exception as e:
+            last_error = e
+            print(f"  WARNING: {model} failed: {e}", file=sys.stderr)
+            continue
+
+    raise RuntimeError(f"All text models failed. Last error: {last_error}")
 
 
 def generate_image(client, image_prompt):
-    """Generate an illustration from the image prompt. Returns (base64, mime_type) or (None, None)."""
+    """Generate an illustration from the image prompt. Returns (base64, mime_type) or (None, None).
+
+    Tries each model in IMAGE_MODELS until one succeeds.
+    """
     prompt = f"Generate a simple, friendly, colorful illustration: {image_prompt}. Style: flat design, warm colors, minimal detail, no text."
 
-    try:
-        response = client.models.generate_content(
-            model=IMAGE_MODEL,
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                response_modalities=["TEXT", "IMAGE"],
-            ),
-        )
+    for model in IMAGE_MODELS:
+        try:
+            print(f"  Trying image model: {model}")
+            response = client.models.generate_content(
+                model=model,
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_modalities=["TEXT", "IMAGE"],
+                ),
+            )
 
-        for part in response.parts:
-            if part.inline_data is not None:
-                b64 = base64.b64encode(part.inline_data.data).decode("utf-8")
-                mime = part.inline_data.mime_type or "image/png"
-                return b64, mime
+            for part in response.parts:
+                if part.inline_data is not None:
+                    b64 = base64.b64encode(part.inline_data.data).decode("utf-8")
+                    mime = part.inline_data.mime_type or "image/png"
+                    return b64, mime
 
-    except Exception as e:
-        print(f"WARNING: Image generation failed: {e}", file=sys.stderr)
+        except Exception as e:
+            print(f"  WARNING: {model} image generation failed: {e}", file=sys.stderr)
+            continue
 
     return None, None
 
@@ -109,7 +128,18 @@ def main():
     print(f"Generating German sentence for {today_str}...")
 
     # Step 1: Generate sentence + translation + image prompt
-    sentence_data = generate_sentence(client, today_str)
+    try:
+        sentence_data = generate_sentence(client, today_str)
+    except Exception as e:
+        print(f"  ERROR: German sentence generation failed: {e}", file=sys.stderr)
+        # Write empty result so pipeline can continue without this section
+        result = {"german": "", "english": "", "image_base64": None, "image_mime": None}
+        os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
+        with open(args.output, "w") as f:
+            json.dump(result, f, ensure_ascii=False, indent=2)
+        print(f"  Output (empty): {args.output}")
+        return
+
     print(f"  Sentence: {sentence_data['german']}")
     print(f"  Translation: {sentence_data['english']}")
 

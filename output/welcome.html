@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PersonalMentor — Welcome</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* === RESET === */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* === THEME VARIABLES (default: modern-minimalist) === */
+    :root {
+      --color-bg: #ffffff;
+      --color-surface: #f8f9fa;
+      --color-primary: #2d2d2d;
+      --color-secondary: #555555;
+      --color-accent: #0066cc;
+      --color-text: #1a1a1a;
+      --color-text-muted: #6b7280;
+      --color-border: #e5e7eb;
+      --font-heading: 'Georgia', serif;
+      --font-body: 'Helvetica Neue', 'Arial', sans-serif;
+    }
+
+    /* === BASE === */
+    body {
+      font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* === HEADER === */
+    .wizard-header {
+      position: relative;
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .wizard-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-accent), var(--color-secondary), transparent);
+      border-radius: 2px;
+    }
+    .wizard-header h1 {
+      font-family: var(--font-heading), Georgia, serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      letter-spacing: -0.02em;
+    }
+    .wizard-header p {
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-top: 0.35rem;
+    }
+
+    /* === PROGRESS BAR === */
+    .progress-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    .progress-step {
+      flex: 1;
+      text-align: center;
+    }
+    .progress-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--color-border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      background: var(--color-surface);
+      transition: all 0.3s;
+    }
+    .progress-step.active .progress-dot {
+      border-color: var(--color-accent);
+      background: var(--color-accent);
+      color: #fff;
+    }
+    .progress-step.done .progress-dot {
+      border-color: #16a34a;
+      background: #16a34a;
+      color: #fff;
+    }
+    .progress-label {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+    .progress-step.active .progress-label {
+      color: var(--color-accent);
+      font-weight: 600;
+    }
+
+    /* === STEP PANELS === */
+    .step { display: none; }
+    .step.active { display: block; }
+    .step h2 {
+      font-family: var(--font-heading), Georgia, serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* === FORM ELEMENTS === */
+    .field {
+      margin-bottom: 1.25rem;
+    }
+    .field label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 0.3rem;
+    }
+    .field .hint {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .field input[type="text"],
+    .field input[type="email"],
+    .field input[type="url"],
+    .field input[type="time"],
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      background: var(--color-bg);
+      color: var(--color-text);
+      transition: border-color 0.2s;
+    }
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+    }
+    .field textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .field .required::after {
+      content: ' *';
+      color: #dc2626;
+    }
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 500px) {
+      .field-row { grid-template-columns: 1fr; }
+    }
+
+    /* === DROP ZONE === */
+    .drop-zone {
+      border: 2px dashed var(--color-border);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      background: var(--color-surface);
+    }
+    .drop-zone:hover,
+    .drop-zone.dragover {
+      border-color: var(--color-accent);
+      background: rgba(0, 102, 204, 0.04);
+    }
+    .drop-zone.has-file {
+      border-color: #16a34a;
+      border-style: solid;
+    }
+    .drop-zone-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .drop-zone-text {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+    }
+    .drop-zone-text strong {
+      color: var(--color-accent);
+    }
+    .drop-zone-file {
+      font-size: 0.85rem;
+      color: #16a34a;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    /* === CHIP / TAG INPUT === */
+    .chip-input-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      padding: 0.4rem;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      background: var(--color-bg);
+      min-height: 42px;
+      cursor: text;
+    }
+    .chip-input-wrap:focus-within {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: var(--color-accent);
+      color: #fff;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .chip button {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.8);
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 0;
+      line-height: 1;
+    }
+    .chip-input {
+      border: none;
+      outline: none;
+      font-size: 0.85rem;
+      flex: 1;
+      min-width: 100px;
+      background: transparent;
+      color: var(--color-text);
+      font-family: var(--font-body);
+    }
+
+    /* === THEME PICKER === */
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .theme-card {
+      border: 2px solid var(--color-border);
+      border-radius: 10px;
+      padding: 0.75rem;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+      text-align: center;
+    }
+    .theme-card:hover {
+      transform: translateY(-2px);
+    }
+    .theme-card.selected {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 2px var(--color-accent);
+    }
+    .theme-preview {
+      height: 40px;
+      border-radius: 6px;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .theme-preview-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .theme-card-name {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    /* === CHECKBOXES === */
+    .checkbox-group {
+      display: grid;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      background: var(--color-surface);
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .checkbox-item:hover {
+      border-color: var(--color-accent);
+    }
+    .checkbox-item input[type="checkbox"] {
+      margin-top: 0.15rem;
+      accent-color: var(--color-accent);
+    }
+    .checkbox-item .cb-label {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .checkbox-item .cb-desc {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+
+    /* === NAVIGATION === */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--color-border);
+    }
+    .btn {
+      padding: 0.6rem 1.5rem;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      border: none;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-back {
+      background: var(--color-surface);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+    }
+    .btn-next {
+      background: var(--color-accent);
+      color: #fff;
+    }
+    .btn-next:hover { opacity: 0.9; }
+    .btn-next:disabled { opacity: 0.5; cursor: default; }
+    .btn-submit {
+      background: #16a34a;
+      color: #fff;
+      padding: 0.7rem 2rem;
+      font-size: 1rem;
+    }
+
+    /* === SUCCESS SCREEN === */
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+    .success-screen.active { display: block; }
+    .success-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+    .success-screen h2 {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      color: var(--color-primary);
+      margin-bottom: 0.5rem;
+      border: none;
+      padding: 0;
+    }
+    .success-screen p {
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .btn-generate {
+      background: var(--color-accent);
+      color: #fff;
+      padding: 0.7rem 2rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-generate:hover { opacity: 0.9; }
+
+    /* === STATUS MESSAGES === */
+    .status-msg {
+      text-align: center;
+      font-size: 0.85rem;
+      margin-top: 0.75rem;
+      min-height: 1.2em;
+    }
+    .status-msg.error { color: #dc2626; }
+    .status-msg.info { color: var(--color-accent); }
+
+    /* === WEBSITE PREVIEW === */
+    .website-preview {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      display: none;
+    }
+    .website-preview.visible { display: block; }
+    .website-preview h4 {
+      font-size: 0.85rem;
+      color: var(--color-primary);
+      margin-bottom: 0.25rem;
+    }
+    .website-preview p {
+      color: var(--color-text-muted);
+      font-size: 0.8rem;
+    }
+
+    /* === FOOTER === */
+    .wizard-footer {
+      border-top: 1px solid var(--color-border);
+      padding-top: 1.25rem;
+      margin-top: 2.5rem;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="wizard-header">
+    <h1>PersonalMentor</h1>
+    <p>Set up your personalized daily newspaper in 5 steps</p>
+  </header>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-step active" data-step="0">
+      <span class="progress-dot">1</span>
+      <span class="progress-label">Identity</span>
+    </div>
+    <div class="progress-step" data-step="1">
+      <span class="progress-dot">2</span>
+      <span class="progress-label">Experience</span>
+    </div>
+    <div class="progress-step" data-step="2">
+      <span class="progress-dot">3</span>
+      <span class="progress-label">Interests</span>
+    </div>
+    <div class="progress-step" data-step="3">
+      <span class="progress-dot">4</span>
+      <span class="progress-label">Design</span>
+    </div>
+    <div class="progress-step" data-step="4">
+      <span class="progress-dot">5</span>
+      <span class="progress-label">Sources</span>
+    </div>
+  </div>
+
+  <!-- STEP 1: Identity -->
+  <div class="step active" id="step0">
+    <h2>Who are you?</h2>
+    <div class="field">
+      <label class="required">Full Name</label>
+      <input type="text" id="name" placeholder="e.g. Alex Chen" required>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Job Title</label>
+        <input type="text" id="title" placeholder="e.g. Software Engineer">
+      </div>
+      <div class="field">
+        <label>Location</label>
+        <input type="text" id="location" placeholder="e.g. Zurich, Switzerland">
+      </div>
+    </div>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="you@example.com">
+    </div>
+    <div class="field">
+      <label>Short Bio</label>
+      <textarea id="bio" placeholder="A sentence or two about what you do and what drives you..."></textarea>
+    </div>
+    <div class="nav-buttons">
+      <div></div>
+      <button class="btn btn-next" onclick="nextStep()">Next</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Import Experience -->
+  <div class="step" id="step1">
+    <h2>Import Your Experience</h2>
+    <p class="hint" style="margin-bottom:1rem; color: var(--color-text-muted); font-size: 0.85rem;">
+      Optional: upload a CV or provide your website to auto-fill your profile.
+    </p>
+    <div class="field">
+      <label>Upload CV (PDF or DOCX)</label>
+      <div class="drop-zone" id="dropZone">
+        <div class="drop-zone-icon">&#128196;</div>
+        <div class="drop-zone-text">Drag & drop your CV here, or <strong>click to browse</strong></div>
+        <div class="drop-zone-file" id="dropZoneFile"></div>
+      </div>
+      <input type="file" id="cvFile" accept=".pdf,.docx,.doc" style="display:none">
+    </div>
+    <div class="field">
+      <label>Personal Website URL</label>
+      <input type="url" id="website" placeholder="https://yoursite.com">
+      <button class="btn btn-back" style="margin-top:0.5rem; font-size:0.8rem; padding:0.3rem 0.8rem;" onclick="scrapeWebsite()">Preview</button>
+      <div class="website-preview" id="websitePreview">
+        <h4 id="previewTitle"></h4>
+        <p id="previewDesc"></p>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>LinkedIn URL</label>
+        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/you">
+      </div>
+      <div class="field">
+        <label>GitHub URL</label>
+        <input type="url" id="github" placeholder="https://github.com/you">
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-back" onclick="prevStep()">Back</button>
+      <button class="btn btn-next" onclick="nextStep()">Next</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Interests & Job Search -->
+  <div class="step" id="step2">
+    <h2>Interests & Job Search</h2>
+    <div class="field">
+      <label>Professional Topics</label>
+      <div class="hint">Press Enter or comma to add a topic</div>
+      <div class="chip-input-wrap" id="topicsWrap">
+        <input class="chip-input" id="topicsInput" placeholder="e.g. AI, energy markets, strategy...">
+      </div>
+    </div>
+    <div class="field">
+      <label>Industries</label>
+      <div class="hint">Press Enter or comma to add</div>
+      <div class="chip-input-wrap" id="industriesWrap">
+        <input class="chip-input" id="industriesInput" placeholder="e.g. Tech, Energy, Consulting...">
+      </div>
+    </div>
+    <div class="field">
+      <label>Personal Interests</label>
+      <div class="hint">Hobbies, side projects, etc.</div>
+      <div class="chip-input-wrap" id="personalWrap">
+        <input class="chip-input" id="personalInput" placeholder="e.g. hiking, piano, volleyball...">
+      </div>
+    </div>
+    <div class="field" style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid var(--color-border);">
+      <label style="display:flex; align-items:center; gap:0.5rem;">
+        <input type="checkbox" id="jobSearchActive">
+        I'm actively looking for a new role
+      </label>
+    </div>
+    <div id="jobSearchFields" style="display:none;">
+      <div class="field">
+        <label>Target Roles</label>
+        <div class="chip-input-wrap" id="rolesWrap">
+          <input class="chip-input" id="rolesInput" placeholder="e.g. AI Engineer, Strategy Consultant...">
+        </div>
+      </div>
+      <div class="field">
+        <label>Preferred Companies</label>
+        <div class="chip-input-wrap" id="companiesWrap">
+          <input class="chip-input" id="companiesInput" placeholder="e.g. Google, McKinsey...">
+        </div>
+      </div>
+      <div class="field">
+        <label>Target Locations</label>
+        <div class="chip-input-wrap" id="locationsWrap">
+          <input class="chip-input" id="locationsInput" placeholder="e.g. Switzerland, Remote...">
+        </div>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-back" onclick="prevStep()">Back</button>
+      <button class="btn btn-next" onclick="nextStep()">Next</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: Design & Preferences -->
+  <div class="step" id="step3">
+    <h2>Design & Preferences</h2>
+    <div class="field">
+      <label>Theme</label>
+      <div class="hint">Click a theme to preview it live on this page</div>
+      <div class="theme-grid" id="themeGrid"></div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Tone</label>
+        <select id="tone">
+          <option value="conversational">Conversational</option>
+          <option value="professional">Professional</option>
+          <option value="casual">Casual</option>
+          <option value="academic">Academic</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Language</label>
+        <select id="language">
+          <option value="en">English</option>
+          <option value="de">Deutsch</option>
+          <option value="fr">Fran&#231;ais</option>
+          <option value="it">Italiano</option>
+          <option value="es">Espa&#241;ol</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Delivery Time</label>
+      <div class="hint">When should your daily newspaper be generated?</div>
+      <input type="time" id="deliveryTime" value="07:00">
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-back" onclick="prevStep()">Back</button>
+      <button class="btn btn-next" onclick="nextStep()">Next</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: Content Sources -->
+  <div class="step" id="step4">
+    <h2>Content Sources</h2>
+    <p class="hint" style="margin-bottom:1rem; color: var(--color-text-muted); font-size: 0.85rem;">
+      Select the feeds and sources for your daily newspaper. You can change these later.
+    </p>
+
+    <div class="field">
+      <label>RSS Feeds</label>
+      <div class="checkbox-group" id="rssFeedsGroup"></div>
+    </div>
+
+    <div class="field">
+      <label>Job Boards</label>
+      <div class="checkbox-group" id="jobBoardsGroup"></div>
+    </div>
+
+    <div class="field">
+      <label>Event Sources</label>
+      <div class="checkbox-group" id="eventSourcesGroup"></div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-back" onclick="prevStep()">Back</button>
+      <button class="btn btn-submit" onclick="submitForm()">Create My Profile</button>
+    </div>
+    <div class="status-msg" id="submitStatus"></div>
+  </div>
+
+  <!-- SUCCESS SCREEN -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">&#127881;</div>
+    <h2>Welcome aboard!</h2>
+    <p id="successMsg">Your profile has been created. Your first newspaper will generate at 07:00.</p>
+    <button class="btn-generate" onclick="generateNow()">Generate My First Newspaper Now</button>
+    <div class="status-msg" id="generateStatus" style="margin-top:1rem;"></div>
+    <p style="margin-top:1.5rem;"><a href="#" onclick="startNewProfile(); return false;" style="color:#6366f1; text-decoration:underline; font-size:0.95rem;">Create a new profile</a></p>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="wizard-footer">
+    PersonalMentor &middot; Your AI-powered daily newspaper
+  </footer>
+
+<script>
+(function() {
+  'use strict';
+
+  // ====== THEMES (matches render_newspaper.py) ======
+  var THEMES = {
+    'modern-minimalist': {
+      label: 'Modern Minimalist', bg: '#ffffff', surface: '#f8f9fa', primary: '#2d2d2d',
+      secondary: '#555555', accent: '#0066cc', text: '#1a1a1a', text_muted: '#6b7280',
+      border: '#e5e7eb', font_heading: "'Georgia', serif", font_body: "'Helvetica Neue', 'Arial', sans-serif"
+    },
+    'clean-modern': {
+      label: 'Clean Modern', bg: '#f9fafb', surface: '#ffffff', primary: '#1e293b',
+      secondary: '#0ea5e9', accent: '#6366f1', text: '#1e293b', text_muted: '#64748b',
+      border: '#e2e8f0', font_heading: "'Inter', sans-serif", font_body: "'Inter', sans-serif"
+    },
+    'tech-innovation': {
+      label: 'Tech Innovation', bg: '#0d1117', surface: '#161b22', primary: '#58a6ff',
+      secondary: '#3fb950', accent: '#58a6ff', text: '#e6edf3', text_muted: '#8b949e',
+      border: '#30363d', font_heading: "'JetBrains Mono', monospace", font_body: "'Inter', sans-serif"
+    },
+    'ocean-depths': {
+      label: 'Ocean Depths', bg: '#f1faee', surface: '#ffffff', primary: '#1a2332',
+      secondary: '#2d8b8b', accent: '#2d8b8b', text: '#1a2332', text_muted: '#5a6b7a',
+      border: '#d1dce5', font_heading: "'Georgia', serif", font_body: "'Source Sans Pro', sans-serif"
+    },
+    'sunset-boulevard': {
+      label: 'Sunset Boulevard', bg: '#fffaf5', surface: '#ffffff', primary: '#8b2500',
+      secondary: '#d4652f', accent: '#e8943a', text: '#2d1810', text_muted: '#8b6f60',
+      border: '#f0ddd0', font_heading: "'Playfair Display', serif", font_body: "'Lato', sans-serif"
+    },
+    'forest-canopy': {
+      label: 'Forest Canopy', bg: '#f5f7f2', surface: '#ffffff', primary: '#2d5016',
+      secondary: '#5a8a3c', accent: '#7ab648', text: '#1a2e0d', text_muted: '#6b7a60',
+      border: '#d5e0cc', font_heading: "'Merriweather', serif", font_body: "'Open Sans', sans-serif"
+    },
+    'golden-hour': {
+      label: 'Golden Hour', bg: '#faf6f0', surface: '#ffffff', primary: '#5c4033',
+      secondary: '#b8860b', accent: '#daa520', text: '#2d2017', text_muted: '#8b7355',
+      border: '#e8dcc8', font_heading: "'Libre Baskerville', serif", font_body: "'Nunito', sans-serif"
+    },
+    'arctic-frost': {
+      label: 'Arctic Frost', bg: '#f0f4f8', surface: '#ffffff', primary: '#1e3a5f',
+      secondary: '#4a90d9', accent: '#7eb8da', text: '#1a2a3a', text_muted: '#6b8299',
+      border: '#d0dce8', font_heading: "'Raleway', serif", font_body: "'Roboto', sans-serif"
+    },
+    'desert-rose': {
+      label: 'Desert Rose', bg: '#faf5f2', surface: '#ffffff', primary: '#8b5e6b',
+      secondary: '#c4868f', accent: '#d4a0a7', text: '#3d2830', text_muted: '#9b7a82',
+      border: '#e8d5d8', font_heading: "'Cormorant Garamond', serif", font_body: "'Poppins', sans-serif"
+    },
+    'botanical-garden': {
+      label: 'Botanical Garden', bg: '#f7faf5', surface: '#ffffff', primary: '#2e6b3e',
+      secondary: '#5ba06e', accent: '#88c999', text: '#1a3320', text_muted: '#6b8b72',
+      border: '#cde0d2', font_heading: "'DM Serif Display', serif", font_body: "'Work Sans', sans-serif"
+    },
+    'midnight-galaxy': {
+      label: 'Midnight Galaxy', bg: '#0f0f23', surface: '#1a1a3e', primary: '#9b59b6',
+      secondary: '#6c5ce7', accent: '#a29bfe', text: '#e8e0f0', text_muted: '#8a82a6',
+      border: '#2d2d5e', font_heading: "'Cinzel', serif", font_body: "'Quicksand', sans-serif"
+    }
+  };
+
+  // ====== DEFAULT SOURCES ======
+  var DEFAULT_RSS = [
+    { url: 'https://www.technologyreview.com/feed/', category: 'ai', label: 'MIT Technology Review', checked: true },
+    { url: 'https://openai.com/blog/rss.xml', category: 'ai', label: 'OpenAI Blog', checked: true },
+    { url: 'https://deepmind.google/blog/rss.xml', category: 'ai', label: 'Google DeepMind', checked: true },
+    { url: 'https://cleantechnica.com/feed/', category: 'energy', label: 'CleanTechnica', checked: true },
+    { url: 'https://www.canarymedia.com/rss.rss', category: 'energy', label: 'Canary Media', checked: true },
+    { url: 'https://energycentral.com/feed', category: 'energy_market', label: 'Energy Central', checked: true },
+    { url: 'https://www.utilitydive.com/feeds/news/', category: 'energy_market', label: 'Utility Dive', checked: false },
+    { url: 'https://www.iea.org/rss/news.xml', category: 'energy_policy', label: 'IEA News', checked: true },
+    { url: 'https://feeds.arstechnica.com/arstechnica/technology-lab', category: 'tech', label: 'Ars Technica', checked: false },
+    { url: 'https://hnrss.org/frontpage', category: 'tech', label: 'Hacker News', checked: true },
+    { url: 'https://techcrunch.com/feed/', category: 'tech', label: 'TechCrunch', checked: false },
+    { url: 'https://spectrum.ieee.org/feeds/feed.rss', category: 'tech', label: 'IEEE Spectrum', checked: false },
+    { url: 'https://cdn.prod.swi-services.ch/rss/eng/rssxml/latest-news/rss', category: 'news', label: 'SWI swissinfo.ch', checked: true }
+  ];
+
+  var DEFAULT_JOB_BOARDS = [
+    { url: 'https://www.datacareer.ch/categories/AI/', type: 'html', site: 'datacareer', search_terms: ['AI','machine learning','energy'], label: 'DataCareer.ch — AI', checked: true },
+    { url: 'https://www.datacareer.ch/categories/machinelearning/', type: 'html', site: 'datacareer', search_terms: ['machine learning','deep learning'], label: 'DataCareer.ch — ML', checked: true },
+    { url: 'https://swissdevjobs.ch/rss', type: 'rss', site: 'swissdevjobs', filter_keywords: ['AI','machine learning','energy','strategy','innovation'], label: 'SwissDevJobs (RSS)', checked: true },
+    { url: 'https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=energy+market+analyst&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0', type: 'html', site: 'linkedin', search_terms: ['energy market','electricity market','energy trading'], label: 'LinkedIn — Energy Market', checked: true },
+    { url: 'https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=energy+policy+strategy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0', type: 'html', site: 'linkedin', search_terms: ['energy policy','strategy','innovation'], label: 'LinkedIn — Energy Policy', checked: true },
+    { url: 'https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=AI+engineer+energy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0', type: 'html', site: 'linkedin', search_terms: ['AI','energy','machine learning'], label: 'LinkedIn — AI + Energy', checked: true },
+    { url: 'https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=innovation+manager&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0', type: 'html', site: 'linkedin', search_terms: ['innovation','strategy','management'], label: 'LinkedIn — Innovation', checked: false }
+  ];
+
+  var DEFAULT_EVENTS = [
+    { url: 'http://www.wikicfp.com/cfp/call?conference=energy%20market&skip=1', location_filter: '', label: 'WikiCFP — Energy Markets', checked: true },
+    { url: 'http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1', location_filter: '', label: 'WikiCFP — AI', checked: true },
+    { url: 'http://www.wikicfp.com/cfp/call?conference=innovation%20management&skip=1', location_filter: '', label: 'WikiCFP — Innovation', checked: false },
+    { url: 'https://www.eventbrite.com/d/switzerland/energy-technology/', location_filter: 'Switzerland', label: 'Eventbrite — Energy & Tech', checked: true },
+    { url: 'https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS', location_filter: 'Switzerland', label: 'Meetup — AI (Zurich)', checked: true }
+  ];
+
+  // ====== STATE ======
+  var currentStep = 0;
+  var totalSteps = 5;
+  var selectedTheme = 'modern-minimalist';
+  var cvFileData = null;
+  var cvFileName = '';
+
+  // Chip collections
+  var chips = {
+    topics: [],
+    industries: [],
+    personal: [],
+    roles: [],
+    companies: [],
+    locations: []
+  };
+
+  // ====== INIT ======
+  function init() {
+    buildThemeGrid();
+    buildSourceCheckboxes();
+    initChipInputs();
+    initDropZone();
+    initJobSearchToggle();
+  }
+
+  // ====== NAVIGATION ======
+  window.nextStep = function() {
+    // Validate current step
+    if (currentStep === 0) {
+      var name = document.getElementById('name').value.trim();
+      if (!name) {
+        document.getElementById('name').style.borderColor = '#dc2626';
+        document.getElementById('name').focus();
+        return;
+      }
+      document.getElementById('name').style.borderColor = '';
+    }
+    if (currentStep < totalSteps - 1) {
+      goToStep(currentStep + 1);
+    }
+  };
+
+  window.prevStep = function() {
+    if (currentStep > 0) {
+      goToStep(currentStep - 1);
+    }
+  };
+
+  function goToStep(n) {
+    document.getElementById('step' + currentStep).classList.remove('active');
+    document.getElementById('step' + n).classList.add('active');
+
+    var steps = document.querySelectorAll('.progress-step');
+    steps.forEach(function(el, i) {
+      el.classList.remove('active', 'done');
+      if (i < n) el.classList.add('done');
+      if (i === n) el.classList.add('active');
+    });
+
+    currentStep = n;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ====== THEME PICKER ======
+  function buildThemeGrid() {
+    var grid = document.getElementById('themeGrid');
+    Object.keys(THEMES).forEach(function(key) {
+      var t = THEMES[key];
+      var card = document.createElement('div');
+      card.className = 'theme-card' + (key === selectedTheme ? ' selected' : '');
+      card.setAttribute('data-theme', key);
+
+      card.innerHTML =
+        '<div class="theme-preview" style="background:' + t.bg + '">' +
+          '<span class="theme-preview-dot" style="background:' + t.primary + '"></span>' +
+          '<span class="theme-preview-dot" style="background:' + t.accent + '"></span>' +
+          '<span class="theme-preview-dot" style="background:' + t.secondary + '"></span>' +
+        '</div>' +
+        '<div class="theme-card-name">' + t.label + '</div>';
+
+      card.addEventListener('click', function() {
+        selectedTheme = key;
+        document.querySelectorAll('.theme-card').forEach(function(c) { c.classList.remove('selected'); });
+        card.classList.add('selected');
+        applyTheme(t);
+      });
+
+      grid.appendChild(card);
+    });
+  }
+
+  function applyTheme(t) {
+    var root = document.documentElement;
+    root.style.setProperty('--color-bg', t.bg);
+    root.style.setProperty('--color-surface', t.surface);
+    root.style.setProperty('--color-primary', t.primary);
+    root.style.setProperty('--color-secondary', t.secondary);
+    root.style.setProperty('--color-accent', t.accent);
+    root.style.setProperty('--color-text', t.text);
+    root.style.setProperty('--color-text-muted', t.text_muted);
+    root.style.setProperty('--color-border', t.border);
+    root.style.setProperty('--font-heading', t.font_heading);
+    root.style.setProperty('--font-body', t.font_body);
+  }
+
+  // ====== SOURCE CHECKBOXES ======
+  function buildSourceCheckboxes() {
+    buildCheckboxGroup('rssFeedsGroup', DEFAULT_RSS);
+    buildCheckboxGroup('jobBoardsGroup', DEFAULT_JOB_BOARDS);
+    buildCheckboxGroup('eventSourcesGroup', DEFAULT_EVENTS);
+  }
+
+  function buildCheckboxGroup(containerId, items) {
+    var container = document.getElementById(containerId);
+    items.forEach(function(item, i) {
+      var id = containerId + '_' + i;
+      var div = document.createElement('label');
+      div.className = 'checkbox-item';
+      div.innerHTML =
+        '<input type="checkbox" id="' + id + '"' + (item.checked ? ' checked' : '') + '>' +
+        '<div>' +
+          '<div class="cb-label">' + item.label + '</div>' +
+          '<div class="cb-desc">' + (item.category || item.site || item.location_filter || item.url).substring(0, 60) + '</div>' +
+        '</div>';
+      container.appendChild(div);
+    });
+  }
+
+  // ====== CHIP INPUTS ======
+  function initChipInputs() {
+    setupChipInput('topicsInput', 'topicsWrap', 'topics');
+    setupChipInput('industriesInput', 'industriesWrap', 'industries');
+    setupChipInput('personalInput', 'personalWrap', 'personal');
+    setupChipInput('rolesInput', 'rolesWrap', 'roles');
+    setupChipInput('companiesInput', 'companiesWrap', 'companies');
+    setupChipInput('locationsInput', 'locationsWrap', 'locations');
+  }
+
+  function setupChipInput(inputId, wrapId, chipKey) {
+    var input = document.getElementById(inputId);
+    var wrap = document.getElementById(wrapId);
+
+    wrap.addEventListener('click', function() { input.focus(); });
+
+    input.addEventListener('keydown', function(e) {
+      if ((e.key === 'Enter' || e.key === ',') && input.value.trim()) {
+        e.preventDefault();
+        addChip(chipKey, input.value.replace(',', '').trim(), wrapId, inputId);
+        input.value = '';
+      }
+      if (e.key === 'Backspace' && !input.value && chips[chipKey].length) {
+        removeChip(chipKey, chips[chipKey].length - 1, wrapId, inputId);
+      }
+    });
+
+    input.addEventListener('blur', function() {
+      if (input.value.trim()) {
+        addChip(chipKey, input.value.trim(), wrapId, inputId);
+        input.value = '';
+      }
+    });
+  }
+
+  function addChip(key, value, wrapId, inputId) {
+    if (chips[key].indexOf(value) !== -1) return;
+    chips[key].push(value);
+    renderChips(key, wrapId, inputId);
+  }
+
+  function removeChip(key, index, wrapId, inputId) {
+    chips[key].splice(index, 1);
+    renderChips(key, wrapId, inputId);
+  }
+
+  function renderChips(key, wrapId, inputId) {
+    var wrap = document.getElementById(wrapId);
+    var input = document.getElementById(inputId);
+    // Remove existing chips
+    wrap.querySelectorAll('.chip').forEach(function(c) { c.remove(); });
+    // Add chips before input
+    chips[key].forEach(function(val, i) {
+      var chip = document.createElement('span');
+      chip.className = 'chip';
+      chip.innerHTML = val + ' <button type="button">&times;</button>';
+      chip.querySelector('button').addEventListener('click', function(e) {
+        e.stopPropagation();
+        removeChip(key, i, wrapId, inputId);
+      });
+      wrap.insertBefore(chip, input);
+    });
+  }
+
+  // ====== DROP ZONE ======
+  function initDropZone() {
+    var zone = document.getElementById('dropZone');
+    var fileInput = document.getElementById('cvFile');
+
+    zone.addEventListener('click', function() { fileInput.click(); });
+
+    zone.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      zone.classList.add('dragover');
+    });
+    zone.addEventListener('dragleave', function() {
+      zone.classList.remove('dragover');
+    });
+    zone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    });
+
+    fileInput.addEventListener('change', function() {
+      if (fileInput.files.length) handleFile(fileInput.files[0]);
+    });
+  }
+
+  function handleFile(file) {
+    var ext = file.name.split('.').pop().toLowerCase();
+    if (['pdf', 'docx', 'doc'].indexOf(ext) === -1) {
+      alert('Please upload a PDF or DOCX file.');
+      return;
+    }
+    cvFileName = file.name;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      cvFileData = e.target.result.split(',')[1]; // base64 part
+      document.getElementById('dropZone').classList.add('has-file');
+      document.getElementById('dropZoneFile').textContent = file.name + ' (' + (file.size / 1024).toFixed(0) + ' KB)';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ====== JOB SEARCH TOGGLE ======
+  function initJobSearchToggle() {
+    var cb = document.getElementById('jobSearchActive');
+    var fields = document.getElementById('jobSearchFields');
+    cb.addEventListener('change', function() {
+      fields.style.display = cb.checked ? 'block' : 'none';
+    });
+  }
+
+  // ====== WEBSITE SCRAPE PREVIEW ======
+  window.scrapeWebsite = function() {
+    var url = document.getElementById('website').value.trim();
+    if (!url) return;
+
+    var preview = document.getElementById('websitePreview');
+    var titleEl = document.getElementById('previewTitle');
+    var descEl = document.getElementById('previewDesc');
+
+    titleEl.textContent = 'Loading...';
+    descEl.textContent = '';
+    preview.classList.add('visible');
+
+    fetch('http://localhost:9847/api/scrape-website', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: url })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.data) {
+        titleEl.textContent = data.data.title || 'No title';
+        descEl.textContent = data.data.description || '(no description found)';
+      } else {
+        titleEl.textContent = 'Error';
+        descEl.textContent = data.error || 'Could not fetch website';
+      }
+    })
+    .catch(function() {
+      titleEl.textContent = 'Error';
+      descEl.textContent = 'Could not reach server. Is it running?';
+    });
+  };
+
+  // ====== COLLECT SELECTED SOURCES ======
+  function collectSources(containerId, defaults) {
+    var container = document.getElementById(containerId);
+    var checks = container.querySelectorAll('input[type="checkbox"]');
+    var selected = [];
+    checks.forEach(function(cb, i) {
+      if (cb.checked && defaults[i]) {
+        var item = Object.assign({}, defaults[i]);
+        delete item.label;
+        delete item.checked;
+        selected.push(item);
+      }
+    });
+    return selected;
+  }
+
+  // ====== SUBMIT ======
+  window.submitForm = function() {
+    var statusEl = document.getElementById('submitStatus');
+    statusEl.className = 'status-msg info';
+    statusEl.textContent = 'Creating your profile...';
+
+    var payload = {
+      // Step 1: Identity
+      name: document.getElementById('name').value.trim(),
+      title: document.getElementById('title').value.trim(),
+      location: document.getElementById('location').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      bio: document.getElementById('bio').value.trim(),
+
+      // Step 2: Experience
+      cv_file: cvFileData || '',
+      cv_filename: cvFileName || '',
+      website: document.getElementById('website').value.trim(),
+      linkedin: document.getElementById('linkedin').value.trim(),
+      github: document.getElementById('github').value.trim(),
+
+      // Step 3: Interests
+      topics: chips.topics,
+      industries: chips.industries,
+      personal_interests: chips.personal,
+      job_search_active: document.getElementById('jobSearchActive').checked,
+      target_roles: chips.roles,
+      preferred_companies: chips.companies,
+      target_locations: chips.locations,
+
+      // Step 4: Preferences
+      theme: selectedTheme,
+      tone: document.getElementById('tone').value,
+      language: document.getElementById('language').value,
+      delivery_time: document.getElementById('deliveryTime').value,
+
+      // Step 5: Sources
+      rss_feeds: collectSources('rssFeedsGroup', DEFAULT_RSS),
+      job_boards: collectSources('jobBoardsGroup', DEFAULT_JOB_BOARDS),
+      event_sources: collectSources('eventSourcesGroup', DEFAULT_EVENTS)
+    };
+
+    fetch('http://localhost:9847/api/onboard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.status === 'ok') {
+        // Show success screen
+        document.getElementById('step4').classList.remove('active');
+        document.getElementById('progressBar').style.display = 'none';
+        var screen = document.getElementById('successScreen');
+        screen.classList.add('active');
+        document.getElementById('successMsg').textContent =
+          'Profile created for ' + payload.name + '. Your first newspaper will generate at ' + (data.delivery_time || payload.delivery_time) + '.';
+      } else {
+        statusEl.className = 'status-msg error';
+        statusEl.textContent = data.error || 'Something went wrong.';
+      }
+    })
+    .catch(function(err) {
+      statusEl.className = 'status-msg error';
+      statusEl.textContent = 'Could not reach server. Make sure it is running on port 9847.';
+    });
+  };
+
+  // ====== GENERATE NOW ======
+  window.generateNow = function() {
+    var statusEl = document.getElementById('generateStatus');
+    var btn = document.querySelector('.btn-generate');
+    btn.disabled = true;
+    btn.textContent = 'Generating...';
+    statusEl.className = 'status-msg info';
+    statusEl.textContent = 'Running the pipeline — this may take a minute...';
+
+    fetch('http://localhost:9847/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}'
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.status === 'ok') {
+        statusEl.className = 'status-msg success';
+        statusEl.textContent = 'Your newspaper is ready!';
+        btn.textContent = 'Open Newspaper';
+        btn.disabled = false;
+        btn.onclick = function() {
+          window.location.href = '/daily/' + new Date().toISOString().slice(0, 10) + '.html';
+        };
+      } else {
+        statusEl.className = 'status-msg error';
+        statusEl.textContent = data.error || 'Generation failed.';
+        btn.textContent = 'Retry';
+        btn.disabled = false;
+      }
+    })
+    .catch(function() {
+      statusEl.className = 'status-msg error';
+      statusEl.textContent = 'Could not reach server.';
+      btn.textContent = 'Retry';
+      btn.disabled = false;
+    });
+  };
+
+  // ====== START NEW PROFILE ======
+  window.startNewProfile = function() {
+    document.getElementById('successScreen').classList.remove('active');
+    document.getElementById('progressBar').style.display = '';
+    document.querySelector('.wizard-footer').style.display = '';
+    goToStep(0);
+  };
+
+  // ====== BOOT ======
+  init();
+
+  // Skip onboarding if profile already exists
+  fetch('http://localhost:9847/api/profile-status')
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.exists) {
+        // Hide wizard steps and progress bar, show success screen
+        for (var i = 0; i < totalSteps; i++) {
+          var el = document.getElementById('step' + i);
+          if (el) el.classList.remove('active');
+        }
+        document.getElementById('progressBar').style.display = 'none';
+        document.querySelector('.wizard-footer').style.display = 'none';
+        var screen = document.getElementById('successScreen');
+        screen.classList.add('active');
+        document.getElementById('successMsg').textContent =
+          'Welcome back, ' + data.name + '! Your newspaper generates daily at ' + (data.delivery_time || '07:00') + '.';
+      }
+    })
+    .catch(function() { /* server not running, show wizard normally */ });
+})();
+</script>
+
+</body>
+</html>

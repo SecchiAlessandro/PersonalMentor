@@ -35,8 +35,14 @@ HEADERS = {
 
 
 def compute_match_score(job_title, job_text, interests):
-    """Compute a simple relevance score based on keyword matching."""
-    target_roles = interests.get("job_search", {}).get("target_roles", [])
+    """Compute a simple relevance score based on keyword matching.
+
+    Weights: role 0.3 + location 0.2 + company 0.2 + base 0.3 = max 1.0
+    """
+    job_search = interests.get("job_search", {})
+    target_roles = job_search.get("target_roles", [])
+    target_locations = job_search.get("target_locations", [])
+    preferred_companies = job_search.get("preferred_companies", [])
 
     combined = f"{job_title} {job_text}".lower()
 
@@ -45,15 +51,20 @@ def compute_match_score(job_title, job_text, interests):
 
     for role in target_roles:
         if role.lower() in combined:
-            score += 0.4
+            score += 0.3
             match_reasons.append(f"role: {role}")
             break
 
-    target_locations = interests.get("job_search", {}).get("target_locations", [])
     for loc in target_locations:
         if loc.lower() in combined:
             score += 0.2
             match_reasons.append(f"location: {loc}")
+            break
+
+    for company in preferred_companies:
+        if company.lower() in combined:
+            score += 0.2
+            match_reasons.append(f"company: {company}")
             break
 
     score += 0.3
@@ -305,19 +316,17 @@ def main():
             json.dump([], f)
         return
 
-    all_jobs = []
-    for board in job_boards:
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    def _fetch_one(board):
         url = board.get("url", "")
         location_filter = board.get("location_filter", "")
         if not url:
-            continue
-
+            return []
         board_type = board.get("type", "html")
         print(f"Fetching jobs ({board_type}): {url}")
         jobs = fetch_jobs_for_board(board, interests)
         print(f"  Found {len(jobs)} listings")
-
-        # Apply location filter if configured
         if location_filter and jobs:
             filter_lower = location_filter.lower()
             before = len(jobs)
@@ -328,9 +337,16 @@ def main():
                 or filter_lower in j.get("company", "").lower()
             ]
             print(f"  Location filter '{location_filter}': {before} -> {len(jobs)} jobs")
+        return jobs
 
-        all_jobs.extend(jobs)
-        time.sleep(2)  # Rate limiting
+    all_jobs = []
+    with ThreadPoolExecutor(max_workers=6) as pool:
+        futures = {pool.submit(_fetch_one, b): b for b in job_boards}
+        for fut in as_completed(futures):
+            try:
+                all_jobs.extend(fut.result())
+            except Exception as e:
+                print(f"WARNING: board fetch error: {e}", file=sys.stderr)
 
     # Deduplicate by title (keep highest score)
     seen = {}

@@ -21,6 +21,22 @@ def parse_calendar(input_path, output_path):
     with open(input_path, "r") as f:
         raw = json.load(f)
 
+    # Debug: show top-level structure of gog JSON
+    if isinstance(raw, list):
+        print(f"  DEBUG: gog JSON is a list with {len(raw)} elements")
+        if raw:
+            print(f"  DEBUG: first element keys: {list(raw[0].keys()) if isinstance(raw[0], dict) else type(raw[0])}")
+    elif isinstance(raw, dict):
+        print(f"  DEBUG: gog JSON is a dict with keys: {list(raw.keys())}")
+        for key in raw:
+            val = raw[key]
+            if isinstance(val, list):
+                print(f"  DEBUG:   '{key}' -> list[{len(val)}]")
+            else:
+                print(f"  DEBUG:   '{key}' -> {type(val).__name__}: {str(val)[:100]}")
+    else:
+        print(f"  DEBUG: gog JSON is unexpected type: {type(raw)}")
+
     events = []
     items = raw if isinstance(raw, list) else raw.get("events", raw.get("items", []))
     for item in items:
