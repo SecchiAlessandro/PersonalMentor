@@ -9,11 +9,14 @@ Requires: GEMINI_API_KEY environment variable.
 
 import argparse
 import base64
+import concurrent.futures
 import io
 import json
 import os
 import sys
 from datetime import date
+
+API_TIMEOUT = 60  # seconds per API call
 
 try:
     from google import genai
@@ -46,12 +49,13 @@ def generate_sentence(client, today_str):
 
     Tries each model in TEXT_MODELS until one succeeds.
     """
-    prompt = f"""Today is {today_str}. Generate a useful German sentence for a language learner (A1-B1 level).
+    prompt = f"""Today is {today_str}. Generate a useful German sentence for a language learner (B2 level).
 
 Requirements:
-- The sentence should be practical for daily life (greetings, ordering food, asking directions, small talk, workplace phrases, idioms, etc.)
+- Use more complex grammar: subordinate clauses, Konjunktiv II, passive voice, or idiomatic expressions
+- Topics: professional communication, news/current events, abstract concepts, Swiss/German culture, nuanced opinions
 - Vary the topic each day — use the date as inspiration for variety
-- Keep it natural and commonly used by native speakers
+- Keep it natural and commonly used by educated native speakers
 
 Respond in EXACTLY this JSON format (no markdown, no code fences):
 {{"german": "Die deutsche Satz hier", "english": "The English translation here", "image_prompt": "A short visual description of the sentence's meaning, suitable for generating an illustration (e.g. 'a person greeting a friend at a cafe')"}}"""
@@ -60,7 +64,9 @@ Respond in EXACTLY this JSON format (no markdown, no code fences):
     for model in TEXT_MODELS:
         try:
             print(f"  Trying model: {model}")
-            response = client.models.generate_content(
+            executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+            future = executor.submit(
+                client.models.generate_content,
                 model=model,
                 contents=prompt,
                 config=types.GenerateContentConfig(
@@ -68,6 +74,10 @@ Respond in EXACTLY this JSON format (no markdown, no code fences):
                     temperature=1.0,
                 ),
             )
+            try:
+                response = future.result(timeout=API_TIMEOUT)
+            finally:
+                executor.shutdown(wait=False, cancel_futures=True)
 
             text = response.text.strip()
             # Strip markdown code fences if present
@@ -77,6 +87,10 @@ Respond in EXACTLY this JSON format (no markdown, no code fences):
                     text = text[:-3].strip()
 
             return json.loads(text)
+        except concurrent.futures.TimeoutError:
+            last_error = TimeoutError(f"API call timed out after {API_TIMEOUT}s")
+            print(f"  WARNING: {model} timed out after {API_TIMEOUT}s", file=sys.stderr)
+            continue
         except Exception as e:
             last_error = e
             print(f"  WARNING: {model} failed: {e}", file=sys.stderr)
@@ -95,13 +109,19 @@ def generate_image(client, image_prompt):
     for model in IMAGE_MODELS:
         try:
             print(f"  Trying image model: {model}")
-            response = client.models.generate_content(
+            executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+            future = executor.submit(
+                client.models.generate_content,
                 model=model,
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     response_modalities=["TEXT", "IMAGE"],
                 ),
             )
+            try:
+                response = future.result(timeout=API_TIMEOUT)
+            finally:
+                executor.shutdown(wait=False, cancel_futures=True)
 
             for part in response.parts:
                 if part.inline_data is not None:
@@ -109,6 +129,9 @@ def generate_image(client, image_prompt):
                     mime = part.inline_data.mime_type or "image/png"
                     return b64, mime
 
+        except concurrent.futures.TimeoutError:
+            print(f"  WARNING: {model} image generation timed out after {API_TIMEOUT}s", file=sys.stderr)
+            continue
         except Exception as e:
             print(f"  WARNING: {model} image generation failed: {e}", file=sys.stderr)
             continue

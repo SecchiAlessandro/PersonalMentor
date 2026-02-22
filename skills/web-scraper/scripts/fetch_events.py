@@ -280,8 +280,18 @@ def main():
     with ThreadPoolExecutor(max_workers=6) as pool:
         futures = {pool.submit(_fetch_one, s): s for s in event_sources}
         for fut in as_completed(futures):
+            source = futures[fut]
+            location_filter = source.get("location_filter", "").strip().lower()
             try:
-                all_events.extend(fut.result())
+                events = fut.result()
+                if location_filter:
+                    before = len(events)
+                    events = [
+                        e for e in events
+                        if location_filter in e.get("location", "").lower()
+                    ]
+                    print(f"  Location filter '{location_filter}': {before} → {len(events)} events")
+                all_events.extend(events)
             except Exception as e:
                 print(f"WARNING: event fetch error: {e}", file=sys.stderr)
 

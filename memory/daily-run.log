@@ -1,0 +1,433 @@
+=== PersonalMentor Daily Newspaper ===
+Date: 2026-02-14
+Project: /Users/aless/Desktop/AI_Projects/PersonalMentor
+
+[1/6] Fetching RSS feeds...
+Fetching: https://www.technologyreview.com/feed/ (ai)
+Fetching: https://openai.com/blog/rss.xml (ai)
+Fetching: https://deepmind.google/blog/rss.xml (ai)
+Fetching: https://cleantechnica.com/feed/ (energy)
+Fetching: https://www.canarymedia.com/rss.rss (energy)
+Fetching: https://reneweconomy.com.au/feed/ (energy)
+Fetching: https://www.energy-storage.news/feed/ (energy)
+Fetching: https://feeds.arstechnica.com/arstechnica/technology-lab (tech)
+Fetching: https://hnrss.org/frontpage (tech)
+Fetching: https://techcrunch.com/feed/ (tech)
+Fetching: https://spectrum.ieee.org/feeds/feed.rss (tech)
+Fetching: https://cdn.prod.swi-services.ch/rss/eng/rssxml/latest-news/rss (news)
+Fetched 120 articles from 12 feeds → /tmp/pm_daily_2026-02-14/rss.json
+[2/6] Fetching job listings...
+Fetching jobs (html): https://www.datacareer.ch/categories/AI/
+Fetching jobs (html): https://www.datacareer.ch/categories/machinelearning/
+Fetching jobs (html): https://www.datacareer.ch/categories/data-engineering/
+Fetched 0 jobs from 3 boards → /tmp/pm_daily_2026-02-14/jobs.json
+[3/6] Fetching events...
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=machine%20learning&skip=1
+Fetching events (html): https://www.swissaisummit.com/
+Fetched 12 events from 3 sources → /tmp/pm_daily_2026-02-14/events.json
+[4/6] Fetching calendar & contacts (gog)...
+  Calendar fetched.
+  Contacts fetched.
+Parsed 0 calendar events -> /tmp/pm_daily_2026-02-14/calendar.json
+Found 0 birthday(s) today -> /tmp/pm_daily_2026-02-14/birthdays.json
+[5/6] Rendering newspaper...
+Generated daily newspaper: /Users/aless/Desktop/AI_Projects/PersonalMentor/output/daily/2026-02-14.html
+  Theme: tech-innovation
+  Total content items: 132
+  Articles: 120 (showing max 3)
+  Jobs: 0 (showing max 3)
+  Events: 12 (showing max 3)
+  Calendar: 0
+  Birthdays: 0
+[6/6] Registering artifact...
+Registered artifact: b9e9092c (daily-newspaper) → output/daily/2026-02-14.html
+Logged: artifact_generated — Daily newspaper for 2026-02-14
+
+=== Done ===
+Output: /Users/aless/Desktop/AI_Projects/PersonalMentor/output/daily/2026-02-14.html
+=== PersonalMentor Daily Newspaper ===
+Date: 2026-02-15
+Project: /Users/aless/Desktop/AI_Projects/PersonalMentor
+
+[1/7] Fetching RSS feeds...
+WARNING: Failed to fetch https://energycentral.com/feed: Feed parse error: <unknown>:2:5378: not well-formed (invalid token)
+WARNING: Failed to fetch https://www.utilitydive.com/feeds/news/: Feed parse error: <unknown>:9:2: mismatched tag
+WARNING: Failed to fetch https://www.iea.org/rss/news.xml: Feed parse error: <unknown>:73:158: not well-formed (invalid token)
+WARNING: Failed to fetch https://euractiv.com/sections/energy/feed/: Feed parse error: text/html; charset=iso-8859-1 is not an XML media type
+WARNING: Failed to fetch https://www.montelnews.com/rss: Feed parse error: <unknown>:48:37: not well-formed (invalid token)
+Fetching: https://www.technologyreview.com/feed/ (ai)
+Fetching: https://openai.com/blog/rss.xml (ai)
+Fetching: https://deepmind.google/blog/rss.xml (ai)
+Fetching: https://cleantechnica.com/feed/ (energy)
+Fetching: https://www.canarymedia.com/rss.rss (energy)
+Fetching: https://energycentral.com/feed (energy_market)
+Fetching: https://www.utilitydive.com/feeds/news/ (energy_market)
+Fetching: https://www.power-eng.com/feed/ (energy_market)
+Fetching: https://www.iea.org/rss/news.xml (energy_policy)
+Fetching: https://euractiv.com/sections/energy/feed/ (energy_policy)
+Fetching: https://www.montelnews.com/rss (electricity_market)
+Fetching: https://feeds.arstechnica.com/arstechnica/technology-lab (tech)
+Fetching: https://hnrss.org/frontpage (tech)
+Fetching: https://techcrunch.com/feed/ (tech)
+Fetching: https://spectrum.ieee.org/feeds/feed.rss (tech)
+Fetching: https://cdn.prod.swi-services.ch/rss/eng/rssxml/latest-news/rss (news)
+Fetched 110 articles from 16 feeds → /tmp/pm_daily_2026-02-15/rss.json
+[2/7] Fetching job listings...
+Fetching jobs (html): https://www.datacareer.ch/categories/AI/
+  Found 20 listings
+Fetching jobs (html): https://www.datacareer.ch/categories/machinelearning/
+  Found 13 listings
+Fetching jobs (html): https://www.datacareer.ch/categories/data-engineering/
+  Found 20 listings
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=energy+market+analyst&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+  Found 10 listings
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=energy+policy+strategy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+  Found 5 listings
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=AI+engineer+energy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+  Found 3 listings
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=innovation+manager&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+  Found 10 listings
+Fetching jobs (rss): https://swissdevjobs.ch/rss
+  Found 171 listings
+Fetched 234 unique jobs from 8 boards → /tmp/pm_daily_2026-02-15/jobs.json
+[3/7] Fetching events...
+WARNING: Failed to fetch https://www.european-utility-week.com/: HTTPSConnectionPool(host='www.european-utility-week.com', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'www.european-utility-week.com'. (_ssl.c:1028)")))
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=energy%20market&skip=1
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=electricity%20market&skip=1
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=energy%20policy&skip=1
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=innovation%20management&skip=1
+Fetching events (html): https://www.swissaisummit.com/
+Fetching events (html): https://www.european-utility-week.com/
+Fetched 35 events from 7 sources → /tmp/pm_daily_2026-02-15/events.json
+[4/7] Fetching calendar (gog)...
+  Calendar fetched.
+Parsed 2 calendar events -> /tmp/pm_daily_2026-02-15/calendar.json
+[5/7] Generating German Sentence of the Day...
+Error: GEMINI_API_KEY environment variable is not set.
+  WARNING: German sentence generation failed (GEMINI_API_KEY set?)
+[6/7] Rendering newspaper...
+Generated daily newspaper: /Users/aless/Desktop/AI_Projects/PersonalMentor/output/daily/2026-02-15.html
+  Theme: clean-modern
+  Total content items: 381
+  Articles: 110 (showing max 3)
+  Jobs: 234 (showing max 3)
+  Events: 35 (showing max 3)
+  Calendar: 2
+  German: no
+[7/7] Registering artifact...
+Registered artifact: 049f5f19 (daily-newspaper) → output/daily/2026-02-15.html
+Logged: artifact_generated — Daily newspaper for 2026-02-15
+
+=== Done ===
+Output: /Users/aless/Desktop/AI_Projects/PersonalMentor/output/daily/2026-02-15.html
+=== PersonalMentor Daily Newspaper ===
+Date: 2026-02-16
+Project: /Users/aless/Desktop/AI_Projects/PersonalMentor
+
+[1-3/7] Fetching RSS feeds, job listings, and events in parallel...
+Fetching jobs (html): https://www.datacareer.ch/categories/AI/
+Fetching jobs (html): https://www.datacareer.ch/categories/machinelearning/
+Fetching jobs (rss): https://swissdevjobs.ch/rss
+  Found 168 listings
+  Found 20 listings
+  Found 13 listings
+Fetched 196 unique jobs from 3 boards → /tmp/pm_daily_2026-02-16/jobs.json
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=energy%20market&skip=1
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1
+Fetched 18 events from 2 sources → /tmp/pm_daily_2026-02-16/events.json
+WARNING: Failed to fetch https://www.iea.org/rss/news.xml: Feed parse error: <unknown>:73:158: not well-formed (invalid token)
+WARNING: Failed to fetch https://energycentral.com/feed: Feed parse error: <unknown>:2:5378: not well-formed (invalid token)
+Fetching: https://www.technologyreview.com/feed/ (ai)
+Fetching: https://openai.com/blog/rss.xml (ai)
+Fetching: https://deepmind.google/blog/rss.xml (ai)
+Fetching: https://cleantechnica.com/feed/ (energy)
+Fetching: https://www.canarymedia.com/rss.rss (energy)
+Fetching: https://energycentral.com/feed (energy_market)
+Fetching: https://www.iea.org/rss/news.xml (energy_policy)
+Fetching: https://hnrss.org/frontpage (tech)
+Fetching: https://techcrunch.com/feed/ (tech)
+Fetching: https://cdn.prod.swi-services.ch/rss/eng/rssxml/latest-news/rss (news)
+Fetched 80 articles from 10 feeds → /tmp/pm_daily_2026-02-16/rss.json
+  All fetchers complete.
+[4/7] Fetching calendar (gog)...
+  Calendar fetched.
+Parsed 0 calendar events -> /tmp/pm_daily_2026-02-16/calendar.json
+[5/7] Generating German Sentence of the Day...
+Error: GEMINI_API_KEY environment variable is not set.
+  WARNING: German sentence generation failed (GEMINI_API_KEY set?)
+[6/9] Analyzing feedback...
+Analyzing 1 feedback entries...
+  Overall average rating: 3.0/5
+  calendar: 5.0/5
+  events: 1.0/5
+  german: 5.0/5
+  jobs: 1.0/5
+  news: 1.0/5
+
+Updated /Users/aless/Desktop/AI_Projects/PersonalMentor/memory/learned-preferences.yaml
+  Section item counts: {'news': 1, 'jobs': 1, 'events': 1, 'calendar': 5, 'german': 5}
+  Preferred sections: ['calendar', 'german']
+  Skipped sections: ['events', 'jobs', 'news']
+[7/9] Rendering newspaper...
+Generated daily newspaper: /Users/aless/Desktop/AI_Projects/PersonalMentor/output/daily/2026-02-16.html
+  Theme: golden-hour
+  Total content items: 294
+  Articles: 80 (showing max 3)
+  Jobs: 196 (showing max 3)
+  Events: 18 (showing max 3)
+  Calendar: 0
+  German: no
+[8/9] Starting feedback server...
+  Feedback server already running.
+[9/9] Registering artifact...
+Registered artifact: 8f80a138 (daily-newspaper) → output/daily/2026-02-16.html
+Logged: artifact_generated — Daily newspaper for 2026-02-16
+
+=== Done ===
+Output: /Users/aless/Desktop/AI_Projects/PersonalMentor/output/daily/2026-02-16.html
+=== PersonalMentor Daily Newspaper ===
+Date: 2026-02-17
+Project: /Users/aless/Desktop/AI_Projects/PersonalMentor
+
+[1-3/7] Fetching RSS feeds, job listings, and events in parallel...
+Fetching jobs (html): https://www.datacareer.ch/categories/AI/
+Fetching jobs (html): https://www.datacareer.ch/categories/machinelearning/
+Fetching jobs (rss): https://swissdevjobs.ch/rss
+  Found 20 listings
+  Found 166 listings
+  Found 13 listings
+Fetched 194 unique jobs from 3 boards → /tmp/pm_daily_2026-02-17/jobs.json
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=energy%20market&skip=1
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1
+Fetched 22 events from 2 sources → /tmp/pm_daily_2026-02-17/events.json
+WARNING: Failed to fetch https://www.iea.org/rss/news.xml: Feed parse error: <unknown>:73:158: not well-formed (invalid token)
+WARNING: Failed to fetch https://energycentral.com/feed: Feed parse error: <unknown>:2:5378: not well-formed (invalid token)
+Fetching: https://www.technologyreview.com/feed/ (ai)
+Fetching: https://openai.com/blog/rss.xml (ai)
+Fetching: https://deepmind.google/blog/rss.xml (ai)
+Fetching: https://cleantechnica.com/feed/ (energy)
+Fetching: https://www.canarymedia.com/rss.rss (energy)
+Fetching: https://energycentral.com/feed (energy_market)
+Fetching: https://www.iea.org/rss/news.xml (energy_policy)
+Fetching: https://hnrss.org/frontpage (tech)
+Fetching: https://techcrunch.com/feed/ (tech)
+Fetching: https://cdn.prod.swi-services.ch/rss/eng/rssxml/latest-news/rss (news)
+Fetched 80 articles from 10 feeds → /tmp/pm_daily_2026-02-17/rss.json
+  All fetchers complete.
+[4/7] Fetching calendar (gog)...
+  Calendar fetched.
+Parsed 0 calendar events -> /tmp/pm_daily_2026-02-17/calendar.json
+[5/7] Generating German Sentence of the Day...
+Error: GEMINI_API_KEY environment variable is not set.
+  WARNING: German sentence generation failed (GEMINI_API_KEY set?)
+[6/9] Analyzing feedback...
+Analyzing 2 feedback entries...
+  Overall average rating: 2.0/5
+  calendar: 5.0/5
+  events: 1.5/5
+  german: 5.0/5
+  jobs: 1.5/5
+  news: 1.5/5
+
+Updated /Users/aless/Desktop/AI_Projects/PersonalMentor/memory/learned-preferences.yaml
+  Section item counts: {'news': 1, 'jobs': 1, 'events': 1, 'calendar': 5, 'german': 5}
+  Preferred sections: ['calendar', 'german']
+  Skipped sections: ['events', 'jobs', 'news']
+[7/9] Rendering newspaper...
+Generated daily newspaper: /Users/aless/Desktop/AI_Projects/PersonalMentor/output/daily/2026-02-17.html
+  Theme: golden-hour
+  Total content items: 296
+  Articles: 80 (showing max 3)
+  Jobs: 194 (showing max 3)
+  Events: 22 (showing max 3)
+  Calendar: 0
+  German: no
+[8/9] Starting feedback server...
+  Feedback server started (PID 82693).
+[9/9] Registering artifact...
+Registered artifact: 9c18f6e2 (daily-newspaper) → output/daily/2026-02-17.html
+Logged: artifact_generated — Daily newspaper for 2026-02-17
+
+=== Done ===
+Output: /Users/aless/Desktop/AI_Projects/PersonalMentor/output/daily/2026-02-17.html
+Feedback server listening on http://localhost:9847
+PID: 82693 (file: /tmp/pm_feedback_server.pid)
+Auto-shutdown after 2h of inactivity
+=== PersonalMentor Daily Newspaper ===
+Date: 2026-02-18
+Project: /Users/aless/Desktop/AI_Projects/PersonalMentor
+
+[1-3/7] Fetching RSS feeds, job listings, and events in parallel...
+Fetching jobs (html): https://www.datacareer.ch/categories/AI/
+Fetching jobs (html): https://www.datacareer.ch/categories/machinelearning/
+Fetching jobs (rss): https://swissdevjobs.ch/rss
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=energy+market+analyst&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=energy+policy+strategy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=AI+engineer+energy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+  Found 193 listings
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=innovation+manager&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+  Found 13 listings
+  Found 20 listings
+  Found 4 listings
+  Found 3 listings
+  Found 10 listings
+  Found 10 listings
+Fetched 245 unique jobs from 7 boards → /tmp/pm_daily_2026-02-18/jobs.json
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=energy%20market&skip=1
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1
+Fetched 22 events from 2 sources → /tmp/pm_daily_2026-02-18/events.json
+WARNING: Failed to fetch https://www.iea.org/rss/news.xml: Feed parse error: <unknown>:73:158: not well-formed (invalid token)
+WARNING: Failed to fetch https://energycentral.com/feed: Feed parse error: <unknown>:2:5378: not well-formed (invalid token)
+Fetching: https://www.technologyreview.com/feed/ (ai)
+Fetching: https://openai.com/blog/rss.xml (ai)
+Fetching: https://deepmind.google/blog/rss.xml (ai)
+Fetching: https://cleantechnica.com/feed/ (energy)
+Fetching: https://www.canarymedia.com/rss.rss (energy)
+Fetching: https://energycentral.com/feed (energy_market)
+Fetching: https://www.iea.org/rss/news.xml (energy_policy)
+Fetching: https://hnrss.org/frontpage (tech)
+Fetching: https://techcrunch.com/feed/ (tech)
+Fetching: https://cdn.prod.swi-services.ch/rss/eng/rssxml/latest-news/rss (news)
+Fetched 80 articles from 10 feeds → /tmp/pm_daily_2026-02-18/rss.json
+  All fetchers complete.
+[4/7] Fetching calendar (gog)...
+  Calendar fetched.
+Parsed 0 calendar events -> /tmp/pm_daily_2026-02-18/calendar.json
+[5/7] Generating German Sentence of the Day...
+Generating German sentence for 2026-02-18...
+Traceback (most recent call last):
+  File "/Users/aless/Desktop/AI_Projects/PersonalMentor/skills/daily-newspaper/scripts/generate_german.py", line 141, in <module>
+    main()
+    ~~~~^^
+  File "/Users/aless/Desktop/AI_Projects/PersonalMentor/skills/daily-newspaper/scripts/generate_german.py", line 112, in main
+    sentence_data = generate_sentence(client, today_str)
+  File "/Users/aless/Desktop/AI_Projects/PersonalMentor/skills/daily-newspaper/scripts/generate_german.py", line 56, in generate_sentence
+    response = client.models.generate_content(
+        model=MODEL,
+    ...<4 lines>...
+        ),
+    )
+  File "/Users/aless/Desktop/AI_Projects/PersonalMentor/.venv/lib/python3.13/site-packages/google/genai/models.py", line 5474, in generate_content
+    response = self._generate_content(
+        model=model, contents=contents, config=parsed_config
+    )
+  File "/Users/aless/Desktop/AI_Projects/PersonalMentor/.venv/lib/python3.13/site-packages/google/genai/models.py", line 4214, in _generate_content
+    response = self._api_client.request(
+        'post', path, request_dict, http_options
+    )
+  File "/Users/aless/Desktop/AI_Projects/PersonalMentor/.venv/lib/python3.13/site-packages/google/genai/_api_client.py", line 1396, in request
+    response = self._request(http_request, http_options, stream=False)
+  File "/Users/aless/Desktop/AI_Projects/PersonalMentor/.venv/lib/python3.13/site-packages/google/genai/_api_client.py", line 1232, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/aless/Desktop/AI_Projects/PersonalMentor/.venv/lib/python3.13/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "/Users/aless/Desktop/AI_Projects/PersonalMentor/.venv/lib/python3.13/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "/Users/aless/Desktop/AI_Projects/PersonalMentor/.venv/lib/python3.13/site-packages/tenacity/__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ~~~~~~~~~~~~~~~~~^^
+  File "/Users/aless/Desktop/AI_Projects/PersonalMentor/.venv/lib/python3.13/site-packages/tenacity/__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.3_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.3_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/aless/Desktop/AI_Projects/PersonalMentor/.venv/lib/python3.13/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "/Users/aless/Desktop/AI_Projects/PersonalMentor/.venv/lib/python3.13/site-packages/google/genai/_api_client.py", line 1209, in _request_once
+    errors.APIError.raise_for_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/aless/Desktop/AI_Projects/PersonalMentor/.venv/lib/python3.13/site-packages/google/genai/errors.py", line 134, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/aless/Desktop/AI_Projects/PersonalMentor/.venv/lib/python3.13/site-packages/google/genai/errors.py", line 159, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\nPlease retry in 46.724141993s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '46s'}]}}
+  WARNING: German sentence generation failed (GEMINI_API_KEY set?)
+[6/9] Analyzing feedback...
+Analyzing 2 feedback entries...
+  Overall average rating: 2.0/5
+  calendar: 5.0/5
+  events: 1.5/5
+  german: 5.0/5
+  jobs: 1.5/5
+  news: 1.5/5
+
+Updated /Users/aless/Desktop/AI_Projects/PersonalMentor/memory/learned-preferences.yaml
+  Section item counts: {'news': 2, 'jobs': 2, 'events': 2, 'calendar': 5, 'german': 5}
+  Preferred sections: ['calendar', 'german']
+  Skipped sections: ['events', 'jobs', 'news']
+[7/9] Rendering newspaper...
+Generated daily newspaper: /Users/aless/Desktop/AI_Projects/PersonalMentor/output/daily/2026-02-18.html
+  Theme: golden-hour
+  Total content items: 347
+  Articles: 80 (showing max 3)
+  Jobs: 245 (showing max 3)
+  Events: 22 (showing max 3)
+  Calendar: 0
+  German: no
+[8/9] Starting feedback server...
+  Feedback server already running.
+[9/9] Registering artifact...
+Registered artifact: 2eef22ca (daily-newspaper) → output/daily/2026-02-18.html
+Logged: artifact_generated — Daily newspaper for 2026-02-18
+
+=== Done ===
+Output: /Users/aless/Desktop/AI_Projects/PersonalMentor/output/daily/2026-02-18.html
+=== PersonalMentor Daily Newspaper ===
+Date: 2026-02-19
+Project: /Users/aless/Desktop/AI_Projects/PersonalMentor
+
+[1-3/7] Fetching RSS feeds, job listings, and events in parallel...
+Fetching jobs (html): https://www.datacareer.ch/categories/AI/
+Fetching jobs (html): https://www.datacareer.ch/categories/machinelearning/
+Fetching jobs (rss): https://swissdevjobs.ch/rss
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=energy+market+analyst&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=energy+policy+strategy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=AI+engineer+energy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+  Found 13 listings
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=innovation+manager&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+  Found 189 listings
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=Hitachi+Energy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+  Found 20 listings
+  Found 4 listings
+  Found 5 listings
+  Found 10 listings
+  Found 10 listings
+  Found 10 listings
+Fetched 255 unique jobs from 8 boards → /tmp/pm_daily_2026-02-19/jobs.json
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=energy%20market&skip=1
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1
+Fetched 22 events from 2 sources → /tmp/pm_daily_2026-02-19/events.json
+WARNING: Failed to fetch https://www.iea.org/rss/news.xml: Feed parse error: <unknown>:73:158: not well-formed (invalid token)
+WARNING: Failed to fetch https://energycentral.com/feed: Feed parse error: <unknown>:2:5378: not well-formed (invalid token)
+Fetching: https://www.technologyreview.com/feed/ (ai)
+Fetching: https://openai.com/blog/rss.xml (ai)
+Fetching: https://deepmind.google/blog/rss.xml (ai)
+Fetching: https://cleantechnica.com/feed/ (energy)
+Fetching: https://www.canarymedia.com/rss.rss (energy)
+Fetching: https://energycentral.com/feed (energy_market)
+Fetching: https://www.iea.org/rss/news.xml (energy_policy)
+Fetching: https://hnrss.org/frontpage (tech)
+Fetching: https://techcrunch.com/feed/ (tech)
+Fetching: https://cdn.prod.swi-services.ch/rss/eng/rssxml/latest-news/rss (news)
+Fetched 80 articles from 10 feeds → /tmp/pm_daily_2026-02-19/rss.json
+  All fetchers complete.
+[4/7] Fetching calendar (gog)...
+  Calendar fetched (42 bytes).
+  DEBUG gog raw (first 500 chars):
+    {
+      "events": [],
+      "nextPageToken": ""
+    }
+
+  DEBUG: gog JSON is a dict with keys: ['events', 'nextPageToken']
+  DEBUG:   'events' -> list[0]
+  DEBUG:   'nextPageToken' -> str: 
+Parsed 0 calendar events -> /tmp/pm_daily_2026-02-19/calendar.json
+[5/7] Generating German Sentence of the Day...

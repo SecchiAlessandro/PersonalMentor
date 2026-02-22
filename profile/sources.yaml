@@ -81,6 +81,11 @@ job_boards:
   - AI
 event_sources:
 - url: http://www.wikicfp.com/cfp/call?conference=energy%20market&skip=1
-  location_filter: ''
+  location_filter: 'switzerland'
 - url: http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1
+  location_filter: 'switzerland'
+- url: http://www.wikicfp.com/cfp/call?conference=machine+learning&skip=1
+  location_filter: 'switzerland'
+- url: https://lu.ma/zurich
+  type: html
   location_filter: ''

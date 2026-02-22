@@ -1,23 +1,21 @@
 # PersonalMentor — User Preferences
 
 design:
-  theme: "clean-modern"
+  theme: golden-hour
   colors: []
-
 writing:
-  tone: "conversational"
-  length: "concise"
-  language: "en"
-
+  tone: casual
+  length: concise
+  language: en
 daily_artifact:
-  delivery_time: "07:00"
+  delivery_time: 07:00
   sections_enabled:
-    - top-stories
-    - jobs-for-you
-    - todays-calendar
-    - german-sentence
-    - events-near-you
-    - skill-spotlight
-    - industry-pulse
-    - reading-list
+  - top-stories
+  - jobs-for-you
+  - todays-calendar
+  - german-sentence
+  - events-near-you
+  - skill-spotlight
+  - industry-pulse
+  - reading-list
   max_items_per_section: 5

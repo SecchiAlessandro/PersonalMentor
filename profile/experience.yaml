@@ -1,103 +1,56 @@
 # PersonalMentor — Experience & Skills
 
-work_history:
-  - company: "Hitachi Energy"
-    role: "Control Software Engineer"
-    period: "current"
-    highlights:
-      - "Control software development for power systems"
-      - "Built LumadaAI — Hitachi portfolio analysis tool using RAG"
-      - "Won Hitachi Sustainability Inspiration of the Year Global Award (2025)"
-
-  - company: "Schaffner Group"
-    role: "R&D Electrical Engineer"
-    period: "prior"
-    highlights:
-      - "R&D in electrical engineering and power electronics"
-
-  - company: "EMS (Energia e Mobilità Sostenibile)"
-    role: "Co-Founder"
-    period: "Jan 2020 – Feb 2022"
-    highlights:
-      - "Co-founded sustainable energy and mobility startup"
-
+work_history: []
 education:
-  - institution: "ETH Zurich"
-    degree: "Master in Advanced Studies"
-    field: "Management & Economics"
-    year: "2024–2026"
-
-  - institution: "Politecnico di Milano"
-    degree: "Master's"
-    field: "Electrical Engineering"
-    year: "110 Summa cum laude"
-
-  - institution: "Politecnico di Milano"
-    degree: "Bachelor's"
-    field: "Electrical Engineering"
-    year: ""
-
-  - institution: "Tsinghua University"
-    degree: "Exchange Program"
-    field: "Electrical Engineering"
-    year: "2019"
-
-projects:
-  - name: "EnergyForecaster"
-    description: "Italian electricity market forecasting (2015–2029) analyzing RES integration challenges"
-    technologies: ["Python", "ML", "time-series forecasting"]
-    url: ""
-
-  - name: "LumadaAI"
-    description: "Hitachi portfolio analysis tool using RAG"
-    technologies: ["Python", "LLMs", "RAG"]
-    url: ""
-
-  - name: "Tender Matching System"
-    description: "Clause-by-clause compatibility analysis using Gemini's long context window"
-    technologies: ["Gemini", "NLP"]
-    url: ""
-
-  - name: "Geita Gold Mine"
-    description: "Grid integration and electrification project in Tanzania"
-    technologies: ["Power systems", "PowerWorld"]
-    url: ""
-
-  - name: "SunnyValley"
-    description: "Mobile app for hiking/cycling route optimization"
-    technologies: ["Mobile", "optimization"]
-    url: ""
-
+- institution: 2024 - 2026   ETH Zurich - MAS MTEC | (In Progress)
+  degree: Master in Management, Technology and Economics (MBA equivalent)
+  field: ''
+  year: 2024 - 2026
+- institution: ● Strategic Management, Innovation Management, Change Management
+  degree: ● Corporate Governance, Corporate Finance and Accounting
+  field: ''
+  year: ''
+- institution: ● Data Science for Public Policy, AI for executives
+  degree: ● Economics with focus on Energy Markets and Policy
+  field: ''
+  year: ''
+- institution: ● Executive mentoring sessions with tech leaders from Meta, Google,
+    Apple
+  degree: ● Strategic insights on scaling businesses and partnership development
+  field: ''
+  year: ''
+- institution: ● Experiencing the emerging technology in the Chinese Energy Transition.
+  degree: ● Selected with 200 other students worldwide with full scholarship.
+  field: ''
+  year: ''
+- institution: Master's and Bachelor's in Electrical Engineering
+  degree: ''
+  field: ''
+  year: ''
+projects: []
 skills:
   technical:
-    - "MATLAB/Simulink"
-    - "Python"
-    - "LTspice"
-    - "PowerWorld"
-    - "R"
-    - "Power systems"
-    - "Power electronics"
-    - "Electrical drives"
-    - "Energy markets"
-    - "AI/ML"
-    - "Energy forecasting"
-    - "LangGraph"
-    - "LlamaIndex"
-    - "RAG"
-    - "Fine-tuning LLMs"
-    - "Reinforcement learning"
-  languages:
-    - "Italian (native)"
-    - "English (C1 fluent)"
-    - "German (basic)"
-  tools:
-    - "Claude Desktop"
-    - "Cursor"
-    - "GitHub"
-    - "MCP servers"
-  soft_skills:
-    - "Strategic leadership"
-    - "Project management"
-    - "Entrepreneurship"
-    - "Cross-cultural communication"
-    - "Mentoring"
+  - Leadership & Collaboration
+  - '● Cross-cultural team leadership and member of: IAEE'
+  - IEEE
+  - AEIT
+  - ● Tech lead in several Hackathons competitions
+  - ● Volleyball semi-professional player
+  - Technical & Digital
+  - '● Power systems and power electronics software: Matlab/Simulink'
+  - LTspice
+  - PowerWorld
+  - '● Project management and delivery: Microsoft Tasks'
+  - SAP
+  - Asana
+  - '● Data analysis and reporting tools: Python'
+  - R
+  - Microsoft 365
+  - Power BI
+  - Google Workspace
+  - '● Knowledge of AI latest technologies. Side-projects in GitHub: Cursor'
+  - Claude
+  - MCP tools
+  languages: []
+  tools: []
+  soft_skills: []
