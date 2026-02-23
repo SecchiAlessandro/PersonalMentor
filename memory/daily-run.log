@@ -431,3 +431,99 @@ Fetched 80 articles from 10 feeds → /tmp/pm_daily_2026-02-19/rss.json
   DEBUG:   'nextPageToken' -> str: 
 Parsed 0 calendar events -> /tmp/pm_daily_2026-02-19/calendar.json
 [5/7] Generating German Sentence of the Day...
+=== PersonalMentor Daily Newspaper ===
+Date: 2026-02-23
+Project: /Users/aless/Desktop/AI_Projects/PersonalMentor
+
+[1-3/7] Fetching RSS feeds, job listings, and events in parallel...
+Fetching jobs (html): https://www.datacareer.ch/categories/AI/
+Fetching jobs (html): https://www.datacareer.ch/categories/machinelearning/
+Fetching jobs (rss): https://swissdevjobs.ch/rss
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=energy+market+analyst&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=energy+policy+strategy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=AI+engineer+energy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+  Found 169 listings
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=innovation+manager&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+  Found 15 listings
+Fetching jobs (html): https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=Hitachi+Energy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+  Found 20 listings
+  Found 2 listings
+  Found 10 listings
+  Found 10 listings
+  Found 10 listings
+  Found 10 listings
+Fetched 230 unique jobs from 8 boards → /tmp/pm_daily_2026-02-23/jobs.json
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=energy%20market&skip=1
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1
+Fetching events (html): http://www.wikicfp.com/cfp/call?conference=machine+learning&skip=1
+Fetching events (html): https://lu.ma/zurich
+  Location filter 'switzerland': 1 → 0 events
+  Location filter 'switzerland': 16 → 0 events
+  Location filter 'switzerland': 15 → 0 events
+Fetched 0 events from 4 sources → /tmp/pm_daily_2026-02-23/events.json
+WARNING: Failed to fetch https://www.iea.org/rss/news.xml: Feed parse error: <unknown>:73:158: not well-formed (invalid token)
+WARNING: Failed to fetch https://energycentral.com/feed: Feed parse error: <unknown>:2:5378: not well-formed (invalid token)
+Fetching: https://www.technologyreview.com/feed/ (ai)
+Fetching: https://openai.com/blog/rss.xml (ai)
+Fetching: https://deepmind.google/blog/rss.xml (ai)
+Fetching: https://cleantechnica.com/feed/ (energy)
+Fetching: https://www.canarymedia.com/rss.rss (energy)
+Fetching: https://energycentral.com/feed (energy_market)
+Fetching: https://www.iea.org/rss/news.xml (energy_policy)
+Fetching: https://hnrss.org/frontpage (tech)
+Fetching: https://techcrunch.com/feed/ (tech)
+Fetching: https://cdn.prod.swi-services.ch/rss/eng/rssxml/latest-news/rss (news)
+Fetched 80 articles from 10 feeds → /tmp/pm_daily_2026-02-23/rss.json
+  All fetchers complete.
+[4/7] Fetching calendar (gog)...
+  WARNING: gog calendar fetch failed (OAuth not configured?)
+[5/7] Generating German Sentence of the Day...
+Generating German sentence for 2026-02-23...
+  Trying model: gemini-2.5-flash
+  Sentence: Wenn wir die rasanten Fortschritte in der Genforschung betrachten, sollten wir uns stets fragen, welche ethischen Implikationen diese für die Gesellschaft haben könnten.
+  Translation: If we consider the rapid progress in genetic research, we should always ask ourselves what ethical implications these could have for society.
+  Generating illustration...
+  Trying image model: gemini-2.5-flash-image
+  Image generated successfully.
+  Output: /tmp/pm_daily_2026-02-23/german.json
+[6/9] Analyzing feedback...
+Analyzing 4 feedback entries...
+  Overall average rating: 2.0/5
+  calendar: 4.5/5
+  events: 1.75/5
+  german: 4.5/5
+  jobs: 1.75/5
+  news: 1.75/5
+
+Updated /Users/aless/Desktop/AI_Projects/PersonalMentor/memory/learned-preferences.yaml
+  Section item counts: {'news': 2, 'jobs': 2, 'events': 2, 'calendar': 4, 'german': 4}
+  Preferred sections: ['calendar', 'german']
+  Skipped sections: ['events', 'jobs', 'news']
+[7/9] Rendering newspaper...
+Generated daily newspaper: /Users/aless/Desktop/AI_Projects/PersonalMentor/output/daily/2026-02-23.html
+  Theme: golden-hour
+  Total content items: 311
+  Articles: 80 (showing max 3)
+  Jobs: 230 (showing max 3)
+  Events: 0 (showing max 3)
+  Calendar: 0
+  German: yes
+[8/9] Starting feedback server...
+  Feedback server started (PID 34913).
+[9/9] Registering artifact...
+Registered artifact: 5183ca63 (daily-newspaper) → output/daily/2026-02-23.html
+Logged: artifact_generated — Daily newspaper for 2026-02-23
+DEBUG: Content dir preserved at /tmp/pm_daily_2026-02-23
+[10] Pushing to GitHub...
+[main 0dc4194] Daily newspaper 2026-02-23
+ 1 file changed, 560 insertions(+)
+ create mode 100644 output/daily/2026-02-23.html
+To https://github.com/SecchiAlessandro/PersonalMentor.git
+   c00ca34..0dc4194  main -> main
+  Pushed to GitHub.
+
+=== Done ===
+Output: /Users/aless/Desktop/AI_Projects/PersonalMentor/output/daily/2026-02-23.html
+Feedback server listening on http://localhost:9847
+PID: 34913 (file: /tmp/pm_feedback_server.pid)
+Auto-shutdown after 2h of inactivity

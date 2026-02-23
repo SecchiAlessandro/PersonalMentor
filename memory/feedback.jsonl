@@ -2,3 +2,4 @@
 {"timestamp": "2026-02-16T14:49:10.988605+00:00", "date": "2026-02-16", "rating": 1, "section_ratings": {"news": 2, "jobs": 2, "events": 2}, "comment": "No calendar events shown, no german sentence, jobs not relevant"}
 {"timestamp": "2026-02-18T12:59:08.640892+00:00", "date": "2026-02-18", "rating": 1, "section_ratings": {"news": 2, "jobs": 2, "events": 2}, "comment": ""}
 {"timestamp": "2026-02-20T08:05:57.065514+00:00", "date": "2026-02-20", "rating": 3, "section_ratings": {"events": 2, "calendar": 4, "german": 4, "jobs": 2, "news": 2}, "comment": ""}
+{"timestamp": "2026-02-23T07:53:41.342823+00:00", "date": "2026-02-23", "rating": 3, "section_ratings": {"jobs": 2, "german": 4, "news": 2}, "comment": "same news and jobs as yesterday"}

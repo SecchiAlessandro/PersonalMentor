@@ -578,3 +578,37 @@ artifacts:
   - events
   - calendar
   - gemini
+- id: 5183ca63
+  type: daily-newspaper
+  path: output/daily/2026-02-23.html
+  created_at: '2026-02-23T06:10:59.218762+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini
+- id: 634bc1dd
+  type: daily-newspaper
+  path: output/daily/2026-02-23.html
+  created_at: '2026-02-23T07:49:20.032609+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini

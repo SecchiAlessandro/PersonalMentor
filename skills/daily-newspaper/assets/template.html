@@ -479,12 +479,16 @@
         statusEl.className = 'feedback-status';
         statusEl.textContent = 'Submitting...';
 
+        var controller = new AbortController();
+        var timeoutId = setTimeout(function() { controller.abort(); }, 2000);
+
         fetch('http://localhost:9847/api/feedback', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(feedbackData)
+          body: JSON.stringify(feedbackData),
+          signal: controller.signal
         })
-        .then(function(res) { return res.json(); })
+        .then(function(res) { clearTimeout(timeoutId); return res.json(); })
         .then(function(data) {
           if (data.status === 'ok') {
             submitted = true;
@@ -495,9 +499,30 @@
           }
         })
         .catch(function(err) {
-          submitBtn.disabled = false;
-          statusEl.className = 'feedback-status error';
-          statusEl.textContent = 'Could not reach feedback server. Start it with: python3 feedback_server.py';
+          clearTimeout(timeoutId);
+          // Fallback: open pre-filled GitHub Issue
+          var title = 'Feedback: ' + feedbackData.date;
+          var lines = ['## Daily Newspaper Feedback', ''];
+          lines.push('**Date:** ' + feedbackData.date);
+          lines.push('**Overall rating:** ' + feedbackData.rating + '/5');
+          if (feedbackData.sections) {
+            lines.push('', '### Section ratings');
+            Object.keys(feedbackData.sections).forEach(function(s) {
+              lines.push('- **' + s + ':** ' + feedbackData.sections[s] + '/5');
+            });
+          }
+          if (feedbackData.comment) {
+            lines.push('', '### Comment', feedbackData.comment);
+          }
+          var body = lines.join('\n');
+          var url = 'https://github.com/SecchiAlessandro/PersonalMentor/issues/new'
+            + '?title=' + encodeURIComponent(title)
+            + '&body=' + encodeURIComponent(body)
+            + '&labels=feedback';
+          window.open(url, '_blank');
+          submitted = true;
+          statusEl.className = 'feedback-status success';
+          statusEl.textContent = 'Feedback opened as GitHub Issue \u2014 thank you!';
         });
       });
     }

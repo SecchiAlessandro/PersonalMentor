@@ -68,7 +68,7 @@ mkdir -p "${CONTENT_DIR}"
 mkdir -p "${PROJECT_ROOT}/output/daily"
 
 # Steps 2-4: Fetch RSS, jobs, and events in parallel
-echo "[1-3/7] Fetching RSS feeds, job listings, and events in parallel..."
+echo "[1-3/10] Fetching RSS feeds, job listings, and events in parallel..."
 
 (python3 "${PROJECT_ROOT}/skills/web-scraper/scripts/fetch_rss.py" \
   --config "${PROJECT_ROOT}/profile/sources.yaml" \
@@ -97,7 +97,7 @@ echo "  All fetchers complete."
 
 # Step 5: Fetch Google Calendar (optional)
 CALENDAR_ARGS=""
-echo "[4/7] Fetching calendar (gog)..."
+echo "[4/10] Fetching calendar (gog)..."
 if command -v gog &>/dev/null; then
   # Fetch calendar events for today only
   WEEK_END="${TOMORROW}"
@@ -131,7 +131,7 @@ fi
 
 # Step 6: Generate German Sentence of the Day
 GERMAN_ARGS=""
-echo "[5/7] Generating German Sentence of the Day..."
+echo "[5/10] Generating German Sentence of the Day..."
 if python3 "${SCRIPT_DIR}/generate_german.py" \
   --output "${CONTENT_DIR}/german.json" \
   --date "${TODAY}" 2>&1; then
@@ -140,8 +140,13 @@ else
   echo "  WARNING: German sentence generation failed (GEMINI_API_KEY set?)"
 fi
 
-# Step 7: Analyze feedback (updates learned-preferences.yaml)
-echo "[6/9] Analyzing feedback..."
+# Step 7: Ingest feedback from GitHub Issues
+echo "[6/10] Ingesting GitHub feedback issues..."
+python3 "${SCRIPT_DIR}/ingest_github_feedback.py" \
+  || echo "  WARNING: GitHub feedback ingestion failed, continuing"
+
+# Step 8: Analyze feedback (updates learned-preferences.yaml)
+echo "[7/10] Analyzing feedback..."
 if [ -f "${PROJECT_ROOT}/memory/feedback.jsonl" ]; then
   python3 "${SCRIPT_DIR}/analyze_feedback.py" \
     || echo "  WARNING: Feedback analysis failed, using defaults"
@@ -149,16 +154,16 @@ else
   echo "  No feedback yet — skipping."
 fi
 
-# Step 8: Render HTML
-echo "[7/9] Rendering newspaper..."
+# Step 9: Render HTML
+echo "[8/10] Rendering newspaper..."
 python3 "${PROJECT_ROOT}/skills/daily-newspaper/scripts/render_newspaper.py" \
   --profile-dir "${PROJECT_ROOT}/profile/" \
   --content-dir "${CONTENT_DIR}" \
   --output "${OUTPUT_FILE}" \
   ${CALENDAR_ARGS} ${GERMAN_ARGS}
 
-# Step 9: Start feedback server (if not already running)
-echo "[8/9] Starting feedback server..."
+# Step 10: Start feedback server (if not already running)
+echo "[9/10] Starting feedback server..."
 if curl -s http://localhost:9847/health >/dev/null 2>&1; then
   echo "  Feedback server already running."
 else
@@ -166,8 +171,8 @@ else
   echo "  Feedback server started (PID $!)."
 fi
 
-# Step 10: Register artifact
-echo "[9/9] Registering artifact..."
+# Step 11: Register artifact
+echo "[10/10] Registering artifact..."
 python3 "${PROJECT_ROOT}/skills/memory-manager/scripts/register_artifact.py" \
   --type daily-newspaper \
   --path "output/daily/${TODAY}.html" \
