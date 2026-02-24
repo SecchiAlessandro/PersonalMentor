@@ -6,18 +6,21 @@ Appends entries to memory/feedback.jsonl and logs via log_action.py.
 Auto-shuts down after 2 hours of inactivity.
 """
 
+import atexit
 import json
 import os
+import platform
 import signal
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 from datetime import datetime, timezone
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
 PORT = 9847
-PID_FILE = "/tmp/pm_feedback_server.pid"
+PID_FILE = os.path.join(tempfile.gettempdir(), "pm_feedback_server.pid")
 INACTIVITY_TIMEOUT = 2 * 60 * 60  # 2 hours in seconds
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -46,8 +49,32 @@ def reset_inactivity_timer():
 def auto_shutdown():
     """Shut down the server after inactivity timeout."""
     print(f"[{datetime.now().isoformat()}] No activity for {INACTIVITY_TIMEOUT}s, shutting down.")
+    # os._exit bypasses atexit handlers; use it here since we're in a daemon
+    # thread and sys.exit() would only raise SystemExit in this thread.
     cleanup_pid()
     os._exit(0)
+
+
+def _is_process_alive(pid: int) -> bool:
+    """Check if a process is still running (cross-platform)."""
+    if platform.system() == "Windows":
+        try:
+            import ctypes
+            kernel32 = ctypes.windll.kernel32
+            PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+            handle = kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
+            if handle:
+                kernel32.CloseHandle(handle)
+                return True
+            return False
+        except Exception:
+            return False
+    else:
+        try:
+            os.kill(pid, 0)
+            return True
+        except OSError:
+            return False
 
 
 def write_pid():
@@ -56,10 +83,9 @@ def write_pid():
         try:
             with open(PID_FILE, "r") as f:
                 old_pid = int(f.read().strip())
-            # Check if that process is still alive
-            os.kill(old_pid, 0)
-            print(f"ERROR: Feedback server already running (PID {old_pid})")
-            sys.exit(1)
+            if _is_process_alive(old_pid):
+                print(f"ERROR: Feedback server already running (PID {old_pid})")
+                sys.exit(1)
         except (OSError, ValueError):
             # Process not running or invalid PID, clean up stale file
             pass
@@ -200,9 +226,12 @@ class FeedbackHandler(BaseHTTPRequestHandler):
 def main():
     write_pid()
 
-    # Clean up on exit
-    signal.signal(signal.SIGTERM, lambda *_: (cleanup_pid(), sys.exit(0)))
-    signal.signal(signal.SIGINT, lambda *_: (cleanup_pid(), sys.exit(0)))
+    # Clean up on exit (atexit works cross-platform)
+    atexit.register(cleanup_pid)
+    # SIGINT is available on all platforms; SIGTERM only on Unix
+    signal.signal(signal.SIGINT, lambda *_: sys.exit(0))
+    if hasattr(signal, "SIGTERM"):
+        signal.signal(signal.SIGTERM, lambda *_: sys.exit(0))
 
     reset_inactivity_timer()
 

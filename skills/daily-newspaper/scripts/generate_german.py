@@ -158,7 +158,7 @@ def main():
         # Write empty result so pipeline can continue without this section
         result = {"german": "", "english": "", "image_base64": None, "image_mime": None}
         os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
-        with open(args.output, "w") as f:
+        with open(args.output, "w", encoding="utf-8") as f:
             json.dump(result, f, ensure_ascii=False, indent=2)
         print(f"  Output (empty): {args.output}")
         return
@@ -184,7 +184,7 @@ def main():
     }
 
     os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
-    with open(args.output, "w") as f:
+    with open(args.output, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
 
     print(f"  Output: {args.output}")

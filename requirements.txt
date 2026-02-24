@@ -14,3 +14,6 @@ docxtpl>=0.16
 
 # Google AI (German sentence generation)
 google-genai>=1.0
+
+# Environment variable loading (cross-platform .env support)
+python-dotenv>=1.0

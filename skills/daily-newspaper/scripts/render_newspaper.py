@@ -104,7 +104,7 @@ def load_learned_preferences():
     """Load learned-preferences.yaml and return section item counts."""
     if not os.path.exists(LEARNED_PREFS_PATH):
         return {}
-    with open(LEARNED_PREFS_PATH, "r") as f:
+    with open(LEARNED_PREFS_PATH, "r", encoding="utf-8") as f:
         prefs = yaml.safe_load(f) or {}
     return prefs.get("reading_patterns", {}).get("section_item_counts", {})
 
@@ -118,7 +118,7 @@ def load_yaml(filepath):
     """Load a YAML file, return empty dict if missing."""
     if not os.path.exists(filepath):
         return {}
-    with open(filepath, "r") as f:
+    with open(filepath, "r", encoding="utf-8") as f:
         return yaml.safe_load(f) or {}
 
 
@@ -126,7 +126,7 @@ def load_json(filepath):
     """Load a JSON file, return empty list if missing."""
     if not os.path.exists(filepath):
         return []
-    with open(filepath, "r") as f:
+    with open(filepath, "r", encoding="utf-8") as f:
         data = json.load(f)
     return data if isinstance(data, list) else []
 
@@ -135,7 +135,7 @@ def load_json_obj(filepath):
     """Load a JSON file, return empty dict if missing."""
     if not os.path.exists(filepath):
         return {}
-    with open(filepath, "r") as f:
+    with open(filepath, "r", encoding="utf-8") as f:
         data = json.load(f)
     return data if isinstance(data, dict) else {}
 
@@ -398,7 +398,7 @@ def main():
     theme = get_theme(profile.get("preferences", {}))
 
     # Load template
-    with open(TEMPLATE_PATH, "r") as f:
+    with open(TEMPLATE_PATH, "r", encoding="utf-8") as f:
         template = f.read()
 
     # Build HTML
@@ -406,7 +406,7 @@ def main():
 
     # Write output
     os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
-    with open(args.output, "w") as f:
+    with open(args.output, "w", encoding="utf-8") as f:
         f.write(html)
 
     total_items = (
