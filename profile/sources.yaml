@@ -2,90 +2,45 @@
 
 rss_feeds:
 - url: https://www.technologyreview.com/feed/
-  category: ai
-- url: https://openai.com/blog/rss.xml
-  category: ai
-- url: https://deepmind.google/blog/rss.xml
-  category: ai
-- url: https://cleantechnica.com/feed/
-  category: energy
-- url: https://www.canarymedia.com/rss.rss
-  category: energy
-- url: https://energycentral.com/feed
-  category: energy_market
-- url: https://www.iea.org/rss/news.xml
-  category: energy_policy
+  category: tech
 - url: https://hnrss.org/frontpage
   category: tech
 - url: https://techcrunch.com/feed/
   category: tech
-- url: https://cdn.prod.swi-services.ch/rss/eng/rssxml/latest-news/rss
+- url: https://ethz.ch/en/news-and-events/eth-news.html
   category: news
+- url: https://www.bloomberg.com/markets
+  category: news
+- url: https://www.iea.org/rss/news.xml
+  category: energy_policy
 job_boards:
-- url: https://www.datacareer.ch/categories/AI/
-  type: html
-  site: datacareer
-  search_terms:
-  - AI
-  - machine learning
-  - energy
-- url: https://www.datacareer.ch/categories/machinelearning/
-  type: html
-  site: datacareer
-  search_terms:
-  - machine learning
-  - deep learning
-- url: https://swissdevjobs.ch/rss
-  type: rss
-  site: swissdevjobs
-  filter_keywords:
-  - AI
-  - machine learning
-  - energy
-  - strategy
-  - innovation
-- url: https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=energy+market+analyst&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
-  type: html
-  site: linkedin
-  search_terms:
-  - energy market
-  - electricity market
-  - energy trading
-- url: https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=energy+policy+strategy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
-  type: html
-  site: linkedin
-  search_terms:
-  - energy policy
-  - strategy
-  - innovation
-- url: https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=AI+engineer+energy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+- url: https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=AI+energy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
   type: html
   site: linkedin
   search_terms:
   - AI
   - energy
   - machine learning
-- url: https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=innovation+manager&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
+- url: https://www.indeed.com/jobs?q=AI+energy&l=Switzerland
   type: html
-  site: linkedin
+  site: indeed
   search_terms:
-  - innovation
-  - strategy
-  - management
-- url: https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=Hitachi+Energy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
-  type: html
-  site: linkedin
-  search_terms:
-  - Hitachi
-  - energy
   - AI
+  - energy
+  - machine learning
+- url: https://www.jobs.ch/en/vacancies/?term=AI+energy
+  type: html
+  site: jobs_ch
+  search_terms:
+  - AI
+  - energy
+  - machine learning
 event_sources:
-- url: http://www.wikicfp.com/cfp/call?conference=energy%20market&skip=1
-  location_filter: 'switzerland'
-- url: http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1
-  location_filter: 'switzerland'
-- url: http://www.wikicfp.com/cfp/call?conference=machine+learning&skip=1
-  location_filter: 'switzerland'
-- url: https://lu.ma/zurich
-  type: html
-  location_filter: ''
+- url: https://www.eventbrite.com/d/switzerland/energy-technology/
+  location_filter: 'Switzerland'
+- url: https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS
+  location_filter: 'Switzerland'
+- url: https://www.zuerich.com/en/visit/events
+  location_filter: 'Zurich'
+- url: https://ethz.ch/en/news-and-events/events.html
+  location_filter: 'Zurich'
