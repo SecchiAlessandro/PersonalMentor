@@ -22,30 +22,47 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ### Setup
+
+**macOS / Linux:**
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+**Windows (PowerShell):**
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
 ### Run the full daily pipeline
+
+**Cross-platform (recommended):**
+```bash
+python skills/daily-newspaper/scripts/run_daily.py
+```
+
+**macOS / Linux (legacy shell script, still works):**
 ```bash
 bash skills/daily-newspaper/scripts/run_daily.sh
 ```
+
 This runs all steps: fetch content, generate German sentence, analyze feedback, render HTML, start feedback server, register artifact, git push. Output goes to `output/daily/YYYY-MM-DD.html`.
 
 ### Run individual pipeline steps
 ```bash
 # RSS feeds
-python3 skills/web-scraper/scripts/fetch_rss.py --config profile/sources.yaml --output /tmp/rss.json
+python3 skills/web-scraper/scripts/fetch_rss.py --config profile/sources.yaml --output rss.json
 
 # Job boards (scored against profile)
-python3 skills/web-scraper/scripts/fetch_jobs.py --config profile/sources.yaml --interests profile/interests.yaml --output /tmp/jobs.json
+python3 skills/web-scraper/scripts/fetch_jobs.py --config profile/sources.yaml --interests profile/interests.yaml --output jobs.json
 
 # Events
-python3 skills/web-scraper/scripts/fetch_events.py --config profile/sources.yaml --output /tmp/events.json
+python3 skills/web-scraper/scripts/fetch_events.py --config profile/sources.yaml --output events.json
 
 # German sentence (requires GEMINI_API_KEY in .env)
-python3 skills/daily-newspaper/scripts/generate_german.py --output /tmp/german.json --date "2026-02-18"
+python3 skills/daily-newspaper/scripts/generate_german.py --output german.json --date "2026-02-18"
 
 # Google Calendar (requires gog CLI + OAuth)
 gog calendar events primary --from 2026-02-18T00:00:00Z --to 2026-02-19T23:59:59Z --json
@@ -57,7 +74,9 @@ python3 skills/daily-newspaper/scripts/render_newspaper.py --profile-dir profile
 python3 skills/daily-newspaper/scripts/analyze_feedback.py
 ```
 
-### Scheduling (macOS launchd)
+### Scheduling
+
+**macOS (launchd):**
 ```bash
 launchctl load ~/Library/LaunchAgents/com.personalmentor.daily.plist    # Enable
 launchctl unload ~/Library/LaunchAgents/com.personalmentor.daily.plist  # Disable
@@ -65,14 +84,22 @@ launchctl start com.personalmentor.daily                                # Manual
 ```
 Plist at `~/Library/LaunchAgents/com.personalmentor.daily.plist`. Runs daily at 07:00. Logs to `memory/daily-run.log`.
 
+**Windows (Task Scheduler):**
+```powershell
+# Create a daily task at 07:00 (run in PowerShell as Administrator)
+schtasks /create /tn "PersonalMentor Daily" /tr "python \path\to\PersonalMentor\skills\daily-newspaper\scripts\run_daily.py" /sc daily /st 07:00
+schtasks /run /tn "PersonalMentor Daily"     # Manual trigger
+schtasks /delete /tn "PersonalMentor Daily"  # Remove
+```
+
 ## Architecture
 
-PersonalMentor is an autonomous agent that generates a daily HTML newspaper tailored to the user's profile. It runs unattended via macOS launchd, fetches content from RSS/job boards/calendar, and publishes to GitHub Pages.
+PersonalMentor is an autonomous agent that generates a daily HTML newspaper tailored to the user's profile. It runs unattended via macOS launchd or Windows Task Scheduler, fetches content from RSS/job boards/calendar, and publishes to GitHub Pages. The pipeline is cross-platform (macOS, Linux, Windows).
 
-### Daily Pipeline (run_daily.sh)
+### Daily Pipeline (run_daily.py / run_daily.sh)
 
 ```
-launchd trigger (07:00)
+Scheduler trigger (07:00) — launchd (macOS) / Task Scheduler (Windows) / cron (Linux)
     │
     ├─ [PARALLEL] fetch_rss.py + fetch_jobs.py + fetch_events.py
     │  (10 RSS feeds, 8 job boards, 2 event sources → JSON files in /tmp/pm_daily_DATE/)
@@ -101,7 +128,7 @@ launchd trigger (07:00)
 
 | Skill | Entry Point | Purpose |
 |---|---|---|
-| `daily-newspaper` | `skills/daily-newspaper/scripts/run_daily.sh` | Pipeline orchestrator + HTML renderer + German generator + feedback system |
+| `daily-newspaper` | `skills/daily-newspaper/scripts/run_daily.py` | Pipeline orchestrator + HTML renderer + German generator + feedback system |
 | `web-scraper` | `skills/web-scraper/scripts/fetch_*.py` | RSS, job board, and event content fetching |
 | `profile-manager` | `skills/profile-manager/scripts/` | CV parsing (PDF/DOCX), website scraping, onboarding interview |
 | `memory-manager` | `skills/memory-manager/scripts/` | Append-only logging, artifact registry, preference learning |
@@ -115,14 +142,14 @@ launchd trigger (07:00)
 ### External Dependencies
 
 - **GEMINI_API_KEY** (in `.env`): Required for German sentence generation via `google-genai` SDK.
-- **gog CLI** (`brew install steipete/tap/gogcli`): Optional. Fetches Google Calendar events. Pipeline continues without it.
+- **gog CLI**: Optional. Fetches Google Calendar events. Pipeline continues without it. Install: `brew install steipete/tap/gogcli` (macOS) or see [gogcli releases](https://github.com/steipete/gogcli) (Windows/Linux).
 - **GitHub Pages**: `index.html` at repo root redirects to today's newspaper.
 
 ### Feedback Server
 
 `feedback_server.py` serves dual purpose:
 - **First run** (no `profile/identity.yaml`): Launches onboarding wizard at `localhost:9847` with CV upload, website scrape, and preference form.
-- **Normal run**: Serves feedback form embedded in each newspaper. Ratings saved to `memory/feedback.jsonl`. PID file at `/tmp/pm_feedback_server.pid`.
+- **Normal run**: Serves feedback form embedded in each newspaper. Ratings saved to `memory/feedback.jsonl`. PID file at `<tempdir>/pm_feedback_server.pid` (platform temp directory).
 
 ## Session Notes
 

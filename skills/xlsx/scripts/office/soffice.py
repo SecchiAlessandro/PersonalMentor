@@ -3,6 +3,9 @@ Helper for running LibreOffice (soffice) in environments where AF_UNIX
 sockets may be blocked (e.g., sandboxed VMs).  Detects the restriction
 at runtime and applies an LD_PRELOAD shim if needed.
 
+On Windows the shim is not applicable (no AF_UNIX / LD_PRELOAD), so
+soffice is invoked directly.
+
 Usage:
     from office.soffice import run_soffice, get_soffice_env
 
@@ -15,17 +18,42 @@ Usage:
 """
 
 import os
-import socket
+import platform
+import shutil
 import subprocess
 import tempfile
 from pathlib import Path
+
+IS_WINDOWS = platform.system() == "Windows"
+
+
+def _find_soffice_command() -> str:
+    """Return the soffice command/path suitable for the current platform."""
+    # If soffice is already on PATH, use it directly
+    if shutil.which("soffice"):
+        return "soffice"
+
+    if IS_WINDOWS:
+        # Common LibreOffice install locations on Windows
+        candidates = [
+            Path(os.environ.get("PROGRAMFILES", r"C:\Program Files"))
+            / "LibreOffice" / "program" / "soffice.exe",
+            Path(os.environ.get("PROGRAMFILES(X86)", r"C:\Program Files (x86)"))
+            / "LibreOffice" / "program" / "soffice.exe",
+        ]
+        for candidate in candidates:
+            if candidate.is_file():
+                return str(candidate)
+
+    # Fallback: hope it's on PATH (will fail clearly if not installed)
+    return "soffice"
 
 
 def get_soffice_env() -> dict:
     env = os.environ.copy()
     env["SAL_USE_VCLPLUGIN"] = "svp"
 
-    if _needs_shim():
+    if not IS_WINDOWS and _needs_shim():
         shim = _ensure_shim()
         env["LD_PRELOAD"] = str(shim)
 
@@ -34,19 +62,27 @@ def get_soffice_env() -> dict:
 
 def run_soffice(args: list[str], **kwargs) -> subprocess.CompletedProcess:
     env = get_soffice_env()
-    return subprocess.run(["soffice"] + args, env=env, **kwargs)
+    cmd = _find_soffice_command()
+    return subprocess.run([cmd] + args, env=env, **kwargs)
 
 
+# ---------------------------------------------------------------------------
+# Unix-only: AF_UNIX socket shim (skipped entirely on Windows)
+# ---------------------------------------------------------------------------
 
 _SHIM_SO = Path(tempfile.gettempdir()) / "lo_socket_shim.so"
 
 
 def _needs_shim() -> bool:
+    """Check whether AF_UNIX sockets are blocked (Unix only)."""
+    if IS_WINDOWS:
+        return False
     try:
+        import socket
         s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         s.close()
         return False
-    except OSError:
+    except (OSError, AttributeError):
         return True
 
 
