@@ -11,9 +11,11 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
-# Activate virtual environment if available
+# Activate virtual environment if available (handle both Unix and Windows paths)
 if [ -f "${PROJECT_ROOT}/.venv/bin/activate" ]; then
   source "${PROJECT_ROOT}/.venv/bin/activate"
+elif [ -f "${PROJECT_ROOT}/.venv/Scripts/activate" ]; then
+  source "${PROJECT_ROOT}/.venv/Scripts/activate"
 fi
 
 # Load environment variables from .env (for manual runs)
@@ -23,8 +25,23 @@ if [ -f "${PROJECT_ROOT}/.env" ]; then
   set +a
 fi
 
+# Detect Python command (python3 on Unix, python on Windows)
+PYTHON_CMD="python3"
+if ! command -v python3 &>/dev/null && command -v python &>/dev/null; then
+  PYTHON_CMD="python"
+fi
+
+# Cross-platform sleep function
+sleep_seconds() {
+  if command -v sleep &>/dev/null; then
+    sleep "$1"
+  else
+    "$PYTHON_CMD" -c "import time; time.sleep($1)"
+  fi
+}
+
 # Profile detection gate: if no identity or no name, launch onboarding
-if ! python3 -c "
+if ! "$PYTHON_CMD" -c "
 import yaml
 d = yaml.safe_load(open('${PROJECT_ROOT}/profile/identity.yaml'))
 assert d and d.get('name', '')
@@ -34,8 +51,8 @@ assert d and d.get('name', '')
 
   # Start feedback server (serves welcome page at /)
   if ! curl -s http://localhost:9847/health >/dev/null 2>&1; then
-    python3 "${SCRIPT_DIR}/feedback_server.py" &
-    sleep 1
+    "$PYTHON_CMD" "${SCRIPT_DIR}/feedback_server.py" &
+    sleep_seconds 1
   fi
 
   # Open browser to welcome page
@@ -70,20 +87,20 @@ mkdir -p "${PROJECT_ROOT}/output/daily"
 # Steps 2-4: Fetch RSS, jobs, and events in parallel
 echo "[1-3/10] Fetching RSS feeds, job listings, and events in parallel..."
 
-(python3 "${PROJECT_ROOT}/skills/web-scraper/scripts/fetch_rss.py" \
+("$PYTHON_CMD" "${PROJECT_ROOT}/skills/web-scraper/scripts/fetch_rss.py" \
   --config "${PROJECT_ROOT}/profile/sources.yaml" \
   --output "${CONTENT_DIR}/rss.json" \
   || echo "WARNING: RSS fetch failed, continuing with empty data") &
 PID_RSS=$!
 
-(python3 "${PROJECT_ROOT}/skills/web-scraper/scripts/fetch_jobs.py" \
+("$PYTHON_CMD" "${PROJECT_ROOT}/skills/web-scraper/scripts/fetch_jobs.py" \
   --config "${PROJECT_ROOT}/profile/sources.yaml" \
   --interests "${PROJECT_ROOT}/profile/interests.yaml" \
   --output "${CONTENT_DIR}/jobs.json" \
   || echo "WARNING: Jobs fetch failed, continuing with empty data") &
 PID_JOBS=$!
 
-(python3 "${PROJECT_ROOT}/skills/web-scraper/scripts/fetch_events.py" \
+("$PYTHON_CMD" "${PROJECT_ROOT}/skills/web-scraper/scripts/fetch_events.py" \
   --config "${PROJECT_ROOT}/profile/sources.yaml" \
   --output "${CONTENT_DIR}/events.json" \
   || echo "WARNING: Events fetch failed, continuing with empty data") &
@@ -115,7 +132,7 @@ if command -v gog &>/dev/null; then
 
   # Parse gog output into render-friendly format
   if [ -f "${CONTENT_DIR}/gog_calendar.json" ]; then
-    python3 "${SCRIPT_DIR}/parse_gog.py" \
+    "$PYTHON_CMD" "${SCRIPT_DIR}/parse_gog.py" \
       --calendar-in "${CONTENT_DIR}/gog_calendar.json" \
       --calendar-out "${CONTENT_DIR}/calendar.json" \
       || echo "  WARNING: gog parse failed"
@@ -132,7 +149,7 @@ fi
 # Step 6: Generate German Sentence of the Day
 GERMAN_ARGS=""
 echo "[5/10] Generating German Sentence of the Day..."
-if python3 "${SCRIPT_DIR}/generate_german.py" \
+if "$PYTHON_CMD" "${SCRIPT_DIR}/generate_german.py" \
   --output "${CONTENT_DIR}/german.json" \
   --date "${TODAY}" 2>&1; then
   GERMAN_ARGS="--german-json ${CONTENT_DIR}/german.json"
@@ -142,13 +159,13 @@ fi
 
 # Step 7: Ingest feedback from GitHub Issues
 echo "[6/10] Ingesting GitHub feedback issues..."
-python3 "${SCRIPT_DIR}/ingest_github_feedback.py" \
+"$PYTHON_CMD" "${SCRIPT_DIR}/ingest_github_feedback.py" \
   || echo "  WARNING: GitHub feedback ingestion failed, continuing"
 
 # Step 8: Analyze feedback (updates learned-preferences.yaml)
 echo "[7/10] Analyzing feedback..."
 if [ -f "${PROJECT_ROOT}/memory/feedback.jsonl" ]; then
-  python3 "${SCRIPT_DIR}/analyze_feedback.py" \
+  "$PYTHON_CMD" "${SCRIPT_DIR}/analyze_feedback.py" \
     || echo "  WARNING: Feedback analysis failed, using defaults"
 else
   echo "  No feedback yet — skipping."
@@ -156,7 +173,7 @@ fi
 
 # Step 9: Render HTML
 echo "[8/10] Rendering newspaper..."
-python3 "${PROJECT_ROOT}/skills/daily-newspaper/scripts/render_newspaper.py" \
+"$PYTHON_CMD" "${PROJECT_ROOT}/skills/daily-newspaper/scripts/render_newspaper.py" \
   --profile-dir "${PROJECT_ROOT}/profile/" \
   --content-dir "${CONTENT_DIR}" \
   --output "${OUTPUT_FILE}" \
@@ -167,20 +184,20 @@ echo "[9/10] Starting feedback server..."
 if curl -s http://localhost:9847/health >/dev/null 2>&1; then
   echo "  Feedback server already running."
 else
-  python3 "${SCRIPT_DIR}/feedback_server.py" &
+  "$PYTHON_CMD" "${SCRIPT_DIR}/feedback_server.py" &
   echo "  Feedback server started (PID $!)."
 fi
 
 # Step 11: Register artifact
 echo "[10/10] Registering artifact..."
-python3 "${PROJECT_ROOT}/skills/memory-manager/scripts/register_artifact.py" \
+"$PYTHON_CMD" "${PROJECT_ROOT}/skills/memory-manager/scripts/register_artifact.py" \
   --type daily-newspaper \
   --path "output/daily/${TODAY}.html" \
   --sections "news,jobs,events,calendar-events,german-sentence" \
   --item-count 0 \
   --sources "rss,jobs,events,calendar,gemini"
 
-python3 "${PROJECT_ROOT}/skills/memory-manager/scripts/log_action.py" \
+"$PYTHON_CMD" "${PROJECT_ROOT}/skills/memory-manager/scripts/log_action.py" \
   --action artifact_generated \
   --detail "Daily newspaper for ${TODAY}"
 

@@ -252,13 +252,13 @@ def main():
     parser.add_argument("--output", required=True, help="Output JSON file path")
     args = parser.parse_args()
 
-    with open(args.config, "r") as f:
+    with open(args.config, "r", encoding="utf-8") as f:
         sources = yaml.safe_load(f) or {}
 
     event_sources = sources.get("event_sources") or []
     if not event_sources:
         print("No event sources configured in sources.yaml")
-        with open(args.output, "w") as f:
+        with open(args.output, "w", encoding="utf-8") as f:
             json.dump([], f)
         return
 
@@ -299,7 +299,7 @@ def main():
     all_events.sort(key=lambda x: x.get("date", ""))
 
     os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
-    with open(args.output, "w") as f:
+    with open(args.output, "w", encoding="utf-8") as f:
         json.dump(all_events, f, indent=2)
 
     print(f"Fetched {len(all_events)} events from {len(event_sources)} sources → {args.output}")

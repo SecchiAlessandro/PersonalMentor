@@ -304,15 +304,15 @@ def main():
     parser.add_argument("--output", required=True, help="Output JSON file path")
     args = parser.parse_args()
 
-    with open(args.config, "r") as f:
+    with open(args.config, "r", encoding="utf-8") as f:
         sources = yaml.safe_load(f) or {}
-    with open(args.interests, "r") as f:
+    with open(args.interests, "r", encoding="utf-8") as f:
         interests = yaml.safe_load(f) or {}
 
     job_boards = sources.get("job_boards") or []
     if not job_boards:
         print("No job boards configured in sources.yaml")
-        with open(args.output, "w") as f:
+        with open(args.output, "w", encoding="utf-8") as f:
             json.dump([], f)
         return
 
@@ -360,7 +360,7 @@ def main():
     all_jobs.sort(key=lambda x: x.get("match_score", 0), reverse=True)
 
     os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
-    with open(args.output, "w") as f:
+    with open(args.output, "w", encoding="utf-8") as f:
         json.dump(all_jobs, f, indent=2)
 
     print(f"Fetched {len(all_jobs)} unique jobs from {len(job_boards)} boards → {args.output}")

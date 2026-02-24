@@ -40,7 +40,7 @@ def load_feedback():
     entries = []
     if not os.path.exists(FEEDBACK_FILE):
         return entries
-    with open(FEEDBACK_FILE, "r") as f:
+    with open(FEEDBACK_FILE, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if line:
@@ -55,7 +55,7 @@ def load_prefs():
     """Load existing learned-preferences.yaml."""
     if not os.path.exists(PREFS_FILE):
         return {}
-    with open(PREFS_FILE, "r") as f:
+    with open(PREFS_FILE, "r", encoding="utf-8") as f:
         return yaml.safe_load(f) or {}
 
 
@@ -145,7 +145,7 @@ def update_preferences(entries, overall_avg, section_avgs):
 
     # Write back
     os.makedirs(os.path.dirname(PREFS_FILE), exist_ok=True)
-    with open(PREFS_FILE, "w") as f:
+    with open(PREFS_FILE, "w", encoding="utf-8") as f:
         yaml.dump(prefs, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
 
     return prefs

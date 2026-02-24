@@ -65,13 +65,13 @@ def main():
     args = parser.parse_args()
 
     # Load sources config
-    with open(args.config, "r") as f:
+    with open(args.config, "r", encoding="utf-8") as f:
         sources = yaml.safe_load(f) or {}
 
     rss_feeds = sources.get("rss_feeds") or []
     if not rss_feeds:
         print("No RSS feeds configured in sources.yaml")
-        with open(args.output, "w") as f:
+        with open(args.output, "w", encoding="utf-8") as f:
             json.dump([], f)
         return
 
@@ -99,7 +99,7 @@ def main():
 
     # Write output
     os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
-    with open(args.output, "w") as f:
+    with open(args.output, "w", encoding="utf-8") as f:
         json.dump(all_articles, f, indent=2)
 
     print(f"Fetched {len(all_articles)} articles from {len(rss_feeds)} feeds → {args.output}")

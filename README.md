@@ -17,7 +17,7 @@ Every day at 07:00, PersonalMentor runs a pipeline that:
 5. **Pushes to GitHub** — auto-commits the newspaper so it's viewable via GitHub Pages
 
 ```
-[07:00 trigger via launchd]
+[07:00 trigger — launchd (macOS) / Task Scheduler (Windows) / cron (Linux)]
       │
       ├── Fetch RSS feeds (10 sources)
       ├── Scrape job boards (8 boards, LinkedIn + datacareer + SwissDevJobs)
@@ -44,10 +44,20 @@ Every day at 07:00, PersonalMentor runs a pipeline that:
 
 ### 1. Clone & install
 
+**macOS / Linux:**
 ```bash
 git clone https://github.com/SecchiAlessandro/PersonalMentor.git
 cd PersonalMentor
 python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+**Windows (PowerShell):**
+```powershell
+git clone https://github.com/SecchiAlessandro/PersonalMentor.git
+cd PersonalMentor
+python -m venv .venv
+.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
@@ -64,7 +74,7 @@ GEMINI_API_KEY=your-gemini-api-key
 Run the pipeline — if no profile exists, it launches the welcome wizard:
 
 ```bash
-bash skills/daily-newspaper/scripts/run_daily.sh
+python skills/daily-newspaper/scripts/run_daily.py
 ```
 
 This opens the **Welcome Page** in your browser at `http://localhost:9847/` where you can:
@@ -78,13 +88,21 @@ After onboarding, re-run the script to generate your first newspaper.
 
 ### 4. Generate manually
 
+**Cross-platform (recommended):**
+```bash
+python skills/daily-newspaper/scripts/run_daily.py
+```
+
+**macOS / Linux (legacy shell script, still works):**
 ```bash
 bash skills/daily-newspaper/scripts/run_daily.sh
 ```
 
 Output: `output/daily/YYYY-MM-DD.html`
 
-### 5. Set up automatic daily runs (macOS)
+### 5. Set up automatic daily runs
+
+**macOS (launchd):**
 
 The pipeline is scheduled via `launchd`. The plist is at:
 
@@ -97,6 +115,15 @@ To load/unload:
 ```bash
 launchctl load ~/Library/LaunchAgents/com.personalmentor.daily.plist
 launchctl unload ~/Library/LaunchAgents/com.personalmentor.daily.plist
+```
+
+**Windows (Task Scheduler):**
+
+```powershell
+# Create a daily task at 07:00 (run in PowerShell as Administrator)
+schtasks /create /tn "PersonalMentor Daily" /tr "python \path\to\PersonalMentor\skills\daily-newspaper\scripts\run_daily.py" /sc daily /st 07:00
+schtasks /run /tn "PersonalMentor Daily"     # Manual trigger
+schtasks /delete /tn "PersonalMentor Daily"  # Remove
 ```
 
 ---
@@ -124,7 +151,7 @@ Or access any specific day directly:
 https://your-username.github.io/PersonalMentor/output/daily/2026-02-18.html
 ```
 
-The `run_daily.sh` pipeline auto-commits and pushes each day's HTML after generation.
+The `run_daily.py` pipeline auto-commits and pushes each day's HTML after generation.
 
 ---
 
@@ -183,7 +210,8 @@ PersonalMentor/
 ├── skills/
 │   ├── daily-newspaper/       # Pipeline orchestration + rendering
 │   │   └── scripts/
-│   │       ├── run_daily.sh          # Main pipeline script
+│   │       ├── run_daily.py           # Main pipeline script (cross-platform)
+│   │       ├── run_daily.sh          # Legacy pipeline script (macOS/Linux)
 │   │       ├── render_newspaper.py   # HTML renderer
 │   │       ├── generate_german.py    # German sentence + image via Gemini
 │   │       ├── parse_gog.py          # Google Calendar JSON parser
@@ -238,8 +266,8 @@ PersonalMentor/
 |-------|------------|
 | Runtime | Claude Code CLI (Claude Opus) |
 | AI | Gemini API (text: `gemini-2.5-flash`, image: `gemini-2.5-flash-image`) |
-| Scheduling | launchd (macOS) |
-| Languages | Python 3.11+, Bash |
+| Scheduling | launchd (macOS), Task Scheduler (Windows), cron (Linux) |
+| Languages | Python 3.11+ |
 | Scraping | BeautifulSoup, requests, feedparser |
 | Google integration | `gog` CLI |
 | Hosting | GitHub Pages |
