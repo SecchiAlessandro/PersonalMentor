@@ -21,6 +21,13 @@ except ImportError:
     print("ERROR: PyYAML not installed. Run: pip install pyyaml")
     sys.exit(1)
 
+# Use OS certificate store (fixes corporate proxy SSL errors on Windows)
+try:
+    import truststore
+    truststore.inject_into_ssl()
+except ImportError:
+    pass
+
 MAX_RETRIES = 3
 RETRY_DELAY = 2
 REQUEST_TIMEOUT = 30
@@ -286,9 +293,14 @@ def main():
                 events = fut.result()
                 if location_filter:
                     before = len(events)
+                    # Build set of filter terms (e.g. "zurich" also matches "zürich")
+                    filter_terms = {location_filter}
+                    zurich_variants = {"zurich", "zürich", "zuerich"}
+                    if location_filter in zurich_variants:
+                        filter_terms = zurich_variants
                     events = [
                         e for e in events
-                        if location_filter in e.get("location", "").lower()
+                        if any(t in e.get("location", "").lower() for t in filter_terms)
                     ]
                     print(f"  Location filter '{location_filter}': {before} → {len(events)} events")
                 all_events.extend(events)

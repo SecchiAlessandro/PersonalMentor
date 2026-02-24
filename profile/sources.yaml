@@ -7,40 +7,50 @@ rss_feeds:
   category: tech
 - url: https://techcrunch.com/feed/
   category: tech
-- url: https://ethz.ch/en/news-and-events/eth-news.html
+- url: https://feeds.bloomberg.com/technology/news.rss
   category: news
-- url: https://www.bloomberg.com/markets
-  category: news
-- url: https://www.iea.org/rss/news.xml
-  category: energy_policy
-job_boards:
-- url: https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=AI+energy&location=Switzerland&geoId=106693272&f_TPR=r604800&start=0
-  type: html
-  site: linkedin
-  search_terms:
-  - AI
-  - energy
-  - machine learning
-- url: https://www.indeed.com/jobs?q=AI+energy&l=Switzerland
-  type: html
-  site: indeed
-  search_terms:
-  - AI
-  - energy
-  - machine learning
-- url: https://www.jobs.ch/en/vacancies/?term=AI+energy
-  type: html
-  site: jobs_ch
-  search_terms:
-  - AI
-  - energy
-  - machine learning
-event_sources:
-- url: https://www.eventbrite.com/d/switzerland/energy-technology/
-  location_filter: 'Switzerland'
-- url: https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS
-  location_filter: 'Switzerland'
-- url: https://www.zuerich.com/en/visit/events
-  location_filter: 'Zurich'
 - url: https://ethz.ch/en/news-and-events/events.html
-  location_filter: 'Zurich'
+  category: news
+  type: html
+job_boards:
+# Hitachi (primary target company) — Zurich area
+- url: https://www.datacareer.ch/jobs/?q=Hitachi&location=Zurich
+  type: html
+  site: datacareer
+  search_terms:
+  - Hitachi
+  - energy
+  - AI
+# SwissDevJobs (broad RSS, filtered by keywords + Zurich)
+- url: https://swissdevjobs.ch/rss
+  type: rss
+  site: swissdevjobs
+  filter_keywords:
+  - Hitachi
+  - AI
+  - energy
+  - economics
+  - data
+  - python
+  - Zurich
+  - Zürich
+  # AI + Energy roles — Zurich area
+- url: https://www.datacareer.ch/jobs/?q=AI+energy&location=Zurich
+  type: html
+  site: datacareer
+  search_terms:
+  - AI
+  - energy
+  - Hitachi
+event_sources:
+# AI events — Zurich area
+- url: https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/
+  location_filter: ''
+- url: https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS
+  location_filter: ''
+# Energy events — Zurich area
+- url: https://www.eventbrite.com/d/switzerland--zurich/energy-technology/
+  location_filter: ''
+# ETH Zurich events
+- url: https://ethz.ch/en/news-and-events/events.html
+  location_filter: ''

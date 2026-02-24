@@ -1,0 +1,850 @@
+[
+  {
+    "title": "Z\u00fcrich AI | AI Tooling",
+    "date": "2026-02-24",
+    "location": "ETH AI Center",
+    "url": "https://www.meetup.com/zurich-ai-meetup/events/312878223/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "AI Deep Dive Series (Virtual) - Build Reliable AI apps with Observability",
+    "date": "2026-02-24",
+    "location": "TBD",
+    "url": "https://www.meetup.com/zurich-ai-developers-group/events/313300219/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "[PDG 475] MASS: Multi-Agent Design: Optimizing Agents with Better Prompts & Top.",
+    "date": "2026-02-24",
+    "location": "TBD",
+    "url": "https://www.meetup.com/ai-paper-discussion-group-ml-ka/events/313118710/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "7-Week ODSC AI Accelerator 2026 | Virtual",
+    "date": "2026-02-24",
+    "location": "TBD",
+    "url": "https://www.meetup.com/zurich-data-sciece-odsc/events/312268371/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "Applied GenAI in Practice: Talks, Panel & Networking (Zurich)",
+    "date": "2026-02-25",
+    "location": "Unit8 Office",
+    "url": "https://www.meetup.com/artifical-intelligence-zurich/events/313415484/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "Mindstone Zurich February AI Meetup",
+    "date": "2026-02-25",
+    "location": "Headsquarter",
+    "url": "https://www.meetup.com/mindstone-zurich-ai-meetup/events/312183120/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "Prompt to Profit \u2014 Learn Generative AI for Business and Innovation",
+    "date": "2026-02-25",
+    "location": "TBD",
+    "url": "https://www.eventbrite.com/e/prompt-to-profit-learn-generative-ai-for-business-and-innovation-tickets-1845871524419",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "Build Your First Successful AI SaaS Startup Today! - Workshop",
+    "date": "2026-02-25",
+    "location": "TBD",
+    "url": "https://www.eventbrite.com/e/build-your-first-successful-ai-saas-startup-today-workshop-tickets-1844989686819",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "Mindstone Zurich February AI Meetup",
+    "date": "2026-02-25",
+    "location": "Headsquarter - The Hip",
+    "url": "https://www.eventbrite.co.uk/e/mindstone-zurich-february-ai-meetup-tickets-1975829966618",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "AI Deep Dive Series (Virtual) - The Architecture Behind Self-Evolving AI Agents",
+    "date": "2026-02-26",
+    "location": "TBD",
+    "url": "https://www.meetup.com/zurich-ai-developers-group/events/313363232/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "Conversational AI Design: A Practical Field Guide ",
+    "date": "2026-02-26",
+    "location": "ETH Maschinenbau ML, Room F36",
+    "url": "https://www.meetup.com/ux-schweiz-last-thursday-talks/events/313078053/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "AI Implementation in Business | Zurich",
+    "date": "2026-02-26",
+    "location": "Z\u00fcrich",
+    "url": "https://www.eventbrite.com.au/e/ai-implementation-in-business-zurich-tickets-1355806175769",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "Rethinking AI Ethics: The Startup Edge",
+    "date": "2026-02-26",
+    "location": "Technoparkstrasse 1",
+    "url": "https://www.eventbrite.ch/e/rethinking-ai-ethics-the-startup-edge-tickets-1980080763867",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "Master AI Entrepreneurship - From A to Z Masterclass",
+    "date": "2026-02-26",
+    "location": "TBD",
+    "url": "https://www.eventbrite.com/e/master-ai-entrepreneurship-from-a-to-z-masterclass-tickets-1981482074224",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "Can Crypto Assets be Rooted?",
+    "date": "2026-02-26",
+    "location": "Zug Institute for Blockchain Research",
+    "url": "https://www.eventbrite.ch/e/can-crypto-assets-be-rooted-tickets-1982349147664",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "Rethinking AI Ethics: The Startup Edge",
+    "date": "2026-02-26",
+    "location": "Technoparkstrasse 1",
+    "url": "https://www.eventbrite.ch/e/rethinking-ai-ethics-the-startup-edge-tickets-1980080763867",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "Health x AI \u2014 discussion and drinks",
+    "date": "2026-02-27",
+    "location": "TBD",
+    "url": "https://www.meetup.com/health-x-ai/events/313417475/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "How to live in the Post-AGI-Era",
+    "date": "2026-02-28",
+    "location": "TBD",
+    "url": "https://www.meetup.com/how-to-live-in-the-post-agi-era/events/313268486/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "More Energy with Somatic Exercises",
+    "date": "2026-02-28",
+    "location": "Triemli",
+    "url": "https://www.eventbrite.ch/e/more-energy-with-somatic-exercises-tickets-1983611976820",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "Launch Your Own Successful AI App | AI Startup | Workshop 2026",
+    "date": "2026-03-01",
+    "location": "TBD",
+    "url": "https://www.eventbrite.com/e/launch-your-own-successful-ai-app-ai-startup-workshop-2026-tickets-1807792850079",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "Master the Art of Buying, Selling & Scaling Startups Successfully!",
+    "date": "2026-03-01",
+    "location": "TBA",
+    "url": "https://www.eventbrite.com/e/master-the-art-of-buying-selling-scaling-startups-successfully-tickets-1977176465031",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "CEO Energy Break",
+    "date": "2026-03-02",
+    "location": "R\u00fctistrasse 12",
+    "url": "https://www.eventbrite.ch/e/ceo-energy-break-tickets-1981564065462",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "Agentic Software Modernization: Back to the Roots",
+    "date": "2026-03-03",
+    "location": "Hardturmstrasse 253",
+    "url": "https://www.meetup.com/zurich-agentic-coding-and-architectures-meetup-group/events/312277811/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "Trusted AI Agents by Design: From Trust Ecosystems to Authority Continuity",
+    "date": "2026-03-03",
+    "location": "TBD",
+    "url": "https://www.meetup.com/lfdt-zug-zurich/events/313334722/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "AI Tech & Startup Night \u2014 Z\u00fcrich",
+    "date": "2026-03-03",
+    "location": "Kitchen Republic",
+    "url": "https://www.eventbrite.com/e/ai-tech-startup-night-zurich-tickets-1978616017772",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "Investor Connect: Pitch & Networking \u2014 Z\u00fcrich",
+    "date": "2026-03-03",
+    "location": "Kitchen Republic",
+    "url": "https://www.eventbrite.com/e/investor-connect-pitch-networking-zurich-tickets-1978616585470",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "AI TechDay: Deep Dive on AI Agents (English)",
+    "date": "2026-03-04",
+    "location": "TBD",
+    "url": "https://www.meetup.com/global-ai-zurich/events/313024297/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "AI DevTalks Live with Google Cloud - Ep 12",
+    "date": "2026-03-05",
+    "location": "TBD",
+    "url": "https://www.meetup.com/zurich-ai-developers-group/events/313437815/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "Generative AI for Society and Workplace | Zurich",
+    "date": "2026-03-05",
+    "location": "Z\u00fcrich",
+    "url": "https://www.eventbrite.com.au/e/generative-ai-for-society-and-workplace-zurich-tickets-1204442763729",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "Future of Finance Z\u00fcrich: KI im Controlling \u2013 Innovation hautnah erleben",
+    "date": "2026-03-05",
+    "location": "IBM Schweiz",
+    "url": "https://www.eventbrite.com/e/future-of-finance-zurich-ki-im-controlling-innovation-hautnah-erleben-tickets-1980545522974",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "Generative AI for Society and Workplace | Zurich",
+    "date": "2026-03-05",
+    "location": "Z\u00fcrich",
+    "url": "https://www.eventbrite.com.au/e/generative-ai-for-society-and-workplace-zurich-tickets-1204442763729",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "#24 Datacenter & Cloud Management",
+    "date": "2026-03-05",
+    "location": "Digital Realty Z\u00fcrich ZUR1",
+    "url": "https://www.eventbrite.ch/e/24-datacenter-cloud-management-tickets-1727554986469",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "Astral Research Kickoff",
+    "date": "2026-03-06",
+    "location": "TBD",
+    "url": "https://www.meetup.com/astral-research/events/313306722/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "Hello 50:50 World in Zurich: AI & Leadership",
+    "date": "2026-03-06",
+    "location": "Impact Hub Z\u00fcrich - Viadukt",
+    "url": "https://www.eventbrite.ch/e/hello-5050-world-in-zurich-ai-leadership-tickets-1983204547187",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "Decrypting DeSci (Decentralized Science) | Zurich",
+    "date": "2026-03-06",
+    "location": "Z\u00fcrich",
+    "url": "https://www.eventbrite.com.au/e/decrypting-desci-decentralized-science-zurich-tickets-1918820376399",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "Hello 50:50 World in Zurich: AI & Leadership",
+    "date": "2026-03-06",
+    "location": "Impact Hub Z\u00fcrich - Viadukt",
+    "url": "https://www.eventbrite.ch/e/hello-5050-world-in-zurich-ai-leadership-tickets-1983204547187",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "TechTalkThursday #27 @ Nine",
+    "date": "2026-03-10",
+    "location": "Nine Internet Solutions AG",
+    "url": "https://www.meetup.com/ninetechtalkthursday/events/310932529/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "Microsoft SQL Server Analysis Services Tabular - Schulung in Z\u00fcrich",
+    "date": "2026-03-10",
+    "location": "ecos  Office Center Z\u00fcrich",
+    "url": "https://www.eventbrite.de/e/microsoft-sql-server-analysis-services-tabular-schulung-in-zurich-tickets-1446320687109",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "March 11 - Strategies for Validating World Models and Action-Conditioned Video",
+    "date": "2026-03-11",
+    "location": "TBD",
+    "url": "https://www.meetup.com/stuttgart-ai-machine-learning-and-computer-vision-meetup/events/313022960/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "March Meetup @ Digitec Galaxus",
+    "date": "2026-03-12",
+    "location": "Pause im Foifi",
+    "url": "https://www.meetup.com/graphql-zurich/events/313411981/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "INNOTALK #18 mit Studyond und Kuehne+Nagel",
+    "date": "2026-03-12",
+    "location": "SwissICT",
+    "url": "https://www.meetup.com/swissict-fachgruppe-innovation/events/313204834/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "Integrating Blockchain and AI (Artificial Intelligence) | Zurich",
+    "date": "2026-03-12",
+    "location": "Z\u00fcrich",
+    "url": "https://www.eventbrite.com.au/e/integrating-blockchain-and-ai-artificial-intelligence-zurich-tickets-1922312952789",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "Integrating Blockchain and AI (Artificial Intelligence) | Zurich",
+    "date": "2026-03-12",
+    "location": "Z\u00fcrich",
+    "url": "https://www.eventbrite.com.au/e/integrating-blockchain-and-ai-artificial-intelligence-zurich-tickets-1922312952789",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "SciStay",
+    "date": "2026-03-14",
+    "location": "Kirche Neuwies",
+    "url": "https://www.eventbrite.ch/e/scistay-tickets-1979156625745",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "The Strength Within: A Half-Day Workshop for Men",
+    "date": "2026-03-15",
+    "location": "YogaFlowZug",
+    "url": "https://www.eventbrite.com/e/the-strength-within-a-half-day-workshop-for-men-tickets-1982956855334",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "AI at scale hosted by Zalando",
+    "date": "2026-03-16",
+    "location": "Zalando Switzerland, Prime Tower, 23rd Floor",
+    "url": "https://www.meetup.com/zurich-women-in-machine-learning-and-data-science/events/313187804/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "Microsoft SQL Server kompakt- Schulung in Z\u00fcrich",
+    "date": "2026-03-16",
+    "location": "ecos  Office Center Z\u00fcrich",
+    "url": "https://www.eventbrite.de/e/microsoft-sql-server-kompakt-schulung-in-zurich-tickets-1461306088849",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "Certified UX Design and AI with Figma and Lovable 3-day workshop in Z\u00fcrich",
+    "date": "2026-03-17",
+    "location": "Engimattstrasse 14",
+    "url": "https://www.eventbrite.co.uk/e/certified-ux-design-and-ai-with-figma-and-lovable-3-day-workshop-in-zurich-tickets-1585422043009",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "Erfahrungsaustausch zum VSM (Viable System Model)",
+    "date": "2026-03-18",
+    "location": "evitive Working Spaces",
+    "url": "https://www.meetup.com/management-kybernetik/events/313127604/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "IBM TechXchange Switzerland - Analytics & AI Lounge 10.0",
+    "date": "2026-03-19",
+    "location": "IBM Switzerland AG",
+    "url": "https://www.meetup.com/ibmpoweraizurich/events/313402183/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "GDG Cloud Z\u00fcrich - 19 March 2026 Meetup (#32)",
+    "date": "2026-03-19",
+    "location": "Google Zurich - Europaallee",
+    "url": "https://www.meetup.com/gdg-cloud-zuerich/events/313459725/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "Women in Tech Zurich - OutGeekWomen",
+    "date": "2026-03-19",
+    "location": "Startup HQ",
+    "url": "https://www.eventbrite.com/e/women-in-tech-zurich-outgeekwomen-tickets-617975741077",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "ISTQB AI Tester Training Course (in English) - Zurich",
+    "date": "2026-03-23",
+    "location": "Regus - Zurich, Airport",
+    "url": "https://www.eventbrite.com/e/istqb-ai-tester-training-course-in-english-zurich-tickets-1533780792639",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "Energy Talks @ Zimmerleuten",
+    "date": "2026-03-23",
+    "location": "Zunfthaus zur Zimmerleuten",
+    "url": "https://www.eventbrite.ch/e/energy-talks-zimmerleuten-tickets-1982684703320",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "Women Leaders V - Their Work, Their Journey at AWS",
+    "date": "2026-03-24",
+    "location": "AWS Zurich",
+    "url": "https://www.meetup.com/zurich-women-in-tech-and-academia/events/313019869/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "AI & Technology Pitch Night      Z\u00fcrich",
+    "date": "2026-03-25",
+    "location": "Bar INCONTRO.",
+    "url": "https://www.eventbrite.com/e/ai-technology-pitch-night-zurich-tickets-1982871690604",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "Startup & Tech Networking: \u2028Z\u00fcrich",
+    "date": "2026-03-25",
+    "location": "Bar INCONTRO.",
+    "url": "https://www.eventbrite.com/e/startup-tech-networking-zurich-tickets-1976708811266",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "AI Ambition vs. Enterprise Reality: How to cross the adoption gap.",
+    "date": "2026-03-26",
+    "location": "Xebia Switzerland",
+    "url": "https://www.meetup.com/xebia-switzerland-knowshare/events/313426854/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "The Robots Are Us",
+    "date": "2026-04-09",
+    "location": "Impact Hub Z\u00fcrich - Viadukt",
+    "url": "https://www.eventbrite.de/e/the-robots-are-us-tickets-1982519085954",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "The Robots Are Us",
+    "date": "2026-04-09",
+    "location": "Impact Hub Z\u00fcrich - Viadukt",
+    "url": "https://www.eventbrite.de/e/the-robots-are-us-tickets-1982519085954",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "Zertifizierter VSM Coach \u2013 Seminar am 22., 24. und 30. April 2026",
+    "date": "2026-04-22",
+    "location": "evitive Working Spaces",
+    "url": "https://www.meetup.com/management-kybernetik/events/313291532/",
+    "source": "https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS",
+    "type": "conference"
+  },
+  {
+    "title": "Future of Green Manufacturing Summit 2026",
+    "date": "2026-04-23",
+    "location": "Zurich",
+    "url": "https://www.eventbrite.com/e/future-of-green-manufacturing-summit-2026-tickets-1979958830160",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "The Zurich AI Conference 2026",
+    "date": "2026-05-28",
+    "location": "startup space by IFJ",
+    "url": "https://www.eventbrite.ie/e/the-zurich-ai-conference-2026-tickets-1978887895967",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "Digital Bioprocessing Symposium 2026 (Switzerland) by DataHow",
+    "date": "2026-06-17",
+    "location": "ETH H\u00f6nggerberg",
+    "url": "https://www.eventbrite.ch/e/digital-bioprocessing-symposium-2026-switzerland-by-datahow-tickets-1916178333979",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/energy-technology/",
+    "type": "conference"
+  },
+  {
+    "title": "#24 Cyber Knowledge Exchange",
+    "date": "2026-09-10",
+    "location": "Prime Tower",
+    "url": "https://www.eventbrite.ch/e/24-cyber-knowledge-exchange-tickets-1727692908999",
+    "source": "https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/",
+    "type": "conference"
+  },
+  {
+    "title": "ISDME 2026 \u2014 2026 International Symposium on Dynamics and Mechanical Engineering",
+    "date": "Apr 10, 2026 - Apr 12, 2026",
+    "location": "Xi'an, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=190330&copyownerid=182680",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "ICoSSE 2026 \u2014 2026 9th International Conference on Software and System Engineering (ICoSSE 2026)",
+    "date": "Apr 13, 2026 - Apr 15, 2026",
+    "location": "Lyon, France",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=188733&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "IEEE CEEPE 2026 \u2014 IEEE--2026 the 9th International Conference on Energy, Electrical and Power Engineering (CEEPE 2026)",
+    "date": "Apr 17, 2026 - Apr 19, 2026",
+    "location": "Nanjing, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=189156&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "PSESG  2026 \u2014 2026 3rd International Conference on Power System Engineering and Smart Grid",
+    "date": "Apr 17, 2026 - Apr 19, 2026",
+    "location": "Changsha, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=190633&copyownerid=182680",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "ICMTIM 2026 \u2014 IEEE 2026 7th International Conference on Mechatronics Technology and Intelligent Manufacturing",
+    "date": "Apr 17, 2026 - Apr 19, 2026",
+    "location": "Guangzhou, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=191998&copyownerid=182680",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "FCEE 2026 \u2014 2026 4th International Forum on Clean Energy Engineering (FCEE 2026)",
+    "date": "Apr 17, 2026 - Apr 19, 2026",
+    "location": "Seoul, South Korea",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=188723&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "IC3E 2026 \u2014 2026 9th International Conference on Environmental and Energy Engineering (IC3E 2026)",
+    "date": "Apr 24, 2025 - Apr 26, 2026",
+    "location": "Changhai, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=190549&copyownerid=90512",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "Changsha-IC3E 2026 \u2014 2026 9th International Conference on Environmental and Energy Engineering (IC3E 2026)",
+    "date": "Apr 24, 2026 - Apr 26, 2026",
+    "location": "Changsha, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=190551&copyownerid=90512",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "IEEE-ICEPET 2026 \u2014 IEEE 2026 5th International Conference on Energy, Power and Electrical Technology",
+    "date": "Apr 24, 2026 - Apr 26, 2026",
+    "location": "Hangzhou, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=192296&copyownerid=182680",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "UAI 2026 \u2014 42nd Conference on Uncertainty in Artificial Intelligence",
+    "date": "Aug 17, 2026 - Aug 21, 2026",
+    "location": "Amsterdam, The Netherlands",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=191199&copyownerid=13149",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "ACM NLPAI 2026 \u2014 ACM--2026 7th International Conference on Natural Language Processing and Artificial Intelligence (NLPAI 2026)",
+    "date": "Jul 10, 2026 - Jul 13, 2026",
+    "location": "Urumqi, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=189248&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "PRML 2026 \u2014 IEEE--2026 7th International Conference on Pattern Recognition and Machine Learning (PRML 2026)",
+    "date": "Jul 10, 2026 - Jul 13, 2026",
+    "location": "Urumqi, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=189146&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "ICEEB 2026 \u2014 2026 15th International Conference on Environment, Energy and Biotechnology (ICEEB 2026)",
+    "date": "Jul 17, 2026 - Jul 19, 2026",
+    "location": "Seoul, South Korea",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=190445&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "IEEE ACEEE 2026 \u2014 IEEE--2026 9th Asia Conference on Energy and Electrical Engineering (ACEEE 2026)",
+    "date": "Jul 24, 2026 - Jul 26, 2026",
+    "location": "Qingdao, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=190107&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "IEEE ICCSM 2026 \u2014 IEEE--2026 10th International Conference on Computer, Software and Modeling (ICCSM 2026)",
+    "date": "Jul 3, 2026 - Jul 5, 2026",
+    "location": "Nice, France",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=190039&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "CGIP 2026 \u2014 2026 4th International Conference on Computer Graphics and Image Processing (CGIP 2026)",
+    "date": "Jul 30, 2026 - Aug 1, 2026",
+    "location": "Stuttgart, Germany",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=190924&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "POCER  2026 \u2014 8th International Conference and Postgraduate Colloquium of Environmental Research (POCER 2026)",
+    "date": "Jul 8, 2026 - Jul 9, 2026",
+    "location": "University of Nottingham Malaysia",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=191278&copyownerid=185947",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "ICRAS 2026 \u2014 2026 10th International Conference on Robotics and Automation Sciences (ICRAS 2026)",
+    "date": "Jun 12, 2026 - Jun 14, 2026",
+    "location": "Kyoto, Japan",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=189362&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "Springer ICMIM 2026 \u2014 Springer--2026 The 8th International Conference on Materials and Intelligent Manufacturing (ICMIM 2026)",
+    "date": "Jun 5, 2026 - Jun 7, 2026",
+    "location": "Jeju Island, South Korea",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=189250&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "Springe PEAE 2026 \u2014 Springe--2026 4th International Conference on Power and Automation Engineering (PEAE 2026)",
+    "date": "Jun 7, 2026 - Jun 9, 2026",
+    "location": "Melbourne, Australia",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=189447&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "Springe PEAE 2026 \u2014 Springe--2026 4th International Conference on Power and Automation Engineering (PEAE 2026)",
+    "date": "Jun 7, 2026 - Jun 9, 2026",
+    "location": "Melbourne, Australia",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=189447&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "ISDFS 2026 \u2014 14th IEEE International Symposium on Digital Forensics and Security",
+    "date": "Mar 19, 2026 - Mar 20, 2026",
+    "location": "Boston, Massachusetts",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=189946&copyownerid=63039",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "WAPAIS 2026 \u2014 5th Workshop on Applications of Artificial Intelligence for Society",
+    "date": "Mar 19, 2026 - Mar 20, 2026",
+    "location": "Boston, Massachusetts",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=190057&copyownerid=63039",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "IEEE-ICSGGE 2026 \u2014 2026 5th International Conference on Smart Grid and Green Energy",
+    "date": "Mar 20, 2026 - Mar 22, 2026",
+    "location": "Dongfang City, Hainan Province, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=191515&copyownerid=163220",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "NEMD 2026 \u2014 2026 6th International Conference on Energy Engineering, New Energy Materials and Devices",
+    "date": "Mar 27, 2026 - Mar 29, 2026",
+    "location": "Shenyang, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=191481&copyownerid=163220",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "EI/Scopus-HIDA 2026 \u2014 2026 2nd International Conference on Health Informatization and Data Analysis-EI/Scopus",
+    "date": "Mar 27, 2026 - Mar 29, 2026",
+    "location": "Guangzhou, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=186385&copyownerid=182680",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "IEEE AEEES 2026 \u2014 IEEE-- 2026 The 8th Asia Energy and Electrical Engineering Symposium (AEEES 2026)",
+    "date": "Mar 27, 2026 - Mar 30, 2026",
+    "location": "Chengdu, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=188301&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "EESD 2026 \u2014 2026 International Conference on Energy, Electricity and Sustainable Development",
+    "date": "Mar 6, 2026 - Mar 8, 2026",
+    "location": "Kunming, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=190044&copyownerid=182680",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "AIDMM 2026 \u2014 2026 International Conference on AI Decision-Making and Management",
+    "date": "Mar 6, 2026 - Mar 8, 2026",
+    "location": "Kuala Lumpur, Malaysia",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=190907&copyownerid=182680",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "LLMs4SSH 2026 \u2014 Shaping Multilingual, Multimodal AI for the Social Sciences and Humanities",
+    "date": "May 11, 2026 - May 11, 2026",
+    "location": "Palma de Mallorca, Spain",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=191244&copyownerid=320",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "DeTermIt 2026 \u2014 Workshop @ LREC 2026 - Evaluating Text Difficulty in a Multilingual Context",
+    "date": "May 11, 2026 - May 16, 2026",
+    "location": "Palma de Mallorca, Spain",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=191074&copyownerid=320",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "IEEE ICPST 2026 \u2014 2026 IEEE 4th International Conference on Power Science and Technology (ICPST 2026)",
+    "date": "May 15, 2026 - May 18, 2026",
+    "location": "Hohhot, Inner Mongolia, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=189557&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "CMCL  2026 \u2014 The 15th edition of the Workshop on Cognitive Modeling and Computational Linguistic",
+    "date": "May 16, 2026 - May 16, 2026",
+    "location": "Palma de Mallorca, Spain",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=191174&copyownerid=320",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "IEEE ICMLT 2026 \u2014 IEEE--2026 11th International Conference on Machine Learning Technologies (ICMLT 2026)",
+    "date": "May 20, 2026 - May 22, 2026",
+    "location": "Berlin, Germany",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=189851&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "IEEE BDPC 2026 \u2014 IEEE--2026 4th International Conference on Big Data and Privacy Computing (BDPC 2026)",
+    "date": "May 29, 2026 - May 31, 2026",
+    "location": "Beijing, China",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=189368&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "MSE 2026 \u2014 10th International Conference on Materials Science and Engineering",
+    "date": "May 30, 2026 - May 31, 2026",
+    "location": "Virtual Conference",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=189522&copyownerid=170233",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "ICCSS 2026 \u2014 IEEE--2026 9th International Conference on Circuits, Systems and Simulation (ICCSS 2026)",
+    "date": "May 8, 2026 - May 10, 2026",
+    "location": "Bangkok, Thailand",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=189243&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "Springer SSPS 2026 \u2014 Springer--2026 8th International Symposium on Signal Processing Systems (SSPS 2026)",
+    "date": "May 8, 2026 - May 10, 2026",
+    "location": "Bangkok, Thailand",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=189245&copyownerid=13881",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "ICDTA 2026 \u2014 International Conference on Digital Technologies and Applications",
+    "date": "Oct 9, 2026 - Oct 10, 2026",
+    "location": "New York, USA",
+    "url": "http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=191907&copyownerid=196930",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "first|previous| Page 1 |next|lastTotal of 2099 CFPs in 105 pages \u2014 first|previous| Page 1 |next|last",
+    "date": "first|previous| Page 1 |next|last",
+    "location": "Total of 2099 CFPs in 105 pages",
+    "url": "http://www.wikicfp.com/cfp/call?conference=energy&page=1",
+    "source": "http://www.wikicfp.com/cfp/call?conference=energy&skip=1",
+    "type": "conference"
+  },
+  {
+    "title": "first|previous| Page 1 |next|lastTotal of 10020 CFPs in 501 pages \u2014 first|previous| Page 1 |next|last",
+    "date": "first|previous| Page 1 |next|last",
+    "location": "Total of 10020 CFPs in 501 pages",
+    "url": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&page=1",
+    "source": "http://www.wikicfp.com/cfp/call?conference=artificial%20intelligence&skip=1",
+    "type": "conference"
+  }
+]

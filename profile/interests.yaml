@@ -23,6 +23,6 @@ job_search:
   - Google
   - Microsoft
   target_locations:
-  - Switzerland
+  - Zurich
   - Remote
   salary_range: ''

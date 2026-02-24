@@ -22,6 +22,13 @@ except ImportError:
     print("ERROR: PyYAML not installed. Run: pip install pyyaml")
     sys.exit(1)
 
+# Use OS certificate store (fixes corporate proxy SSL errors on Windows)
+try:
+    import truststore
+    truststore.inject_into_ssl()
+except ImportError:
+    pass
+
 MAX_RETRIES = 3
 RETRY_DELAY = 2
 REQUEST_TIMEOUT = 30

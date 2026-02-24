@@ -646,3 +646,105 @@ artifacts:
   - events
   - calendar
   - gemini
+- id: f84d3e3c
+  type: daily-newspaper
+  path: output/daily/2026-02-24.html
+  created_at: '2026-02-24T10:39:09.172650+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini
+- id: 33fedbcf
+  type: daily-newspaper
+  path: output/daily/2026-02-24.html
+  created_at: '2026-02-24T10:49:34.696661+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini
+- id: 5d0ae307
+  type: daily-newspaper
+  path: output/daily/2026-02-24.html
+  created_at: '2026-02-24T10:58:47.559000+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini
+- id: 5ad45dae
+  type: daily-newspaper
+  path: output/daily/2026-02-24.html
+  created_at: '2026-02-24T10:59:03.206166+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini
+- id: d7014e85
+  type: daily-newspaper
+  path: output/daily/2026-02-24.html
+  created_at: '2026-02-24T13:30:18.196491+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini
+- id: 4fbbc65b
+  type: daily-newspaper
+  path: output/daily/2026-02-24.html
+  created_at: '2026-02-24T13:44:47.804244+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini

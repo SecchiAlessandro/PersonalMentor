@@ -4,6 +4,10 @@
 pyyaml>=6.0
 requests>=2.31
 beautifulsoup4>=4.12
+feedparser>=6.0
+
+# SSL — use OS certificate store (fixes corporate proxies on Windows)
+truststore>=0.9
 
 # CV parsing (onboarding)
 pypdf>=4.0
