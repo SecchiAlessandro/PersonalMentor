@@ -146,16 +146,23 @@ else
   echo "  gog not installed — skipping. Install: brew install steipete/tap/gogcli"
 fi
 
-# Step 6: Generate German Sentence of the Day
+# Step 6: Generate German Sentence of the Day (with 3-minute timeout)
 GERMAN_ARGS=""
 echo "[5/10] Generating German Sentence of the Day..."
-if "$PYTHON_CMD" "${SCRIPT_DIR}/generate_german.py" \
+# Use perl-based timeout (works on macOS without coreutils)
+"$PYTHON_CMD" "${SCRIPT_DIR}/generate_german.py" \
   --output "${CONTENT_DIR}/german.json" \
-  --date "${TODAY}" 2>&1; then
+  --date "${TODAY}" 2>&1 &
+GERMAN_PID=$!
+( sleep 180 && kill $GERMAN_PID 2>/dev/null && echo "  WARNING: German generation timed out after 180s" ) &
+TIMER_PID=$!
+if wait $GERMAN_PID 2>/dev/null; then
   GERMAN_ARGS="--german-json ${CONTENT_DIR}/german.json"
 else
-  echo "  WARNING: German sentence generation failed (GEMINI_API_KEY set?)"
+  echo "  WARNING: German sentence generation failed or timed out (GEMINI_API_KEY set?)"
 fi
+kill $TIMER_PID 2>/dev/null || true
+wait $TIMER_PID 2>/dev/null || true
 
 # Step 7: Ingest feedback from GitHub Issues
 echo "[6/10] Ingesting GitHub feedback issues..."

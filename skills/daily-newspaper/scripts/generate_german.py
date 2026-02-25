@@ -13,10 +13,24 @@ import concurrent.futures
 import io
 import json
 import os
+import signal
 import sys
 from datetime import date
 
 API_TIMEOUT = 60  # seconds per API call
+SCRIPT_TIMEOUT = 180  # total script timeout in seconds
+
+
+def _script_timeout_handler(signum, frame):
+    """Force-exit if the script exceeds SCRIPT_TIMEOUT."""
+    print(f"\n  TIMEOUT: Script exceeded {SCRIPT_TIMEOUT}s, force-exiting.", file=sys.stderr)
+    os._exit(1)
+
+
+# Set overall script timeout (Unix only; harmless no-op on Windows)
+if hasattr(signal, "SIGALRM"):
+    signal.signal(signal.SIGALRM, _script_timeout_handler)
+    signal.alarm(SCRIPT_TIMEOUT)
 
 try:
     from google import genai
@@ -192,3 +206,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # Force-exit to prevent hanging on leftover ThreadPoolExecutor threads
+    # (Gemini SDK uses tenacity retries that can outlive our timeout)
+    os._exit(0)
