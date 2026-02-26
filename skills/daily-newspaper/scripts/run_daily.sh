@@ -149,20 +149,22 @@ fi
 # Step 6: Generate German Sentence of the Day (with 3-minute timeout)
 GERMAN_ARGS=""
 echo "[5/10] Generating German Sentence of the Day..."
-# Use perl-based timeout (works on macOS without coreutils)
 "$PYTHON_CMD" "${SCRIPT_DIR}/generate_german.py" \
   --output "${CONTENT_DIR}/german.json" \
   --date "${TODAY}" 2>&1 &
 GERMAN_PID=$!
-( sleep 180 && kill $GERMAN_PID 2>/dev/null && echo "  WARNING: German generation timed out after 180s" ) &
+( sleep 180 && kill $GERMAN_PID 2>/dev/null && echo "  WARNING: German generation killed after 180s timeout" ) &
 TIMER_PID=$!
-if wait $GERMAN_PID 2>/dev/null; then
-  GERMAN_ARGS="--german-json ${CONTENT_DIR}/german.json"
-else
-  echo "  WARNING: German sentence generation failed or timed out (GEMINI_API_KEY set?)"
-fi
+# wait returns non-zero if process was killed; use || true to prevent set -e from aborting
+GERMAN_EXIT=0
+wait $GERMAN_PID 2>/dev/null || GERMAN_EXIT=$?
 kill $TIMER_PID 2>/dev/null || true
 wait $TIMER_PID 2>/dev/null || true
+if [ "$GERMAN_EXIT" -eq 0 ] && [ -f "${CONTENT_DIR}/german.json" ]; then
+  GERMAN_ARGS="--german-json ${CONTENT_DIR}/german.json"
+else
+  echo "  WARNING: German sentence generation failed (exit=$GERMAN_EXIT)"
+fi
 
 # Step 7: Ingest feedback from GitHub Issues
 echo "[6/10] Ingesting GitHub feedback issues..."

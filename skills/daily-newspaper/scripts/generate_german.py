@@ -13,24 +13,24 @@ import concurrent.futures
 import io
 import json
 import os
-import signal
 import sys
+import threading
 from datetime import date
 
 API_TIMEOUT = 60  # seconds per API call
 SCRIPT_TIMEOUT = 180  # total script timeout in seconds
 
 
-def _script_timeout_handler(signum, frame):
-    """Force-exit if the script exceeds SCRIPT_TIMEOUT."""
-    print(f"\n  TIMEOUT: Script exceeded {SCRIPT_TIMEOUT}s, force-exiting.", file=sys.stderr)
+def _force_exit_timeout():
+    """Force-exit the process after SCRIPT_TIMEOUT seconds."""
+    print(f"\n  TIMEOUT: Script exceeded {SCRIPT_TIMEOUT}s, force-exiting.", file=sys.stderr, flush=True)
     os._exit(1)
 
 
-# Set overall script timeout (Unix only; harmless no-op on Windows)
-if hasattr(signal, "SIGALRM"):
-    signal.signal(signal.SIGALRM, _script_timeout_handler)
-    signal.alarm(SCRIPT_TIMEOUT)
+# Daemon timer guarantees exit even if main thread is blocked in C extensions
+_deadline = threading.Timer(SCRIPT_TIMEOUT, _force_exit_timeout)
+_deadline.daemon = True
+_deadline.start()
 
 try:
     from google import genai
