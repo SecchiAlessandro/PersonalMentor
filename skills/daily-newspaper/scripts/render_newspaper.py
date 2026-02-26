@@ -238,12 +238,13 @@ def render_calendar_html(events, max_items=MAX_ITEMS):
 
 
 def render_german_html(german_data):
-    """Render German Sentence of the Day to HTML."""
+    """Render German Quote of the Day to HTML."""
     if not german_data:
-        return '<p class="empty-state">No German sentence today.</p>'
+        return '<p class="empty-state">No German quote today.</p>'
 
     german = german_data.get("german", "")
     english = german_data.get("english", "")
+    author = german_data.get("author", "")
     image_b64 = german_data.get("image_base64")
 
     image_html = ""
@@ -251,11 +252,13 @@ def render_german_html(german_data):
         mime = german_data.get("image_mime", "image/png")
         image_html = f'<img class="german-card-image" src="data:{mime};base64,{image_b64}" alt="Illustration">'
 
+    author_html = f'\n        <div class="german-author">— {author}</div>' if author else ""
+
     return f'''    <div class="german-card">
       {image_html}
       <div class="german-card-text">
-        <div class="german-sentence">{german}</div>
-        <div class="german-translation">{english}</div>
+        <div class="german-sentence">„{german}“</div>
+        <div class="german-translation">“{english}”</div>{author_html}
       </div>
     </div>'''
 

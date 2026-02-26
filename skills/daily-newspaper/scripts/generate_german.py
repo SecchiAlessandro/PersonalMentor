@@ -63,16 +63,17 @@ def generate_sentence(client, today_str):
 
     Tries each model in TEXT_MODELS until one succeeds.
     """
-    prompt = f"""Today is {today_str}. Generate a useful German sentence for a language learner (B2 level).
+    prompt = f"""Today is {today_str}. Pick a famous quote about life, motivation, love, wisdom, or perseverance from a well-known philosopher, writer, scientist, or historical figure. Translate it into German (B2 level).
 
 Requirements:
-- Use more complex grammar: subordinate clauses, Konjunktiv II, passive voice, or idiomatic expressions
-- Topics: professional communication, news/current events, abstract concepts, Swiss/German culture, nuanced opinions
-- Vary the topic each day — use the date as inspiration for variety
-- Keep it natural and commonly used by educated native speakers
+- Choose a REAL, well-known quote — do NOT invent one
+- The author must be a real, famous person (e.g. Goethe, Nietzsche, Einstein, Marie Curie, Marcus Aurelius, Rumi, Seneca, Maya Angelou, etc.)
+- Vary the author and topic each day — use the date as inspiration for variety
+- If the original quote is in German, provide the original; otherwise provide a faithful German translation
+- Provide the English version (original or translation)
 
 Respond in EXACTLY this JSON format (no markdown, no code fences):
-{{"german": "Die deutsche Satz hier", "english": "The English translation here", "image_prompt": "A short visual description of the sentence's meaning, suitable for generating an illustration (e.g. 'a person greeting a friend at a cafe')"}}"""
+{{"german": "Das Zitat auf Deutsch", "english": "The quote in English", "author": "Author Name", "image_prompt": "A short visual description inspired by the quote's meaning, suitable for generating an illustration (e.g. 'a sunrise over a mountain symbolizing new beginnings')"}}"""
 
     last_error = None
     for model in TEXT_MODELS:
@@ -170,7 +171,7 @@ def main():
     except Exception as e:
         print(f"  ERROR: German sentence generation failed: {e}", file=sys.stderr)
         # Write empty result so pipeline can continue without this section
-        result = {"german": "", "english": "", "image_base64": None, "image_mime": None}
+        result = {"german": "", "english": "", "author": "", "image_base64": None, "image_mime": None}
         os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
         with open(args.output, "w", encoding="utf-8") as f:
             json.dump(result, f, ensure_ascii=False, indent=2)
@@ -193,6 +194,7 @@ def main():
     result = {
         "german": sentence_data["german"],
         "english": sentence_data["english"],
+        "author": sentence_data.get("author", ""),
         "image_base64": image_b64,
         "image_mime": image_mime,
     }
