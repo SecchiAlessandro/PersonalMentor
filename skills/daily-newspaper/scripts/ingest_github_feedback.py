@@ -33,8 +33,9 @@ def gh_available():
 
 
 def fetch_open_feedback_issues():
-    """Return a list of open issues with the 'feedback' label."""
-    result = subprocess.run(
+    """Return a list of open feedback issues (by label OR title prefix)."""
+    # Fetch by label
+    by_label = subprocess.run(
         [
             "gh", "issue", "list",
             "--repo", REPO,
@@ -44,10 +45,27 @@ def fetch_open_feedback_issues():
         ],
         capture_output=True, text=True, timeout=30,
     )
-    if result.returncode != 0:
-        print(f"  WARNING: gh issue list failed: {result.stderr.strip()}")
-        return []
-    return json.loads(result.stdout)
+    # Fetch by title search
+    by_title = subprocess.run(
+        [
+            "gh", "issue", "list",
+            "--repo", REPO,
+            "--search", "Feedback: in:title",
+            "--state", "open",
+            "--json", "number,title,body,createdAt",
+        ],
+        capture_output=True, text=True, timeout=30,
+    )
+    # Merge and deduplicate by issue number
+    seen = {}
+    for result in (by_label, by_title):
+        if result.returncode != 0:
+            continue
+        for issue in json.loads(result.stdout):
+            seen[issue["number"]] = issue
+    if not seen and by_label.returncode != 0 and by_title.returncode != 0:
+        print(f"  WARNING: gh issue list failed: {by_label.stderr.strip()}")
+    return list(seen.values())
 
 
 def parse_issue(issue):
