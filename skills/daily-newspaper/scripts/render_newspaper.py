@@ -4,6 +4,7 @@
 import argparse
 import json
 import os
+import re
 import sys
 from datetime import datetime, timezone
 
@@ -97,7 +98,130 @@ THEMES = {
     },
 }
 
-MAX_ITEMS = 3  # default, overridden by learned-preferences per section
+MAX_ITEMS = 3  # show the top 3 most relevant items per section
+
+
+def first_sentence(text, max_len=160):
+    """Return a single-sentence summary, trimmed to max_len characters."""
+    if not text:
+        return ""
+    text = str(text)
+    # Strip markdown emphasis/heading markers (common in Luma descriptions)
+    text = re.sub(r"[*_`#]+", "", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    match = re.search(r"(.+?[.!?])(\s|$)", text)
+    sentence = match.group(1) if match else text
+    if len(sentence) > max_len:
+        sentence = sentence[:max_len].rsplit(" ", 1)[0].rstrip(",;:") + "…"
+    return sentence
+
+
+def dedupe_by_title(items):
+    """Drop items with duplicate titles, keeping first occurrence.
+
+    Normalizes by lowercasing and stripping trailing parenthetical/bracketed
+    suffixes so 'Product Academy SUMMIT (Zurich)' and 'Product Academy SUMMIT'
+    collapse to one entry.
+    """
+    seen = set()
+    result = []
+    for item in items:
+        title = item.get("title", "").lower().strip()
+        title = re.sub(r"[\(\[].*?[\)\]]", "", title)  # drop (...) and [...]
+        key = re.sub(r"\s+", " ", title).strip()
+        if key and key in seen:
+            continue
+        seen.add(key)
+        result.append(item)
+    return result
+
+
+def diversify_by_source(items, source_key):
+    """Reorder items so each distinct source appears once before any repeats.
+
+    The input is assumed already ranked (by relevance or match score). A greedy
+    first pass keeps the highest-ranked item from each distinct source, in rank
+    order; remaining items (repeat sources) are appended afterwards. Slicing the
+    result to the top N therefore prefers one-item-per-source, and only falls
+    back to a repeated source when there aren't enough distinct ones to fill the
+    section.
+    """
+    first_pass = []
+    leftovers = []
+    seen = set()
+    for item in items:
+        key = str(source_key(item) or "").lower().strip()
+        if key and key in seen:
+            leftovers.append(item)
+            continue
+        if key:
+            seen.add(key)
+        first_pass.append(item)
+    return first_pass + leftovers
+
+
+def _source_host(item):
+    """Source host for an event (matches the label shown in render_events_html)."""
+    source_url = item.get("source", "") or ""
+    host = source_url.split("/")[2] if source_url.startswith("http") else source_url
+    return host.replace("www.", "")
+
+
+def _word_match(term, text):
+    """True if term appears as a whole word in text (case-insensitive).
+
+    Word-boundary matching avoids false positives like 'ai' inside
+    'available'/'training' that naive substring matching would count.
+    """
+    term = str(term).strip().lower()
+    if not term:
+        return False
+    return re.search(r"\b" + re.escape(term) + r"\b", text) is not None
+
+
+def relevance_score(text, interests):
+    """Score how relevant a piece of text is to the user's profile.
+
+    Whole-word, case-insensitive matching against the profile's weighted
+    topics, industries, target roles, and relevance keywords. A score of 0
+    means the text matched no profile signal and is treated as off-profile.
+    """
+    text_l = text.lower()
+    score = 0
+    for t in interests.get("professional", []) or []:
+        if _word_match(t.get("topic", ""), text_l):
+            score += int(t.get("weight", 1))
+    for ind in interests.get("industries", []) or []:
+        if _word_match(ind, text_l):
+            score += 2
+    job_search = interests.get("job_search", {}) or {}
+    for role in job_search.get("target_roles", []) or []:
+        if _word_match(role, text_l):
+            score += 3
+    for kw in interests.get("relevance_keywords", []) or []:
+        # Support either bare strings or {term, weight} mappings.
+        if isinstance(kw, dict):
+            term, weight = kw.get("term", ""), int(kw.get("weight", 2))
+        else:
+            term, weight = kw, 2
+        if _word_match(term, text_l):
+            score += weight
+    return score
+
+
+def rank_by_relevance(items, text_fn, interests):
+    """Sort items by profile relevance and drop off-profile ones (score 0).
+
+    Falls back to the relevance-ranked full list when nothing matches the
+    profile, so a section is never left blank on a quiet news day.
+    """
+    scored = sorted(
+        items,
+        key=lambda it: relevance_score(text_fn(it), interests),
+        reverse=True,
+    )
+    relevant = [it for it in scored if relevance_score(text_fn(it), interests) > 0]
+    return relevant if relevant else scored
 
 
 def load_learned_preferences():
@@ -131,15 +255,6 @@ def load_json(filepath):
     return data if isinstance(data, list) else []
 
 
-def load_json_obj(filepath):
-    """Load a JSON file, return empty dict if missing."""
-    if not os.path.exists(filepath):
-        return {}
-    with open(filepath, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    return data if isinstance(data, dict) else {}
-
-
 def get_theme(preferences):
     """Get theme colors from preferences."""
     theme_name = preferences.get("design", {}).get("theme", "modern-minimalist")
@@ -160,6 +275,8 @@ def render_news_html(articles, max_items=MAX_ITEMS):
         summary = item.get("summary", "")
 
         tag_html = f'<span class="tag">{category}</span>' if category else ""
+        desc = first_sentence(summary)
+        desc_html = f'<div class="item-summary">{desc}</div>' if desc else ""
 
         html_parts.append(f'''    <div class="item">
       <div class="item-title"><a href="{url}" target="_blank">{title}</a></div>
@@ -167,7 +284,7 @@ def render_news_html(articles, max_items=MAX_ITEMS):
         <span class="source">{source}</span>
         {tag_html}
       </div>
-      <div class="item-summary">{summary}</div>
+      {desc_html}
     </div>''')
 
     return "\n".join(html_parts)
@@ -186,12 +303,22 @@ def render_jobs_html(jobs, max_items=MAX_ITEMS):
         location = job.get("location", "")
         score = int(job.get("match_score", 0) * 100)
 
+        meta_company = f'<span class="source">{company}</span>' if company else ""
+        meta_sep = " · " if company and location else ""
+        desc = first_sentence(job.get("description", ""))
+        if not desc:
+            where = f" in {location}" if location else ""
+            at = f" at {company}" if company else ""
+            desc = f"{title}{at}{where}.".strip()
+        desc_html = f'<div class="item-summary">{desc}</div>'
+
         html_parts.append(f'''    <div class="job-item">
       <div class="item-title"><a href="{url}" target="_blank">{title}</a></div>
       <div class="item-meta">
-        <span class="source">{company}</span> · {location}
+        {meta_company}{meta_sep}{location}
         <span class="match-score">{score}% match</span>
       </div>
+      {desc_html}
     </div>''')
 
     return "\n".join(html_parts)
@@ -210,90 +337,35 @@ def render_events_html(events, max_items=MAX_ITEMS):
         location = event.get("location", "TBD")
         etype = event.get("type", "event")
 
+        source_url = event.get("source", "")
+        source_host = source_url.split("/")[2] if source_url.startswith("http") else source_url
+        source_label = source_host.replace("www.", "")
+        desc = first_sentence(event.get("description", ""))
+        if not desc:
+            where = f" in {location}" if location and location != "TBD" else ""
+            when = f" on {date}" if date and date != "TBD" else ""
+            desc = f"{etype.title()}{where}{when}.".strip()
+        desc_html = f'<div class="item-summary">{desc}</div>'
         html_parts.append(f'''    <div class="item">
       <div class="item-title"><a href="{url}" target="_blank">{title}</a></div>
       <div class="item-meta">
         <span class="source">{date}</span> · {location}
         <span class="tag">{etype}</span>
+        <a class="source-link" href="{source_url}" target="_blank">{source_label}</a>
       </div>
+      {desc_html}
     </div>''')
 
     return "\n".join(html_parts)
 
 
-def render_calendar_html(events, max_items=MAX_ITEMS):
-    """Render calendar events to HTML."""
-    if not events:
-        return '<p class="empty-state">No events on your calendar today.</p>'
-
-    html_parts = []
-    for event in events[:max_items]:
-        time_str = event.get("time", "")
-        title = event.get("title", "Untitled")
-        html_parts.append(f'''    <div class="calendar-item">
-      <span class="calendar-time">{time_str}</span> {title}
-    </div>''')
-
-    return "\n".join(html_parts)
-
-
-def render_german_html(german_data):
-    """Render German Quote of the Day to HTML."""
-    if not german_data:
-        return '<p class="empty-state">No German quote today.</p>'
-
-    german = german_data.get("german", "")
-    english = german_data.get("english", "")
-    author = german_data.get("author", "")
-    image_b64 = german_data.get("image_base64")
-
-    image_html = ""
-    if image_b64:
-        mime = german_data.get("image_mime", "image/png")
-        image_html = f'<img class="german-card-image" src="data:{mime};base64,{image_b64}" alt="Illustration">'
-
-    author_html = f'\n        <div class="german-author">— {author}</div>' if author else ""
-
-    return f'''    <div class="german-card">
-      {image_html}
-      <div class="german-card-text">
-        <div class="german-sentence">„{german}“</div>
-        <div class="german-translation">“{english}”</div>{author_html}
-      </div>
-    </div>'''
-
-
-def render_feedback_html(active_sections):
-    """Render the feedback section with per-section thumb rows for active sections.
-
-    active_sections: list of (key, label) for sections that have content.
-    """
-    section_rows = []
-    for key, label in active_sections:
-        section_rows.append(
-            f'      <div class="feedback-section-row" data-section="{key}">'
-            f'<span>{label}</span> '
-            f'<button class="thumb up">&#128077;</button> '
-            f'<button class="thumb down">&#128078;</button>'
-            f'</div>'
-        )
-
-    rows_html = "\n".join(section_rows) if section_rows else ""
-
-    return f'''  <section class="section" id="feedback">
-    <h2 class="section-title">Rate Today's Edition</h2>
+def render_feedback_html():
+    """Render the feedback section — a single free-text box for written feedback."""
+    return '''  <section class="section" id="feedback">
+    <h2 class="section-title">Today's Feedback</h2>
     <div class="feedback-card">
-      <div class="feedback-overall">
-        <span class="feedback-label">Overall</span>
-        <div class="star-rating" data-target="overall">
-          <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
-        </div>
-      </div>
-      <div class="feedback-sections">
-{rows_html}
-      </div>
-      <textarea class="feedback-comment" placeholder="Any thoughts? (optional)"></textarea>
-      <button class="feedback-submit">Submit Feedback</button>
+      <textarea class="feedback-comment" placeholder="What did you think of today's edition? What should change tomorrow?"></textarea>
+      <button class="feedback-submit">Send Feedback</button>
       <div class="feedback-status"></div>
     </div>
   </section>'''
@@ -310,35 +382,40 @@ def build_html(template, profile, content, theme):
     date_str = now.strftime("%Y-%m-%d")
     date_formatted = now.strftime("%A, %B %d, %Y")
 
-    articles = content.get("articles", [])
+    interests = profile.get("interests", {})
+    articles = dedupe_by_title(content.get("articles", []))
     jobs = content.get("jobs", [])
-    events = content.get("events", [])
-    calendar = content.get("calendar", [])
-    german = content.get("german", {})
+    events = dedupe_by_title(content.get("events", []))
+
+    # Rank news and events by relevance, dropping off-profile items
+    # (jobs arrive pre-scored and pre-filtered from fetch_jobs.py).
+    articles = rank_by_relevance(
+        articles,
+        lambda a: f"{a.get('title','')} {a.get('summary','')} {a.get('category','')}",
+        interests,
+    )
+    events = rank_by_relevance(
+        events,
+        lambda e: f"{e.get('title','')} {e.get('description','')} {e.get('location','')}",
+        interests,
+    )
+
+    # Diversify by source so each shown item comes from a different reference.
+    # Repeated sources fall to the back and only surface if there aren't enough
+    # distinct sources to fill a section.
+    articles = diversify_by_source(articles, lambda a: a.get("source", ""))
+    jobs = diversify_by_source(jobs, lambda j: j.get("source", ""))
+    events = diversify_by_source(events, _source_host)
 
     # Load learned preferences for per-section item counts
     section_item_counts = load_learned_preferences()
 
-    # Render section content with per-section max items
+    # Render section content — top N most relevant items per section
     news_html = render_news_html(articles, get_max_items("news", section_item_counts))
     jobs_html = render_jobs_html(jobs, get_max_items("jobs", section_item_counts))
     events_html = render_events_html(events, get_max_items("events", section_item_counts))
-    calendar_html = render_calendar_html(calendar, get_max_items("calendar", section_item_counts))
-    german_html = render_german_html(german)
 
-    # Determine which sections have content (for feedback thumbs)
-    active_sections = []
-    if articles:
-        active_sections.append(("news", "News"))
-    if jobs:
-        active_sections.append(("jobs", "Jobs"))
-    if events:
-        active_sections.append(("events", "Events"))
-    if calendar:
-        active_sections.append(("calendar", "Calendar"))
-    if german:
-        active_sections.append(("german", "German"))
-    feedback_html = render_feedback_html(active_sections)
+    feedback_html = render_feedback_html()
 
     # Replace all placeholders
     html = template
@@ -363,8 +440,6 @@ def build_html(template, profile, content, theme):
     html = html.replace("{{news_content}}", news_html)
     html = html.replace("{{jobs_content}}", jobs_html)
     html = html.replace("{{events_content}}", events_html)
-    html = html.replace("{{calendar_content}}", calendar_html)
-    html = html.replace("{{german_content}}", german_html)
     html = html.replace("{{feedback_content}}", feedback_html)
 
     return html
@@ -375,8 +450,6 @@ def main():
     parser.add_argument("--profile-dir", required=True, help="Path to profile/ directory")
     parser.add_argument("--content-dir", required=True, help="Path to content JSON files directory")
     parser.add_argument("--output", required=True, help="Output HTML file path")
-    parser.add_argument("--calendar-json", default="", help="Optional: calendar events JSON file")
-    parser.add_argument("--german-json", default="", help="Optional: German sentence JSON file")
     args = parser.parse_args()
 
     # Load profile
@@ -393,8 +466,6 @@ def main():
         "articles": load_json(os.path.join(args.content_dir, "rss.json")),
         "jobs": load_json(os.path.join(args.content_dir, "jobs.json")),
         "events": load_json(os.path.join(args.content_dir, "events.json")),
-        "calendar": load_json(args.calendar_json) if args.calendar_json else [],
-        "german": load_json_obj(args.german_json) if args.german_json else {},
     }
 
     # Get theme
@@ -412,19 +483,13 @@ def main():
     with open(args.output, "w", encoding="utf-8") as f:
         f.write(html)
 
-    total_items = (
-        len(content["articles"]) + len(content["jobs"]) +
-        len(content["events"]) + len(content["calendar"]) +
-        (1 if content["german"] else 0)
-    )
+    total_items = len(content["articles"]) + len(content["jobs"]) + len(content["events"])
     print(f"Generated daily newspaper: {args.output}")
     print(f"  Theme: {profile['preferences'].get('design', {}).get('theme', 'modern-minimalist')}")
     print(f"  Total content items: {total_items}")
     print(f"  Articles: {len(content['articles'])} (showing max {MAX_ITEMS})")
     print(f"  Jobs: {len(content['jobs'])} (showing max {MAX_ITEMS})")
     print(f"  Events: {len(content['events'])} (showing max {MAX_ITEMS})")
-    print(f"  Calendar: {len(content['calendar'])}")
-    print(f"  German: {'yes' if content['german'] else 'no'}")
 
 
 if __name__ == "__main__":

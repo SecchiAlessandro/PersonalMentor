@@ -1,14 +1,24 @@
 # PersonalMentor — Content Sources
 
 rss_feeds:
-- url: https://www.technologyreview.com/feed/
-  category: tech
+# --- AI / ML ---
+- url: https://www.technologyreview.com/topic/artificial-intelligence/feed/
+  category: ai
+- url: https://venturebeat.com/category/ai/feed/
+  category: ai
+# --- Energy / power / clean tech ---
+- url: https://spectrum.ieee.org/feeds/topic/energy.rss
+  category: energy
+- url: https://www.canarymedia.com/articles.rss
+  category: energy
+- url: https://cleantechnica.com/feed/
+  category: energy
+# --- Broad tech (kept; profile relevance filter trims off-profile items) ---
 - url: https://hnrss.org/frontpage
   category: tech
 - url: https://techcrunch.com/feed/
   category: tech
-- url: https://feeds.bloomberg.com/technology/news.rss
-  category: news
+# --- ETH Zurich news/events ---
 - url: https://ethz.ch/en/news-and-events/events.html
   category: news
   type: html
@@ -43,6 +53,10 @@ job_boards:
   - energy
   - Hitachi
 event_sources:
+# Luma Zurich — tech/AI/startup events (JS-rendered, requires Playwright)
+- url: https://lu.ma/zurich
+  type: playwright
+  location_filter: ''
 # AI events — Zurich area
 - url: https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/
   location_filter: ''

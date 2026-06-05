@@ -1,28 +1,139 @@
 # PersonalMentor — Interests & Topics
+# Drives relevance scoring for news, jobs, and events.
+#   - professional topics: weighted (1-10), the strongest signal
+#   - relevance_keywords: finer terms (weighted) for topical news/event filtering
+#   - job_search: roles/companies/locations for the job scorer
+# Matching is whole-word + case-insensitive (so "ai" won't match "available").
 
 professional:
-- topic: Ai
+- topic: AI
   weight: 10
-- topic: Energy
+- topic: multi-agent systems
+  weight: 10
+- topic: agentic AI
   weight: 9
-- topic: Management
+- topic: machine learning
+  weight: 9
+- topic: energy
+  weight: 10
+- topic: power systems
+  weight: 9
+- topic: grid
   weight: 8
+- topic: renewable energy
+  weight: 8
+- topic: electricity markets
+  weight: 8
+- topic: energy transition
+  weight: 8
+- topic: control systems
+  weight: 7
+- topic: project management
+  weight: 6
+- topic: innovation management
+  weight: 6
+- topic: strategy
+  weight: 6
+- topic: electrical engineering
+  weight: 6
+- topic: cybersecurity
+  weight: 4
+- topic: management
+  weight: 5
+
 industries:
-- Tech
 - Energy
+- Power & Utilities
+- AI
+- Tech
+
+# Finer-grained terms for filtering news + events to the profile.
+# Items matching none of the profile signals are treated as off-profile.
+relevance_keywords:
+- term: artificial intelligence
+  weight: 6
+- term: LLM
+  weight: 5
+- term: agents
+  weight: 4
+- term: agent
+  weight: 3
+- term: GPT
+  weight: 3
+- term: RAG
+  weight: 3
+- term: MCP
+  weight: 3
+- term: foundation model
+  weight: 4
+- term: deep learning
+  weight: 4
+- term: forecasting
+  weight: 4
+- term: energy transition
+  weight: 6
+- term: decarbonization
+  weight: 5
+- term: smart grid
+  weight: 5
+- term: power grid
+  weight: 5
+- term: HVDC
+  weight: 5
+- term: STATCOM
+  weight: 5
+- term: converter
+  weight: 4
+- term: substation
+  weight: 4
+- term: battery storage
+  weight: 5
+- term: energy storage
+  weight: 5
+- term: solar
+  weight: 3
+- term: wind power
+  weight: 4
+- term: electricity
+  weight: 3
+- term: digital twin
+  weight: 4
+- term: automation
+  weight: 3
+
 personal: []
+
 job_search:
   active: true
+  # Leaning toward the AI/ML + Energy hybrid roles Alessandro is targeting,
+  # plus the engineering-leadership roles his Hitachi Energy track supports.
   target_roles:
   - AI engineer
-  - Strategy
-  - Team lead
-  - Energy analyst
+  - AI specialist
+  - machine learning engineer
+  - ML engineer
+  - energy analyst
+  - energy systems engineer
+  - solutions architect
+  - transformation lead
+  - innovation manager
+  - technical project manager
+  - strategy
   preferred_companies:
+  - Hitachi Energy
   - Hitachi
+  - ABB
+  - Siemens
   - Google
   - Microsoft
+  - Tesla
+  - Axpo
+  - Alpiq
+  - BKW
   target_locations:
   - Zurich
+  - Zürich
+  - Baden
+  - Switzerland
   - Remote
   salary_range: ''

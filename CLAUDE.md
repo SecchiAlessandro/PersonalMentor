@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## User Identity
 
 - **Name:** Alessandro Secchi
-- **Title:** Control Software Engineer at Hitachi Energy
+- **Title:** Project Manager Engineering & AI Specialist at Hitachi Energy (AI Point of Contact / SME for the AINexus transformation program)
 - **Location:** Baden, Switzerland
 - **Key facts:** ETH Zurich MAS in Management & Economics (2024-2026), MSc EE from Politecnico di Milano (summa cum laude), co-founded EMS, Hitachi Sustainability Inspiration of the Year 2025, builds AI tools for energy (EnergyForecaster, LumadaAI)
 - **Active goal:** Searching for AI/ML + Energy hybrid roles (Switzerland / Remote)
