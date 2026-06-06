@@ -40,42 +40,111 @@ HEADERS = {
     )
 }
 
+# Pure software-engineering titles to de-prioritize — the user targets
+# management / commercial / strategy / AI lanes, not deep SWE. Matched
+# whole-word against the title only, so phrases like "software engineer"
+# never catch "AI engineer" / "ML engineer".
+# Stored in normalized form (hyphens -> spaces); the title is normalized the
+# same way before matching, so "Full-Stack" matches "full stack".
+SWE_TITLE_TERMS = [
+    "software engineer", "software developer", "backend", "back end",
+    "frontend", "front end", "full stack", "fullstack", "devops",
+    "embedded", "firmware", "qa engineer", "test engineer", "android",
+    "ios developer", "web developer", "mobile developer",
+    # Dev-stack signals (strong deep-SWE markers; none collide with the
+    # target lanes like "business developer").
+    "react", "react native", "angular", "vue", "java", "javascript",
+    "typescript", "golang", "kotlin", "c++", ".net",
+]
+SWE_PENALTY = 0.3
+
+
+def _word_match(term, text):
+    """True if term appears as a whole word in text (case-insensitive).
+
+    Word-boundary matching avoids false positives like 'ai' inside
+    'available'/'training' or a 'Google Cloud' mention tagging the employer.
+    """
+    term = str(term).strip().lower()
+    if not term:
+        return False
+    return re.search(r"\b" + re.escape(term) + r"\b", text) is not None
+
 
 def compute_match_score(job_title, job_text, interests):
-    """Compute a simple relevance score based on keyword matching.
+    """Compute a relevance score based on keyword matching against the profile.
 
-    Weights: role 0.3 + location 0.2 + company 0.2 + base 0.3 = max 1.0
+    Weights: role 0.4 + topic 0.3 + location 0.2 + company 0.1 (max 1.0).
+    A job is only considered relevant if it matches at least one signal —
+    there is no unconditional base score. Company is matched against the
+    title only (where '@ Employer' lives), so a 'Google Cloud' mention in a
+    description does not falsely tag the job as being at Google.
     """
     job_search = interests.get("job_search", {})
     target_roles = job_search.get("target_roles", [])
     target_locations = job_search.get("target_locations", [])
     preferred_companies = job_search.get("preferred_companies", [])
+    professional = interests.get("professional", []) or []
 
     combined = f"{job_title} {job_text}".lower()
+    title_l = job_title.lower()
 
     score = 0.0
     match_reasons = []
 
     for role in target_roles:
-        if role.lower() in combined:
-            score += 0.3
+        if _word_match(role, combined):
+            score += 0.4
             match_reasons.append(f"role: {role}")
             break
 
+    for t in professional:
+        topic = str(t.get("topic", ""))
+        if _word_match(topic, combined):
+            score += 0.3
+            match_reasons.append(f"topic: {topic.lower()}")
+            break
+
     for loc in target_locations:
-        if loc.lower() in combined:
+        if _word_match(loc, combined):
             score += 0.2
             match_reasons.append(f"location: {loc}")
             break
 
     for company in preferred_companies:
-        if company.lower() in combined:
-            score += 0.2
+        if _word_match(company, title_l):
+            score += 0.1
             match_reasons.append(f"company: {company}")
             break
 
-    score += 0.3
+    # De-prioritize pure software-engineering roles. This only lowers the rank
+    # of jobs that already matched some signal — it never adds a match_reason,
+    # so it cannot make an otherwise-irrelevant job pass the relevance filter.
+    title_norm = title_l.replace("-", " ")
+    if any(_word_match(t, title_norm) for t in SWE_TITLE_TERMS):
+        score = max(0.0, score - SWE_PENALTY)
+
     return min(score, 1.0), match_reasons
+
+
+def is_link_live(url):
+    """Check a job posting link is reachable (proxy for 'still accepting applications').
+
+    Returns True only for URLs that resolve with an HTTP status < 400.
+    Expired postings on most boards return 404/410, so this filters stale links.
+    """
+    if not url or not url.startswith("http"):
+        return False
+    try:
+        resp = requests.head(url, headers=HEADERS, timeout=10, allow_redirects=True)
+        # Some servers reject HEAD (405) or mishandle it — fall back to GET.
+        if resp.status_code >= 400:
+            resp = requests.get(
+                url, headers=HEADERS, timeout=15, allow_redirects=True, stream=True
+            )
+        return resp.status_code < 400
+    except Exception:
+        return False
 
 
 # ---------------------------------------------------------------------------
@@ -115,6 +184,7 @@ def fetch_datacareer(url, interests):
                     "location": location,
                     "url": link,
                     "source": "datacareer.ch",
+                    "description": "",
                     "match_score": round(score, 2),
                     "match_reasons": reasons,
                 })
@@ -160,6 +230,7 @@ def fetch_linkedin(url, interests):
                     "location": location,
                     "url": link,
                     "source": "LinkedIn",
+                    "description": "",
                     "match_score": round(score, 2),
                     "match_reasons": reasons,
                 })
@@ -185,6 +256,7 @@ def fetch_rss_jobs(url, filter_keywords, interests):
                 title = item.find("title").get_text(strip=True) if item.find("title") else ""
                 link = item.find("link").get_text(strip=True) if item.find("link") else ""
                 desc = item.find("description").get_text(strip=True) if item.find("description") else ""
+                desc = re.sub(r"<[^>]+>", "", desc)
 
                 if not title:
                     continue
@@ -204,6 +276,7 @@ def fetch_rss_jobs(url, filter_keywords, interests):
                     "location": "",
                     "url": link,
                     "source": "SwissDevJobs",
+                    "description": desc,
                     "match_score": round(score, 2),
                     "match_reasons": reasons,
                 })
@@ -257,6 +330,7 @@ def fetch_board_generic(url, search_terms, interests):
                             "location": "",
                             "url": link,
                             "source": url,
+                            "description": "",
                             "match_score": round(score, 2),
                             "match_reasons": reasons,
                         })
@@ -363,14 +437,31 @@ def main():
             seen[key] = job
     all_jobs = list(seen.values())
 
+    # Keep only jobs genuinely relevant to the profile (matched a role or topic)
+    before = len(all_jobs)
+    all_jobs = [j for j in all_jobs if j.get("match_reasons")]
+    print(f"Relevance filter: {before} -> {len(all_jobs)} jobs")
+
     # Sort by match score (highest first)
     all_jobs.sort(key=lambda x: x.get("match_score", 0), reverse=True)
+
+    # Validate links for the top candidates so the report only shows postings
+    # that are still reachable (a proxy for "still accepting applications").
+    VALIDATE_TOP = 25
+    head = all_jobs[:VALIDATE_TOP]
+    tail = all_jobs[VALIDATE_TOP:]
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        live_flags = list(pool.map(lambda j: is_link_live(j.get("url", "")), head))
+    live_jobs = [j for j, live in zip(head, live_flags) if live]
+    dropped = len(head) - len(live_jobs)
+    print(f"Link validation: checked {len(head)}, dropped {dropped} dead/missing links")
+    all_jobs = live_jobs + tail
 
     os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
     with open(args.output, "w", encoding="utf-8") as f:
         json.dump(all_jobs, f, indent=2)
 
-    print(f"Fetched {len(all_jobs)} unique jobs from {len(job_boards)} boards → {args.output}")
+    print(f"Fetched {len(all_jobs)} relevant jobs from {len(job_boards)} boards → {args.output}")
 
 
 if __name__ == "__main__":

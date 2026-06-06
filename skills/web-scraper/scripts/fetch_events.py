@@ -16,6 +16,12 @@ except ImportError:
     sys.exit(1)
 
 try:
+    from playwright.sync_api import sync_playwright
+    _PLAYWRIGHT_AVAILABLE = True
+except ImportError:
+    _PLAYWRIGHT_AVAILABLE = False
+
+try:
     import yaml
 except ImportError:
     print("ERROR: PyYAML not installed. Run: pip install pyyaml")
@@ -80,6 +86,7 @@ def extract_jsonld_events(soup, source_url):
                 location = ""
 
             url = item.get("url", source_url)
+            description = item.get("description", "") or ""
 
             events.append({
                 "title": title,
@@ -87,6 +94,7 @@ def extract_jsonld_events(soup, source_url):
                 "location": location or "TBD",
                 "url": url,
                 "source": source_url,
+                "description": description,
                 "type": "conference",
             })
 
@@ -229,6 +237,70 @@ def fetch_api_events(url, location_filter=""):
                 return []
 
 
+def fetch_playwright_events(url, location_filter=""):
+    """Fetch events from JS-rendered pages using Playwright (extracts JSON-LD)."""
+    if not _PLAYWRIGHT_AVAILABLE:
+        print(f"WARNING: playwright not installed, skipping {url}. Run: pip install playwright && playwright install chromium", file=sys.stderr)
+        return []
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True)
+            page = browser.new_page()
+            page.goto(url, wait_until="networkidle", timeout=30000)
+            jsonld_texts = page.eval_on_selector_all(
+                'script[type="application/ld+json"]',
+                "els => els.map(e => e.textContent)"
+            )
+            browser.close()
+
+        events = []
+        for text in jsonld_texts:
+            try:
+                data = json.loads(text)
+            except (json.JSONDecodeError, TypeError):
+                continue
+            # ItemList wrapping Event items (e.g. Luma community pages)
+            if isinstance(data, dict) and data.get("@type") == "ItemList":
+                for list_item in data.get("itemListElement", []):
+                    item = list_item.get("item", list_item)
+                    if not isinstance(item, dict):
+                        continue
+                    if "Event" not in str(item.get("@type", "")):
+                        continue
+                    title = item.get("name", "")
+                    if not title:
+                        continue
+                    start = item.get("startDate", "")
+                    loc = item.get("location", {})
+                    if isinstance(loc, dict):
+                        addr = loc.get("address", {})
+                        location = (
+                            addr.get("addressLocality", "") if isinstance(addr, dict)
+                            else str(addr)
+                        ) or loc.get("name", "")
+                    else:
+                        location = str(loc) if loc else ""
+                    events.append({
+                        "title": title,
+                        "date": start[:10] if start else "",
+                        "location": location or "TBD",
+                        "url": item.get("url", url),
+                        "source": url,
+                        "description": item.get("description", "") or "",
+                        "type": "event",
+                    })
+            # Direct Event or list of Events
+            else:
+                from bs4 import BeautifulSoup as _BS
+                soup = _BS(f'<script type="application/ld+json">{text}</script>', "html.parser")
+                events.extend(extract_jsonld_events(soup, url))
+
+        return events
+    except Exception as e:
+        print(f"WARNING: Playwright fetch failed for {url}: {e}", file=sys.stderr)
+        return []
+
+
 def fetch_event_source(url, location_filter=""):
     """Fetch events from a single source URL (HTML + JSON-LD)."""
     for attempt in range(MAX_RETRIES):
@@ -280,6 +352,8 @@ def main():
         print(f"Fetching events ({source_type}): {url}")
         if source_type == "api":
             return fetch_api_events(url, location_filter)
+        elif source_type == "playwright":
+            return fetch_playwright_events(url, location_filter)
         else:
             return fetch_event_source(url, location_filter)
 

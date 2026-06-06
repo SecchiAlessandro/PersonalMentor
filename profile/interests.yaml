@@ -105,20 +105,44 @@ personal: []
 
 job_search:
   active: true
-  # Leaning toward the AI/ML + Energy hybrid roles Alessandro is targeting,
-  # plus the engineering-leadership roles his Hitachi Energy track supports.
+  # Four target lanes (one or a mix), not deep SWE:
+  #   1. Energy-industry team lead / manager
+  #   2. Big-tech commercial / strategy / solutions
+  #   3. AI
+  #   4. Business development / strategy / market intelligence
   target_roles:
-  - AI engineer
-  - AI specialist
-  - machine learning engineer
-  - ML engineer
-  - energy analyst
-  - energy systems engineer
-  - solutions architect
-  - transformation lead
+  # --- Energy mgmt / leadership ---
+  - engineering manager
+  - team lead
+  - team leader
+  - head of
+  - program manager
+  - project manager
   - innovation manager
-  - technical project manager
+  - energy manager
+  - portfolio manager
+  # --- Big-tech commercial / strategy / solutions ---
+  - solutions architect
+  - solutions engineer
+  - solutions consultant
+  - presales
+  - customer engineer
+  - technical account manager
+  - go-to-market
+  - commercial
+  # --- AI ---
+  - AI specialist
+  - AI engineer
+  - AI consultant
+  - applied AI
+  - AI product manager
+  # --- Business development / strategy / market intelligence ---
+  - business development
   - strategy
+  - strategic
+  - market intelligence
+  - product manager
+  - consultant
   preferred_companies:
   - Hitachi Energy
   - Hitachi
@@ -126,6 +150,13 @@ job_search:
   - Siemens
   - Google
   - Microsoft
+  - Amazon
+  - AWS
+  - Nvidia
+  - OpenAI
+  - Anthropic
+  - SAP
+  - Palantir
   - Tesla
   - Axpo
   - Alpiq

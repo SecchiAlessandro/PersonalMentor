@@ -98,7 +98,25 @@ THEMES = {
     },
 }
 
-MAX_ITEMS = 3  # show the top 3 most relevant items per section
+MAX_ITEMS = 3  # show the top 3 most relevant items per section (per topic track)
+
+# Keyword sets used to classify a news article or event into one of two tracks:
+# "energy" vs "ai" (AI & Tech). Matched whole-word, case-insensitive.
+ENERGY_TERMS = [
+    "energy", "power", "grid", "renewable", "renewables", "electricity",
+    "electric", "hvdc", "statcom", "substation", "converter", "transmission",
+    "battery", "storage", "solar", "wind", "hydro", "nuclear", "decarbonization",
+    "decarbonisation", "energy transition", "power systems", "smart grid",
+    "utility", "utilities", "entso-e", "entsoe", "iea", "irena", "iaee",
+    "epex", "montel", "watt", "megawatt", "gigawatt", "emissions", "carbon",
+]
+AI_TECH_TERMS = [
+    "ai", "artificial intelligence", "machine learning", "ml", "llm", "llms",
+    "agent", "agents", "agentic", "gpt", "model", "models", "foundation model",
+    "deep learning", "neural", "software", "startup", "startups", "chip",
+    "chips", "gpu", "cloud", "data", "algorithm", "robot", "robotics",
+    "openai", "anthropic", "deepmind", "nvidia", "developer", "app", "saas",
+]
 
 
 def first_sentence(text, max_len=160):
@@ -177,6 +195,35 @@ def _word_match(term, text):
     if not term:
         return False
     return re.search(r"\b" + re.escape(term) + r"\b", text) is not None
+
+
+def classify_topic(item):
+    """Classify a news article or event into the "energy" or "ai" track.
+
+    Articles carry a `category` field, which is the strongest signal:
+    "energy" -> energy; "ai"/"tech" -> ai. Anything else (e.g. "news") and
+    events (which have no category) fall through to whole-word keyword scoring
+    over the item's text. Ties default to "ai".
+    """
+    category = str(item.get("category", "")).strip().lower()
+    if category == "energy":
+        return "energy"
+    if category in ("ai", "tech"):
+        return "ai"
+
+    text = " ".join(str(item.get(k, "")) for k in
+                    ("title", "summary", "description", "location", "source")).lower()
+    energy_hits = sum(1 for t in ENERGY_TERMS if _word_match(t, text))
+    ai_hits = sum(1 for t in AI_TECH_TERMS if _word_match(t, text))
+    return "energy" if energy_hits > ai_hits else "ai"
+
+
+def split_by_topic(items):
+    """Split items into (energy_items, ai_items), preserving input order."""
+    energy_items, ai_items = [], []
+    for item in items:
+        (energy_items if classify_topic(item) == "energy" else ai_items).append(item)
+    return energy_items, ai_items
 
 
 def relevance_score(text, interests):
@@ -359,6 +406,20 @@ def render_events_html(events, max_items=MAX_ITEMS):
     return "\n".join(html_parts)
 
 
+def render_section_split(energy_items, ai_items, render_fn, max_items):
+    """Render a section as two labelled tracks: Energy, then AI & Tech.
+
+    Each track shows up to `max_items`, rendered by `render_fn` (which already
+    handles its own empty-state line, so a quiet track degrades gracefully).
+    """
+    return (
+        '    <h3 class="subsection-title">⚡ Energy</h3>\n'
+        + render_fn(energy_items, max_items)
+        + '\n    <h3 class="subsection-title">🤖 AI &amp; Tech</h3>\n'
+        + render_fn(ai_items, max_items)
+    )
+
+
 def render_feedback_html():
     """Render the feedback section — a single free-text box for written feedback."""
     return '''  <section class="section" id="feedback">
@@ -400,20 +461,31 @@ def build_html(template, profile, content, theme):
         interests,
     )
 
+    # Split news and events into two tracks (Energy / AI & Tech), preserving
+    # relevance order within each. Jobs stay a single ranked list.
+    news_energy, news_ai = split_by_topic(articles)
+    events_energy, events_ai = split_by_topic(events)
+
     # Diversify by source so each shown item comes from a different reference.
     # Repeated sources fall to the back and only surface if there aren't enough
-    # distinct sources to fill a section.
-    articles = diversify_by_source(articles, lambda a: a.get("source", ""))
+    # distinct sources to fill a track.
+    news_energy = diversify_by_source(news_energy, lambda a: a.get("source", ""))
+    news_ai = diversify_by_source(news_ai, lambda a: a.get("source", ""))
     jobs = diversify_by_source(jobs, lambda j: j.get("source", ""))
-    events = diversify_by_source(events, _source_host)
+    events_energy = diversify_by_source(events_energy, _source_host)
+    events_ai = diversify_by_source(events_ai, _source_host)
 
     # Load learned preferences for per-section item counts
     section_item_counts = load_learned_preferences()
 
-    # Render section content — top N most relevant items per section
-    news_html = render_news_html(articles, get_max_items("news", section_item_counts))
+    # Render section content — top N most relevant items per topic track
+    news_html = render_section_split(
+        news_energy, news_ai, render_news_html,
+        get_max_items("news", section_item_counts))
     jobs_html = render_jobs_html(jobs, get_max_items("jobs", section_item_counts))
-    events_html = render_events_html(events, get_max_items("events", section_item_counts))
+    events_html = render_section_split(
+        events_energy, events_ai, render_events_html,
+        get_max_items("events", section_item_counts))
 
     feedback_html = render_feedback_html()
 

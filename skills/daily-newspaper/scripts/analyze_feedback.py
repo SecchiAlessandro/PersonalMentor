@@ -23,31 +23,51 @@ PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "..", ".."))
 FEEDBACK_FILE = os.path.join(PROJECT_ROOT, "memory", "feedback.jsonl")
 PREFS_FILE = os.path.join(PROJECT_ROOT, "memory", "learned-preferences.yaml")
 
-# Default item counts per section
+# Top N most relevant items per section
 DEFAULT_ITEM_COUNT = 3
-MIN_ITEM_COUNT = 2
-MAX_ITEM_COUNT = 7
+MIN_ITEM_COUNT = 3
+MAX_ITEM_COUNT = 3
 
 # Thresholds
 HIGH_RATING_THRESHOLD = 4.0  # sections rated >= this get more items
 LOW_RATING_THRESHOLD = 2.0   # sections rated <= this get fewer items
 
-ALL_SECTIONS = ["news", "jobs", "events", "calendar", "german"]
+ALL_SECTIONS = ["news", "jobs", "events"]
+
+
+FEEDBACK_WINDOW_DAYS = 30
 
 
 def load_feedback():
-    """Load all feedback entries from JSONL file."""
+    """Load feedback entries from the last FEEDBACK_WINDOW_DAYS days."""
     entries = []
     if not os.path.exists(FEEDBACK_FILE):
         return entries
+    cutoff = datetime.now(timezone.utc).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
+    from datetime import timedelta
+    cutoff = cutoff - timedelta(days=FEEDBACK_WINDOW_DAYS)
     with open(FEEDBACK_FILE, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
-            if line:
-                try:
-                    entries.append(json.loads(line))
-                except json.JSONDecodeError:
-                    continue
+            if not line:
+                continue
+            try:
+                entry = json.loads(line)
+                ts = entry.get("timestamp", "")
+                if ts:
+                    try:
+                        entry_dt = datetime.fromisoformat(ts)
+                        if entry_dt.tzinfo is None:
+                            entry_dt = entry_dt.replace(tzinfo=timezone.utc)
+                        if entry_dt < cutoff:
+                            continue
+                    except ValueError:
+                        pass
+                entries.append(entry)
+            except json.JSONDecodeError:
+                continue
     return entries
 
 
@@ -102,10 +122,12 @@ def determine_item_counts(section_avgs):
 
 
 def determine_section_preferences(section_avgs):
-    """Determine preferred and skipped sections."""
+    """Determine preferred and skipped sections (only considers active sections)."""
     preferred = []
     skipped = []
     for section, avg in section_avgs.items():
+        if section not in ALL_SECTIONS:
+            continue
         if avg >= HIGH_RATING_THRESHOLD:
             preferred.append(section)
         elif avg <= LOW_RATING_THRESHOLD:
@@ -128,6 +150,14 @@ def update_preferences(entries, overall_avg, section_avgs):
     cp.setdefault("disliked_topics", [])
     cp.setdefault("preferred_sources", [])
     cp.setdefault("ignored_sources", [])
+
+    # Collect recent written feedback so it is considered going forward
+    recent_comments = [
+        {"date": e.get("date", ""), "comment": e.get("comment", "").strip()}
+        for e in entries
+        if e.get("comment", "").strip()
+    ]
+    cp["recent_comments"] = recent_comments[-10:]
 
     # Update reading_patterns
     if "reading_patterns" not in prefs:

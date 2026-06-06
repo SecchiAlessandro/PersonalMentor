@@ -17,7 +17,7 @@ import tempfile
 import time
 import webbrowser
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 from urllib.request import urlopen
 
@@ -154,79 +154,8 @@ def fetch_all_parallel(content_dir: Path):
     print("  All fetchers complete.")
 
 
-def fetch_calendar(content_dir: Path, today: str, tomorrow: str) -> str | None:
-    """Fetch Google Calendar via gog CLI. Returns render arg or None."""
-    print("[4/10] Fetching calendar (gog)...")
-    gog = shutil.which("gog")
-    if not gog:
-        install_hint = (
-            "brew install steipete/tap/gogcli" if platform.system() == "Darwin"
-            else "See https://github.com/steipete/gogcli for install instructions"
-        )
-        print(f"  gog not installed — skipping. Install: {install_hint}")
-        return None
-
-    gog_out = content_dir / "gog_calendar.json"
-    try:
-        result = _run(
-            [gog, "calendar", "events", "primary",
-             "--from", f"{today}T00:00:00Z",
-             "--to", f"{tomorrow}T23:59:59Z",
-             "--json"],
-            capture_output=True, timeout=30,
-        )
-        if result.returncode != 0:
-            raise RuntimeError("gog returned non-zero")
-        gog_out.write_bytes(result.stdout)
-        size = gog_out.stat().st_size
-        print(f"  Calendar fetched ({size} bytes).")
-        # Debug: first 500 chars
-        preview = result.stdout[:500].decode(errors="replace")
-        for line in preview.splitlines():
-            print(f"    {line}")
-    except Exception:
-        print("  WARNING: gog calendar fetch failed (OAuth not configured?)")
-        if gog_out.exists():
-            gog_out.unlink()
-        return None
-
-    # Parse gog output
-    parsed = content_dir / "calendar.json"
-    try:
-        _run(
-            [_python(), str(SCRIPT_DIR / "parse_gog.py"),
-             "--calendar-in", str(gog_out),
-             "--calendar-out", str(parsed)],
-            check=True, capture_output=True,
-        )
-    except Exception:
-        print("  WARNING: gog parse failed")
-        return None
-
-    if parsed.is_file():
-        return str(parsed)
-    return None
-
-
-def generate_german(content_dir: Path, today: str) -> str | None:
-    """Generate German Sentence of the Day. Returns render arg or None."""
-    print("[5/10] Generating German Sentence of the Day...")
-    german_out = content_dir / "german.json"
-    try:
-        _run(
-            [_python(), str(SCRIPT_DIR / "generate_german.py"),
-             "--output", str(german_out),
-             "--date", today],
-            check=True, timeout=60,
-        )
-        return str(german_out)
-    except Exception:
-        print("  WARNING: German sentence generation failed (GEMINI_API_KEY set?)")
-        return None
-
-
 def ingest_github_feedback():
-    print("[6/10] Ingesting GitHub feedback issues...")
+    print("[5/8] Ingesting GitHub feedback issues...")
     try:
         _run([_python(), str(SCRIPT_DIR / "ingest_github_feedback.py")],
              check=True, capture_output=True, timeout=30)
@@ -235,7 +164,7 @@ def ingest_github_feedback():
 
 
 def analyze_feedback():
-    print("[7/10] Analyzing feedback...")
+    print("[6/8] Analyzing feedback...")
     feedback_file = PROJECT_ROOT / "memory" / "feedback.jsonl"
     if feedback_file.is_file():
         try:
@@ -247,25 +176,19 @@ def analyze_feedback():
         print("  No feedback yet — skipping.")
 
 
-def render_newspaper(content_dir: Path, output_file: Path,
-                     calendar_json: str | None, german_json: str | None):
-    print("[8/10] Rendering newspaper...")
-    args = [
+def render_newspaper(content_dir: Path, output_file: Path):
+    print("[6/8] Rendering newspaper...")
+    _run([
         _python(),
         str(PROJECT_ROOT / "skills" / "daily-newspaper" / "scripts" / "render_newspaper.py"),
         "--profile-dir", str(PROJECT_ROOT / "profile"),
         "--content-dir", str(content_dir),
         "--output", str(output_file),
-    ]
-    if calendar_json:
-        args += ["--calendar-json", calendar_json]
-    if german_json:
-        args += ["--german-json", german_json]
-    _run(args, check=True)
+    ], check=True)
 
 
 def start_feedback_server():
-    print("[9/10] Starting feedback server...")
+    print("[7/8] Starting feedback server...")
     if _health_check():
         print("  Feedback server already running.")
     else:
@@ -277,15 +200,15 @@ def start_feedback_server():
 
 
 def register_artifact(today: str):
-    print("[10/10] Registering artifact...")
+    print("[8/8] Registering artifact...")
     _run([
         _python(),
         str(PROJECT_ROOT / "skills" / "memory-manager" / "scripts" / "register_artifact.py"),
         "--type", "daily-newspaper",
         "--path", f"output/daily/{today}.html",
-        "--sections", "news,jobs,events,calendar-events,german-sentence",
+        "--sections", "news,jobs,events",
         "--item-count", "0",
-        "--sources", "rss,jobs,events,calendar,gemini",
+        "--sources", "rss,jobs,events",
     ])
     _run([
         _python(),
@@ -347,7 +270,6 @@ def main():
         launch_onboarding()
 
     today = datetime.now().strftime("%Y-%m-%d")
-    tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
     content_dir = Path(tempfile.gettempdir()) / f"pm_daily_{today}"
     output_file = PROJECT_ROOT / "output" / "daily" / f"{today}.html"
 
@@ -363,25 +285,19 @@ def main():
     # Steps 2-4: Parallel fetchers
     fetch_all_parallel(content_dir)
 
-    # Step 5: Calendar
-    calendar_json = fetch_calendar(content_dir, today, tomorrow)
-
-    # Step 6: German sentence
-    german_json = generate_german(content_dir, today)
-
-    # Step 7: GitHub feedback
+    # Step 5: GitHub feedback
     ingest_github_feedback()
 
-    # Step 8: Analyze feedback
+    # Step 6: Analyze feedback
     analyze_feedback()
 
-    # Step 9: Render
-    render_newspaper(content_dir, output_file, calendar_json, german_json)
+    # Step 7: Render
+    render_newspaper(content_dir, output_file)
 
-    # Step 10: Feedback server
+    # Step 8: Feedback server
     start_feedback_server()
 
-    # Step 11: Register artifact
+    # Step 9: Register artifact
     register_artifact(today)
 
     # Cleanup old temp dirs

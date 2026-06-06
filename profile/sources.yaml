@@ -6,17 +6,37 @@ rss_feeds:
   category: ai
 - url: https://venturebeat.com/category/ai/feed/
   category: ai
+# --- AI company blogs ---
+- url: https://www.anthropic.com/news
+  category: ai
+  type: html
+- url: https://deepmind.google/discover/blog/
+  category: ai
+  type: html
 # --- Energy / power / clean tech ---
 - url: https://spectrum.ieee.org/feeds/topic/energy.rss
   category: energy
 - url: https://www.canarymedia.com/articles.rss
   category: energy
-- url: https://cleantechnica.com/feed/
+# --- Energy industry & markets ---
+- url: https://www.entsoe.eu/news/
   category: energy
+  type: html
+- url: https://iaee.org/news
+  category: energy
+  type: html
+- url: https://www.energymonitor.ai/news/
+  category: energy
+  type: html
+- url: https://www.montelnews.com/
+  category: energy
+  type: html
 # --- Broad tech (kept; profile relevance filter trims off-profile items) ---
 - url: https://hnrss.org/frontpage
   category: tech
 - url: https://techcrunch.com/feed/
+  category: tech
+- url: https://www.producthunt.com/feed
   category: tech
 # --- ETH Zurich news/events ---
 - url: https://ethz.ch/en/news-and-events/events.html
@@ -67,4 +87,11 @@ event_sources:
   location_filter: ''
 # ETH Zurich events
 - url: https://ethz.ch/en/news-and-events/events.html
+  location_filter: ''
+# Industry events — ENTSO-E, IAEE
+- url: https://www.entsoe.eu/events/
+  type: html
+  location_filter: ''
+- url: https://iaee.org/events
+  type: html
   location_filter: ''

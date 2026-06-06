@@ -85,6 +85,16 @@
       padding-bottom: 0.5rem;
       margin-bottom: 1rem;
     }
+    .subsection-title {
+      font-family: var(--font-heading), Georgia, serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-secondary);
+      margin: 1.25rem 0 0.6rem;
+    }
+    .subsection-title:first-child { margin-top: 0; }
 
     /* === ITEMS === */
     .item {
@@ -131,6 +141,14 @@
       margin-left: 0.5rem;
       border-radius: 4px;
     }
+    .item-meta .source-link {
+      margin-left: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--color-accent);
+      text-decoration: none;
+      opacity: 0.8;
+    }
+    .item-meta .source-link:hover { opacity: 1; text-decoration: underline; }
     .item-summary {
       font-size: 0.9rem;
       color: var(--color-text);
@@ -161,81 +179,6 @@
       border-radius: 4px;
     }
 
-    /* === CALENDAR === */
-    .calendar-item {
-      padding: 0.6rem 0;
-      border-bottom: 1px solid var(--color-border);
-      font-size: 0.9rem;
-    }
-    .calendar-item:last-child {
-      border-bottom: none;
-    }
-    .calendar-time {
-      font-weight: 700;
-      color: var(--color-primary);
-      margin-right: 0.5rem;
-    }
-
-    /* === GERMAN SENTENCE OF THE DAY === */
-    .german-card {
-      background: var(--color-surface);
-      border-radius: 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-      padding: 1.5rem;
-      display: flex;
-      gap: 1.5rem;
-      align-items: flex-start;
-      border-left: 3px solid var(--color-accent);
-      transition: box-shadow 0.2s ease;
-    }
-    .german-card:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-    .german-card-image {
-      flex-shrink: 0;
-      width: 200px;
-      height: 200px;
-      border-radius: 10px;
-      object-fit: cover;
-    }
-    .german-card-text {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 0.75rem;
-    }
-    .german-sentence {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--color-primary);
-      line-height: 1.4;
-    }
-    .german-translation {
-      font-size: 1rem;
-      color: var(--color-text-muted);
-      font-style: italic;
-      line-height: 1.4;
-    }
-    .german-author {
-      font-size: 0.95rem;
-      color: var(--color-accent);
-      font-weight: 600;
-      margin-top: 0.25rem;
-    }
-
-    @media (max-width: 600px) {
-      .german-card {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
-      .german-card-image {
-        width: 160px;
-        height: 160px;
-      }
-    }
-
     /* === FEEDBACK === */
     .feedback-card {
       background: var(--color-surface);
@@ -244,63 +187,6 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.06);
       max-width: 520px;
       margin: 0 auto;
-    }
-    .feedback-overall {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.25rem;
-    }
-    .feedback-label {
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: var(--color-text);
-      min-width: 60px;
-    }
-    .star-rating {
-      display: flex;
-      gap: 0.25rem;
-      cursor: pointer;
-    }
-    .star-rating .star {
-      font-size: 1.75rem;
-      color: var(--color-border);
-      transition: color 0.15s;
-      user-select: none;
-    }
-    .star-rating .star.active,
-    .star-rating .star.hover {
-      color: #f59e0b;
-    }
-    .feedback-sections {
-      margin-bottom: 1.25rem;
-    }
-    .feedback-section-row {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.35rem 0;
-    }
-    .feedback-section-row span {
-      font-size: 0.85rem;
-      color: var(--color-text);
-      min-width: 80px;
-    }
-    .thumb {
-      background: none;
-      border: 1px solid var(--color-border);
-      border-radius: 6px;
-      padding: 0.2rem 0.5rem;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .thumb:hover {
-      border-color: var(--color-accent);
-    }
-    .thumb.active {
-      background: var(--color-accent);
-      border-color: var(--color-accent);
     }
     .feedback-comment {
       width: 100%;
@@ -400,18 +286,6 @@
     {{events_content}}
   </section>
 
-  <!-- CALENDAR EVENTS -->
-  <section class="section" id="calendar-events">
-    <h2 class="section-title">Calendar Events</h2>
-    {{calendar_content}}
-  </section>
-
-  <!-- GERMAN SENTENCE OF THE DAY -->
-  <section class="section" id="german-sentence">
-    <h2 class="section-title">German Quote of the Day</h2>
-    {{german_content}}
-  </section>
-
   <!-- FEEDBACK -->
   {{feedback_content}}
 
@@ -425,44 +299,6 @@
     var feedbackData = { date: '{{date}}', rating: null, section_ratings: {}, comment: '' };
     var submitted = false;
 
-    // Star rating
-    var stars = document.querySelectorAll('.star-rating .star');
-    stars.forEach(function(star, i) {
-      star.addEventListener('mouseenter', function() {
-        if (submitted) return;
-        stars.forEach(function(s, j) { s.classList.toggle('hover', j <= i); });
-      });
-      star.addEventListener('mouseleave', function() {
-        stars.forEach(function(s) { s.classList.remove('hover'); });
-      });
-      star.addEventListener('click', function() {
-        if (submitted) return;
-        feedbackData.rating = i + 1;
-        stars.forEach(function(s, j) { s.classList.toggle('active', j <= i); });
-      });
-    });
-
-    // Thumb buttons
-    document.querySelectorAll('.feedback-section-row').forEach(function(row) {
-      var section = row.getAttribute('data-section');
-      var thumbs = row.querySelectorAll('.thumb');
-      thumbs.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          if (submitted) return;
-          var isUp = btn.classList.contains('up');
-          var wasActive = btn.classList.contains('active');
-          thumbs.forEach(function(t) { t.classList.remove('active'); });
-          if (wasActive) {
-            delete feedbackData.section_ratings[section];
-          } else {
-            btn.classList.add('active');
-            feedbackData.section_ratings[section] = isUp ? 4 : 2;
-          }
-        });
-      });
-    });
-
-    // Comment
     var commentEl = document.querySelector('.feedback-comment');
     if (commentEl) {
       commentEl.addEventListener('input', function() {
@@ -470,20 +306,19 @@
       });
     }
 
-    // Submit
     var submitBtn = document.querySelector('.feedback-submit');
     var statusEl = document.querySelector('.feedback-status');
     if (submitBtn) {
       submitBtn.addEventListener('click', function() {
         if (submitted) return;
-        if (feedbackData.rating === null) {
+        if (!feedbackData.comment.trim()) {
           statusEl.className = 'feedback-status error';
-          statusEl.textContent = 'Please select an overall star rating first.';
+          statusEl.textContent = 'Please write a few words first.';
           return;
         }
         submitBtn.disabled = true;
         statusEl.className = 'feedback-status';
-        statusEl.textContent = 'Submitting...';
+        statusEl.textContent = 'Sending...';
 
         var controller = new AbortController();
         var timeoutId = setTimeout(function() { controller.abort(); }, 2000);
@@ -510,16 +345,7 @@
           var title = 'Feedback: ' + feedbackData.date;
           var lines = ['## Daily Newspaper Feedback', ''];
           lines.push('**Date:** ' + feedbackData.date);
-          lines.push('**Overall rating:** ' + feedbackData.rating + '/5');
-          if (feedbackData.sections) {
-            lines.push('', '### Section ratings');
-            Object.keys(feedbackData.sections).forEach(function(s) {
-              lines.push('- **' + s + ':** ' + feedbackData.sections[s] + '/5');
-            });
-          }
-          if (feedbackData.comment) {
-            lines.push('', '### Comment', feedbackData.comment);
-          }
+          lines.push('', '### Comment', feedbackData.comment);
           var body = lines.join('\n');
           var url = 'https://github.com/SecchiAlessandro/PersonalMentor/issues/new'
             + '?title=' + encodeURIComponent(title)
