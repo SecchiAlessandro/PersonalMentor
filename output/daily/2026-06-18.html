@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PersonalMentor Daily — 2026-06-18</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* === RESET === */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* === THEME VARIABLES (replaced at render time) === */
+    :root {
+      --color-bg: #faf6f0;
+      --color-surface: #ffffff;
+      --color-primary: #5c4033;
+      --color-secondary: #b8860b;
+      --color-accent: #daa520;
+      --color-text: #2d2017;
+      --color-text-muted: #8b7355;
+      --color-border: #e8dcc8;
+      --font-heading: 'Libre Baskerville', serif;
+      --font-body: 'Nunito', sans-serif;
+    }
+
+    /* === BASE === */
+    body {
+      font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+
+    /* === HEADER === */
+    .newspaper-header {
+      position: relative;
+      padding-bottom: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .newspaper-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-accent), var(--color-secondary), transparent);
+      border-radius: 2px;
+    }
+    .newspaper-header h1 {
+      font-family: var(--font-heading), Georgia, serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      letter-spacing: -0.02em;
+    }
+    .newspaper-header .greeting {
+      font-size: 1.1rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+    .newspaper-header .date-line {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      margin-top: 0.5rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* === SECTIONS === */
+    .section {
+      margin-bottom: 2.5rem;
+    }
+    .section-title {
+      font-family: var(--font-heading), Georgia, serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      letter-spacing: -0.01em;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .subsection-title {
+      font-family: var(--font-heading), Georgia, serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-secondary);
+      margin: 1.25rem 0 0.6rem;
+    }
+    .subsection-title:first-child { margin-top: 0; }
+
+    /* === ITEMS === */
+    .item {
+      background: var(--color-surface);
+      border-left: 3px solid var(--color-accent);
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .item:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transform: translateY(-1px);
+    }
+    .item-title {
+      font-family: var(--font-heading), Georgia, serif;
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+    .item-title a {
+      color: var(--color-text);
+      text-decoration: none;
+    }
+    .item-title a:hover {
+      color: var(--color-accent);
+      text-decoration: underline;
+    }
+    .item-meta {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.35rem;
+    }
+    .item-meta .source { font-weight: 600; }
+    .item-meta .tag {
+      display: inline-block;
+      background: var(--color-primary);
+      color: var(--color-bg);
+      padding: 0.1em 0.5em;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      margin-left: 0.5rem;
+      border-radius: 4px;
+    }
+    .item-meta .source-link {
+      margin-left: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--color-accent);
+      text-decoration: none;
+      opacity: 0.8;
+    }
+    .item-meta .source-link:hover { opacity: 1; text-decoration: underline; }
+    .item-summary {
+      font-size: 0.9rem;
+      color: var(--color-text);
+      line-height: 1.5;
+    }
+
+    /* === JOB ITEMS === */
+    .job-item {
+      background: var(--color-surface);
+      border-left: 3px solid var(--color-secondary);
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .job-item:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transform: translateY(-1px);
+    }
+    .match-score {
+      display: inline-block;
+      background: var(--color-secondary);
+      color: #ffffff;
+      padding: 0.15em 0.6em;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 4px;
+    }
+
+    /* === FEEDBACK === */
+    .feedback-card {
+      background: var(--color-surface);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .feedback-comment {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      resize: vertical;
+      min-height: 48px;
+      margin-bottom: 1rem;
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+    .feedback-comment::placeholder {
+      color: var(--color-text-muted);
+    }
+    .feedback-submit {
+      display: block;
+      width: 100%;
+      padding: 0.6rem;
+      background: var(--color-accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .feedback-submit:hover {
+      opacity: 0.9;
+    }
+    .feedback-submit:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+    .feedback-status {
+      text-align: center;
+      font-size: 0.85rem;
+      margin-top: 0.75rem;
+      min-height: 1.2em;
+    }
+    .feedback-status.success { color: #16a34a; }
+    .feedback-status.error { color: #dc2626; }
+
+    /* === FOOTER === */
+    .newspaper-footer {
+      border-top: 1px solid var(--color-border);
+      padding-top: 1.25rem;
+      margin-top: 2.5rem;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-align: center;
+    }
+    .newspaper-footer a {
+      color: var(--color-accent);
+      text-decoration: none;
+    }
+    .newspaper-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* === EMPTY STATE === */
+    .empty-state {
+      color: var(--color-text-muted);
+      font-style: italic;
+      padding: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="newspaper-header">
+    <h1>PersonalMentor Daily</h1>
+    <div class="greeting">Good morning, Alessandro Secchi</div>
+    <div class="date-line">Thursday, June 18, 2026</div>
+  </header>
+
+  <!-- NEWS -->
+  <section class="section" id="news">
+    <h2 class="section-title">News</h2>
+        <h3 class="subsection-title">⚡ Energy</h3>
+    <div class="item">
+      <div class="item-title"><a href="https://spectrum.ieee.org/renewable-energy-resistance" target="_blank">Why Sardinians Are Fighting the Renewable Energy Transition</a></div>
+      <div class="item-meta">
+        <span class="source">IEEE Spectrum</span>
+        <span class="tag">energy</span>
+      </div>
+      <div class="item-summary">“Not in my backyard” is the rallying cry of citizens everywhere resisting projects proposed for their locality.</div>
+    </div>
+    <div class="item">
+      <div class="item-title"><a href="https://www.canarymedia.com/articles/data-centers/ai-energy-gas-turbines-space-underwater" target="_blank">AI firms are getting creative as they scramble for energy</a></div>
+      <div class="item-meta">
+        <span class="source">Canary Media</span>
+        <span class="tag">energy</span>
+      </div>
+      <div class="item-summary">This analysis and news roundup come from the Canary Media Weekly newsletter.</div>
+    </div>
+    <div class="item">
+      <div class="item-title"><a href="https://www.montelnews.com/news/50d6383f-b926-4ab0-971a-abb737308151/looming-french-heatwave-to-test-grid-river-limits" target="_blank">Looming French heatwave to test grid, river limits</a></div>
+      <div class="item-meta">
+        <span class="source">Montelnews</span>
+        <span class="tag">energy</span>
+      </div>
+      
+    </div>
+    <h3 class="subsection-title">🤖 AI &amp; Tech</h3>
+    <div class="item">
+      <div class="item-title"><a href="https://techcrunch.com/2026/06/18/ai-data-centers-just-got-a-government-mandated-fast-lane-to-the-grid/" target="_blank">AI data centers just got a government-mandated fast lane to the grid</a></div>
+      <div class="item-meta">
+        <span class="source">TechCrunch</span>
+        <span class="tag">tech</span>
+      </div>
+      <div class="item-summary">FERC told grid operators to give data centers a fast lane for interconnections, but it failed to address electricity supply shortages.</div>
+    </div>
+    <div class="item">
+      <div class="item-title"><a href="https://www.technologyreview.com/2026/06/02/1137827/rehumanizing-global-health-care-with-agentic-ai/" target="_blank">Rehumanizing global health care with agentic AI</a></div>
+      <div class="item-meta">
+        <span class="source">Artificial intelligence – MIT Technology Review</span>
+        <span class="tag">ai</span>
+      </div>
+      <div class="item-summary">The global health care sector is under increasing strain.&160; Decades of chronic underinvestment and constraints in recruitment have coincided with a surge in…</div>
+    </div>
+    <div class="item">
+      <div class="item-title"><a href="https://venturebeat.com/infrastructure/claude-code-costs-up-to-usd200-a-month-goose-does-the-same-thing-for-free" target="_blank">Claude Code costs up to $200 a month. Goose does the same thing for free.</a></div>
+      <div class="item-meta">
+        <span class="source">AI | VentureBeat</span>
+        <span class="tag">ai</span>
+      </div>
+      <div class="item-summary">The artificial intelligence coding revolution comes with a catch: it&x27;s expensive.Claude Code, Anthropic&x27;s terminal-based AI agent that can write…</div>
+    </div>
+  </section>
+
+  <!-- JOBS -->
+  <section class="section" id="jobs">
+    <h2 class="section-title">Jobs</h2>
+        <div class="job-item">
+      <div class="item-title"><a href="https://swissdevjobs.ch/jobs/Data-Purpose-AG-Senior-Consultant-SAP-Data--Analytics-60100-mwd?utm_source=our_rss_feed&utm_medium=our_rss_feed" target="_blank">Senior Consultant SAP Data & Analytics 60–100% (m/w/d) @ Data Purpose AG [CHF 120'000 - 150'000]</a></div>
+      <div class="item-meta">
+        
+        <span class="match-score">100% match</span>
+      </div>
+      <div class="item-summary">Salary: CHF 120'000 - 150'000 per year Requirements: 5+ Jahre SAP Data & AnalyticsTiefe in mindestens zwei Bereichen: BW/4HANA, SAC, Datasphere oder Embedded…</div>
+    </div>
+    <div class="job-item">
+      <div class="item-title"><a href="https://swissdevjobs.ch/jobs/Rockstar-Recruiting-AG-Software-Cloud-Architect?utm_source=our_rss_feed&utm_medium=our_rss_feed" target="_blank">Software Cloud Architect @ Rockstar Recruiting AG [CHF 135'000 - 150'000]</a></div>
+      <div class="item-meta">
+        
+        <span class="match-score">90% match</span>
+      </div>
+      <div class="item-summary">Salary: CHF 135'000 - 150'000 per year Requirements: Demonstrated track record in roles such as Software Architect, Cloud Architect, Solutions Architect, or…</div>
+    </div>
+    <div class="job-item">
+      <div class="item-title"><a href="https://swissdevjobs.ch/jobs/FP-Robotics-AG-Senior-AI-Engineer--Robotics--Embodied-AI?utm_source=our_rss_feed&utm_medium=our_rss_feed" target="_blank">Senior AI Engineer – Robotics & Embodied AI @ F&P Robotics AG [CHF 105'000 - 135'000]</a></div>
+      <div class="item-meta">
+        
+        <span class="match-score">90% match</span>
+      </div>
+      <div class="item-summary">Salary: CHF 105'000 - 135'000 per year Requirements: Masters degree in Computer Science, Artificial Intelligence, Robotics or a related fieldAt least 3 years…</div>
+    </div>
+  </section>
+
+  <!-- EVENTS -->
+  <section class="section" id="events">
+    <h2 class="section-title">Events</h2>
+        <h3 class="subsection-title">⚡ Energy</h3>
+    <div class="item">
+      <div class="item-title"><a href="https://www.eventbrite.ch/e/rise-shine-hypnosis-and-yin-yoga-experience-in-zurich-tickets-1990862381977" target="_blank">Rise & Shine - Hypnosis and Yin Yoga Experience in Zurich</a></div>
+      <div class="item-meta">
+        <span class="source">2026-06-21</span> · Yoga-Spirit
+        <span class="tag">conference</span>
+        <a class="source-link" href="https://www.eventbrite.com/d/switzerland--zurich/energy-technology/" target="_blank">eventbrite.com</a>
+      </div>
+      <div class="item-summary">Join us for a beautiful and refreshing half-day experience for inner clarity, confidence & energy on summer solstice!</div>
+    </div>
+    <div class="item">
+      <div class="item-title"><a href="https://www.eventbrite.ch/e/ceo-energy-break-tickets-1990466839900" target="_blank">CEO Energy Break</a></div>
+      <div class="item-meta">
+        <span class="source">2026-07-06</span> · Rütistrasse 12
+        <span class="tag">conference</span>
+        <a class="source-link" href="https://www.eventbrite.com/d/switzerland--zurich/energy-technology/" target="_blank">eventbrite.com</a>
+      </div>
+      <div class="item-summary">Meet like-minded Healthtech CEO's to discuss current challenges and learn from each other.</div>
+    </div>
+    <div class="item">
+      <div class="item-title"><a href="https://www.eventbrite.com/e/founders-pitch-networking-night-in-zurich-tickets-1989238029495" target="_blank">Founders Pitch & Networking Night   in     Zürich</a></div>
+      <div class="item-meta">
+        <span class="source">2026-06-30</span> · Bar INCONTRO.
+        <span class="tag">conference</span>
+        <a class="source-link" href="https://www.eventbrite.com/d/switzerland--zurich/energy-technology/" target="_blank">eventbrite.com</a>
+      </div>
+      <div class="item-summary">Dive into tech with other professionals!</div>
+    </div>
+    <h3 class="subsection-title">🤖 AI &amp; Tech</h3>
+    <div class="item">
+      <div class="item-title"><a href="https://www.meetup.com/zurich-ai-machine-learning-and-computer-vision-meetup/events/315203407/" target="_blank">July 30 - Zurich AI, ML and Computer Vision Meetup</a></div>
+      <div class="item-meta">
+        <span class="source">2026-07-30</span> · WestHive
+        <span class="tag">conference</span>
+        <a class="source-link" href="https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS" target="_blank">meetup.com</a>
+      </div>
+      <div class="item-summary">Join our in-person Meetup to hear talks from experts on cutting-edge topics across AI, ML, and computer vision.</div>
+    </div>
+    <div class="item">
+      <div class="item-title"><a href="https://www.eventbrite.com.au/e/integrating-blockchain-and-ai-artificial-intelligence-zurich-tickets-1922342360749" target="_blank">Integrating Blockchain and AI (Artificial Intelligence) | Zurich</a></div>
+      <div class="item-meta">
+        <span class="source">2026-07-09</span> · Zürich
+        <span class="tag">conference</span>
+        <a class="source-link" href="https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/" target="_blank">eventbrite.com</a>
+      </div>
+      <div class="item-summary">2-hour live online training to help you navigate the convergence of Blockchain and AI (Artificial Intelligence).</div>
+    </div>
+    <div class="item">
+      <div class="item-title"><a href="https://www.meetup.com/zurich-ai-machine-learning-and-computer-vision-meetup/events/314913532/" target="_blank">July 23 - AI, ML, and Computer Vision Meetup</a></div>
+      <div class="item-meta">
+        <span class="source">2026-07-23</span> · TBD
+        <span class="tag">conference</span>
+        <a class="source-link" href="https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS" target="_blank">meetup.com</a>
+      </div>
+      <div class="item-summary">Join our virtual meetup to hear talks from experts on cutting-edge topics across AI, ML, and computer vision.</div>
+    </div>
+  </section>
+
+  <!-- FEEDBACK -->
+    <section class="section" id="feedback">
+    <h2 class="section-title">Today's Feedback</h2>
+    <div class="feedback-card">
+      <textarea class="feedback-comment" placeholder="What did you think of today's edition? What should change tomorrow?"></textarea>
+      <button class="feedback-submit">Send Feedback</button>
+      <div class="feedback-status"></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="newspaper-footer">
+    PersonalMentor Daily · Generated 2026-06-18 21:03 UTC · <a href="../daily/">Browse Archive</a>
+  </footer>
+
+  <script>
+  (function() {
+    var feedbackData = { date: '2026-06-18', rating: null, section_ratings: {}, comment: '' };
+    var submitted = false;
+
+    var commentEl = document.querySelector('.feedback-comment');
+    if (commentEl) {
+      commentEl.addEventListener('input', function() {
+        feedbackData.comment = commentEl.value;
+      });
+    }
+
+    var submitBtn = document.querySelector('.feedback-submit');
+    var statusEl = document.querySelector('.feedback-status');
+    if (submitBtn) {
+      submitBtn.addEventListener('click', function() {
+        if (submitted) return;
+        if (!feedbackData.comment.trim()) {
+          statusEl.className = 'feedback-status error';
+          statusEl.textContent = 'Please write a few words first.';
+          return;
+        }
+        submitBtn.disabled = true;
+        statusEl.className = 'feedback-status';
+        statusEl.textContent = 'Sending...';
+
+        var controller = new AbortController();
+        var timeoutId = setTimeout(function() { controller.abort(); }, 2000);
+
+        fetch('http://localhost:9847/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(feedbackData),
+          signal: controller.signal
+        })
+        .then(function(res) { clearTimeout(timeoutId); return res.json(); })
+        .then(function(data) {
+          if (data.status === 'ok') {
+            submitted = true;
+            statusEl.className = 'feedback-status success';
+            statusEl.textContent = 'Thanks for your feedback!';
+          } else {
+            throw new Error(data.error || 'Unknown error');
+          }
+        })
+        .catch(function(err) {
+          clearTimeout(timeoutId);
+          // Fallback: open pre-filled GitHub Issue
+          var title = 'Feedback: ' + feedbackData.date;
+          var lines = ['## Daily Newspaper Feedback', ''];
+          lines.push('**Date:** ' + feedbackData.date);
+          lines.push('', '### Comment', feedbackData.comment);
+          var body = lines.join('\n');
+          var url = 'https://github.com/SecchiAlessandro/PersonalMentor/issues/new'
+            + '?title=' + encodeURIComponent(title)
+            + '&body=' + encodeURIComponent(body)
+            + '&labels=feedback';
+          window.open(url, '_blank');
+          submitted = true;
+          statusEl.className = 'feedback-status success';
+          statusEl.textContent = 'Feedback opened as GitHub Issue \u2014 thank you!';
+        });
+      });
+    }
+  })();
+  </script>
+
+</body>
+</html>
