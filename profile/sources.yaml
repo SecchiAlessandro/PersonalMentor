@@ -42,6 +42,12 @@ rss_feeds:
 - url: https://ethz.ch/en/news-and-events/events.html
   category: news
   type: html
+- url: https://gess.ethz.ch/en/news-and-events.html
+  category: news
+  type: html
+- url: https://cepe.ethz.ch/news-and-events.html
+  category: energy
+  type: html
 job_boards:
 # Hitachi (primary target company) — Zurich area
 - url: https://www.datacareer.ch/jobs/?q=Hitachi&location=Zurich
@@ -88,10 +94,23 @@ event_sources:
 # ETH Zurich events
 - url: https://ethz.ch/en/news-and-events/events.html
   location_filter: ''
+- url: https://gess.ethz.ch/en/news-and-events.html
+  type: html
+  location_filter: ''
+- url: https://cepe.ethz.ch/news-and-events.html
+  type: html
+  location_filter: ''
+- url: https://cepe.ethz.ch/education/lunchseminar.html
+  type: html
+  location_filter: ''
 # Industry events — ENTSO-E, IAEE
 - url: https://www.entsoe.eu/events/
   type: html
   location_filter: ''
 - url: https://iaee.org/events
+  type: html
+  location_filter: ''
+# EU Energy events
+- url: https://energy.ec.europa.eu/topics/funding-and-financing/investors-dialogue-energy/events_en
   type: html
   location_filter: ''
