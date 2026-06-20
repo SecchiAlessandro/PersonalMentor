@@ -7,6 +7,12 @@ __pycache__/
 /output/cv/*
 /output/documents/*
 /output/web/*
+# Personal Coach sub-app build is a deployed artifact — keep it tracked.
+!/output/web/coach
 !/output/**/.gitkeep
 /memory/session-log.jsonl
 /tmp/
+
+# Personal Coach (Vite sub-app) — track source, ignore install/build cruft.
+/coach/node_modules/
+/coach/dist/

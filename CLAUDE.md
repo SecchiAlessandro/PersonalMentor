@@ -74,6 +74,24 @@ python3 skills/daily-newspaper/scripts/render_newspaper.py --profile-dir profile
 python3 skills/daily-newspaper/scripts/analyze_feedback.py
 ```
 
+### Build the Personal Coach sub-app
+
+The newspaper has two sections shown as top tabs: **News · Events · Jobs** (the
+daily pipeline above) and **Personal Coach** (an embedded energy check-in app).
+The coach is a React/Vite app under `coach/`; its build is committed to
+`output/web/coach/` and the newspaper embeds it via an `<iframe>`. It is **not**
+part of the daily pipeline — rebuild only when `coach/` source changes:
+
+```bash
+cd coach
+npm install        # first time only
+npm run build      # → output/web/coach/
+```
+
+See `coach/README.md` for details. The coach is a trim of `LifeCoach/web` with the
+on-device AI coach removed (coaching is always deterministic and rule-based) and no
+mock-data seeding (starts empty).
+
 ### Scheduling
 
 **macOS (launchd):**
@@ -95,6 +113,8 @@ schtasks /delete /tn "PersonalMentor Daily"  # Remove
 ## Architecture
 
 PersonalMentor is an autonomous agent that generates a daily HTML newspaper tailored to the user's profile. It runs unattended via macOS launchd or Windows Task Scheduler, fetches content from RSS/job boards/calendar, and publishes to GitHub Pages. The pipeline is cross-platform (macOS, Linux, Windows).
+
+The newspaper is split into two top-tab sections: **News · Events · Jobs** (the daily pipeline) and **Personal Coach** (a React/Vite energy check-in sub-app under `coach/`, built to `output/web/coach/` and embedded via an `<iframe>` — see the build command above and `coach/README.md`). The tab shell lives in `skills/daily-newspaper/assets/template.html`; the `{{coach_url}}` placeholder is filled by `render_newspaper.py`.
 
 ### Daily Pipeline (run_daily.py / run_daily.sh)
 

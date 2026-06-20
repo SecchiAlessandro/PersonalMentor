@@ -507,6 +507,9 @@ def build_html(template, profile, content, theme):
     html = html.replace("{{date_formatted}}", date_formatted)
     html = html.replace("{{generated_at}}", now.strftime("%Y-%m-%d %H:%M UTC"))
     html = html.replace("{{archive_url}}", "../daily/")
+    # Personal Coach sub-app (built separately into output/web/coach/). Relative
+    # path from output/daily/DATE.html → output/web/coach/index.html.
+    html = html.replace("{{coach_url}}", "../web/coach/index.html")
 
     # Replace section content placeholders
     html = html.replace("{{news_content}}", news_html)
