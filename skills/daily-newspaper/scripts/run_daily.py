@@ -251,6 +251,12 @@ def git_push(today: str):
         return
 
     _run(["git", "commit", "-m", f"Daily newspaper {today}"])
+    # Rebase on the remote first so a remote that is ahead (e.g. a push from
+    # another machine) doesn't reject the push with "fetch first". --autostash
+    # protects any unrelated uncommitted changes in the working tree.
+    pull = _run(["git", "pull", "--rebase", "--autostash", "origin", "main"])
+    if pull.returncode != 0:
+        print("  WARNING: git pull --rebase failed")
     result = _run(["git", "push", "origin", "main"])
     if result.returncode == 0:
         print("  Pushed to GitHub.")

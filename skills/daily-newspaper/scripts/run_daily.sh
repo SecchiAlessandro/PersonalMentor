@@ -223,6 +223,10 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     echo "  No new changes to push."
   else
     git commit -m "Daily newspaper ${TODAY}"
+    # Rebase on the remote first so a remote that is ahead (e.g. a push from
+    # another machine) doesn't reject the push with "fetch first". --autostash
+    # protects any unrelated uncommitted changes in the working tree.
+    git pull --rebase --autostash origin main || echo "  WARNING: git pull --rebase failed"
     git push origin main && echo "  Pushed to GitHub." || echo "  WARNING: git push failed."
   fi
 else
