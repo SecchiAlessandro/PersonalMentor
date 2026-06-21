@@ -209,23 +209,35 @@ job_search:
   - product manager
   - consultant
   preferred_companies:
+  # --- Energy / power tech (Zürich area & Switzerland) ---
   - Hitachi Energy
   - Hitachi
   - ABB
   - Siemens
+  - Siemens Energy
+  - Axpo
+  - Alpiq
+  - BKW
+  - Swissgrid
+  - Landis+Gyr
+  - ewz
+  # --- Big tech / AI (strong Zürich presence) ---
   - Google
+  - Google DeepMind
+  - DeepMind
   - Microsoft
+  - IBM
+  - Meta
+  - Apple
   - Amazon
   - AWS
+  - Oracle
   - Nvidia
   - OpenAI
   - Anthropic
   - SAP
   - Palantir
   - Tesla
-  - Axpo
-  - Alpiq
-  - BKW
   target_locations:
   - Zurich
   - Zürich

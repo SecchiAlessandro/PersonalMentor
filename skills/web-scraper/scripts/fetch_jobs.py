@@ -58,6 +58,17 @@ SWE_TITLE_TERMS = [
 ]
 SWE_PENALTY = 0.3
 
+# Prioritization weights for preferred employers in the Zürich area. The user
+# wants jobs at Google / Microsoft / Hitachi and other AI/energy tech firms near
+# Zürich to rank first, so a preferred-company match is a strong signal and gets
+# an extra bonus when the role is also in the Zürich area.
+PREFERRED_COMPANY_WEIGHT = 0.3
+ZURICH_COMBO_BONUS = 0.3
+ZURICH_AREA_TERMS = [
+    "zurich", "zürich", "zuerich", "baden", "zug", "winterthur",
+    "oerlikon", "glattbrugg", "wallisellen", "dietikon", "schlieren",
+]
+
 
 def _word_match(term, text):
     """True if term appears as a whole word in text (case-insensitive).
@@ -71,14 +82,20 @@ def _word_match(term, text):
     return re.search(r"\b" + re.escape(term) + r"\b", text) is not None
 
 
-def compute_match_score(job_title, job_text, interests):
+def compute_match_score(job_title, job_text, interests, company=""):
     """Compute a relevance score based on keyword matching against the profile.
 
-    Weights: role 0.4 + topic 0.3 + location 0.2 + company 0.1 (max 1.0).
-    A job is only considered relevant if it matches at least one signal —
-    there is no unconditional base score. Company is matched against the
-    title only (where '@ Employer' lives), so a 'Google Cloud' mention in a
-    description does not falsely tag the job as being at Google.
+    Weights: role 0.4 + topic 0.3 + location 0.2 + preferred-company 0.3, plus a
+    +0.3 bonus when a preferred company is also in the Zürich area — so jobs at
+    Google / Microsoft / Hitachi and other AI/energy tech firms near Zürich rank
+    first. A job is only considered relevant if it matches at least one signal
+    (there is no unconditional base score). The score is intentionally uncapped
+    so these priority jobs sort above the generic 1.0-ceiling matches; the report
+    caps the displayed percentage at 100%.
+
+    The preferred company is matched against the title + employer field only
+    (not the free-text description), so a job that merely lists 'AWS' or 'Google
+    Cloud' as a required skill is not tagged as being *at* that employer.
     """
     job_search = interests.get("job_search", {})
     target_roles = job_search.get("target_roles", [])
@@ -87,7 +104,7 @@ def compute_match_score(job_title, job_text, interests):
     professional = interests.get("professional", []) or []
 
     combined = f"{job_title} {job_text}".lower()
-    title_l = job_title.lower()
+    employer_text = f"{job_title} {company}".lower()
 
     score = 0.0
     match_reasons = []
@@ -111,20 +128,31 @@ def compute_match_score(job_title, job_text, interests):
             match_reasons.append(f"location: {loc}")
             break
 
-    for company in preferred_companies:
-        if _word_match(company, title_l):
-            score += 0.1
-            match_reasons.append(f"company: {company}")
+    # Preferred employer (Google / Microsoft / Hitachi / other AI+energy tech).
+    # Matched against the title + employer field only, so a description that just
+    # lists 'AWS'/'Google Cloud' as a skill doesn't get tagged as that employer.
+    matched_company = None
+    for pref in preferred_companies:
+        if _word_match(pref, employer_text):
+            score += PREFERRED_COMPANY_WEIGHT
+            match_reasons.append(f"company: {pref}")
+            matched_company = pref
             break
+
+    # Strong bonus for a preferred employer in the Zürich area — the user's
+    # priority lane — so e.g. "Google Zürich" outranks "Google remote".
+    if matched_company and any(_word_match(t, combined) for t in ZURICH_AREA_TERMS):
+        score += ZURICH_COMBO_BONUS
+        match_reasons.append("priority: preferred company in Zürich area")
 
     # De-prioritize pure software-engineering roles. This only lowers the rank
     # of jobs that already matched some signal — it never adds a match_reason,
     # so it cannot make an otherwise-irrelevant job pass the relevance filter.
-    title_norm = title_l.replace("-", " ")
+    title_norm = job_title.lower().replace("-", " ")
     if any(_word_match(t, title_norm) for t in SWE_TITLE_TERMS):
         score = max(0.0, score - SWE_PENALTY)
 
-    return min(score, 1.0), match_reasons
+    return round(score, 4), match_reasons
 
 
 def is_link_live(url):
@@ -176,7 +204,7 @@ def fetch_datacareer(url, interests):
                 location = location_el.get_text(strip=True) if location_el else ""
 
                 text = f"{title} {company} {location}"
-                score, reasons = compute_match_score(title, text, interests)
+                score, reasons = compute_match_score(title, text, interests, company=company)
 
                 jobs.append({
                     "title": title,
@@ -222,7 +250,7 @@ def fetch_linkedin(url, interests):
                 location = location_el.get_text(strip=True) if location_el else ""
 
                 text = f"{title} {company} {location}"
-                score, reasons = compute_match_score(title, text, interests)
+                score, reasons = compute_match_score(title, text, interests, company=company)
 
                 jobs.append({
                     "title": title,

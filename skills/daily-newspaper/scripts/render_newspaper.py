@@ -424,7 +424,7 @@ def render_jobs_html(jobs, max_items=MAX_ITEMS):
         title = job.get("title", "Untitled")
         company = job.get("company", "Unknown")
         location = job.get("location", "")
-        score = int(job.get("match_score", 0) * 100)
+        score = min(100, int(job.get("match_score", 0) * 100))
 
         meta_company = f'<span class="source">{company}</span>' if company else ""
         meta_sep = " · " if company and location else ""
