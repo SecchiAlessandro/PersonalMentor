@@ -8,22 +8,26 @@
 professional:
 - topic: AI
   weight: 10
-- topic: multi-agent systems
+- topic: enterprise AI
   weight: 10
+- topic: multi-agent systems
+  weight: 9
 - topic: agentic AI
   weight: 9
 - topic: machine learning
-  weight: 9
-- topic: energy
-  weight: 10
-- topic: power systems
-  weight: 9
-- topic: grid
-  weight: 8
-- topic: renewable energy
   weight: 8
 - topic: electricity markets
+  weight: 10
+- topic: power markets
+  weight: 10
+- topic: energy
+  weight: 9
+- topic: power systems
   weight: 8
+- topic: grid
+  weight: 7
+- topic: renewable energy
+  weight: 7
 - topic: energy transition
   weight: 8
 - topic: control systems
@@ -50,6 +54,67 @@ industries:
 # Finer-grained terms for filtering news + events to the profile.
 # Items matching none of the profile signals are treated as off-profile.
 relevance_keywords:
+# --- AI in the enterprise (priority theme) ---
+- term: enterprise AI
+  weight: 8
+- term: generative AI
+  weight: 7
+- term: AI adoption
+  weight: 7
+- term: AI agents
+  weight: 7
+- term: AI platform
+  weight: 6
+- term: AI strategy
+  weight: 6
+- term: copilot
+  weight: 6
+- term: enterprise software
+  weight: 5
+- term: AI deployment
+  weight: 6
+# --- Electricity / power markets (priority theme) ---
+- term: electricity market
+  weight: 8
+- term: electricity markets
+  weight: 8
+- term: power market
+  weight: 8
+- term: power markets
+  weight: 8
+- term: electricity price
+  weight: 7
+- term: electricity prices
+  weight: 7
+- term: power price
+  weight: 7
+- term: day-ahead
+  weight: 7
+- term: intraday
+  weight: 6
+- term: spot price
+  weight: 6
+- term: balancing market
+  weight: 7
+- term: ancillary services
+  weight: 6
+- term: capacity market
+  weight: 6
+- term: power trading
+  weight: 6
+- term: wholesale electricity
+  weight: 7
+- term: merit order
+  weight: 6
+- term: EPEX
+  weight: 6
+- term: Nord Pool
+  weight: 6
+- term: power purchase agreement
+  weight: 5
+- term: PPA
+  weight: 5
+# --- General AI/ML ---
 - term: artificial intelligence
   weight: 6
 - term: LLM

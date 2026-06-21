@@ -11,6 +11,7 @@ __pycache__/
 !/output/web/coach
 !/output/**/.gitkeep
 /memory/session-log.jsonl
+/memory/seen-items.json
 /tmp/
 
 # Personal Coach (Vite sub-app) — track source, ignore install/build cruft.

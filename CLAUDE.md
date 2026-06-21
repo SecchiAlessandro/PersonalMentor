@@ -142,7 +142,8 @@ Scheduler trigger (07:00) — launchd (macOS) / Task Scheduler (Windows) / cron 
 
 - **Single-file HTML output**: All CSS inlined, no external dependencies. Files can be 1+ MB when Gemini illustrations are embedded.
 - **Job scoring algorithm** (`fetch_jobs.py`): role match +0.3, location match +0.2, company match +0.2, base +0.3. Target roles/companies/locations come from `profile/interests.yaml`.
-- **Adaptive content**: `analyze_feedback.py` reads `memory/feedback.jsonl` and adjusts per-section item counts (range 2-7) based on user ratings. Stored in `memory/learned-preferences.yaml`.
+- **Adaptive content**: `analyze_feedback.py` reads `memory/feedback.jsonl` and adjusts per-section item counts (range 2-7) based on user **ratings** only — the free-text comment is not parsed automatically. Stored in `memory/learned-preferences.yaml`.
+- **Day-over-day novelty** (`render_newspaper.py`): news/event items shown on a previous day within `NOVELTY_WINDOW_DAYS` (7) are pushed to the back via `prioritize_unseen`, so each edition differs from recent ones; repeats only fill a track when there aren't enough fresh items (never blanks). Displayed items are recorded in `memory/seen-items.json` (machine-local, gitignored, pruned after `SEEN_RETENTION_DAYS`). Same-day re-runs reproduce the edition (items shown *today* aren't penalised). Jobs are not subject to novelty (match quality matters more there).
 - **Gemini model fallback chain**: gemini-2.5-flash → gemini-2.0-flash → gemini-2.5-flash-lite (for German sentence generation).
 - **10 color themes** in `skills/theme-factory/themes/`. Current theme: golden-hour. Applied via CSS variables at render time.
 

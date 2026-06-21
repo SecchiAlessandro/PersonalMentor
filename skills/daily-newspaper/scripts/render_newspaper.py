@@ -19,6 +19,12 @@ PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "..", ".."))
 TEMPLATE_PATH = os.path.join(SCRIPT_DIR, "..", "assets", "template.html")
 LEARNED_PREFS_PATH = os.path.join(PROJECT_ROOT, "memory", "learned-preferences.yaml")
 
+# Day-over-day novelty: news/event items shown on a previous day within this
+# window are pushed to the back, so each edition differs from recent ones.
+SEEN_PATH = os.path.join(PROJECT_ROOT, "memory", "seen-items.json")
+NOVELTY_WINDOW_DAYS = 7   # suppress repeats shown in the last N days
+SEEN_RETENTION_DAYS = 45  # forget shown-history older than this
+
 # Default theme (Modern Minimalist) — overridden by user preference
 DEFAULT_THEME = {
     "bg": "#ffffff",
@@ -285,6 +291,76 @@ def get_max_items(section, section_item_counts):
     return section_item_counts.get(section, MAX_ITEMS)
 
 
+def _item_key(item):
+    """Stable identity for an article/event, used to suppress day-over-day repeats."""
+    url = str(item.get("url", "") or "").strip().lower()
+    if url and url != "#":
+        return url
+    title = str(item.get("title", "") or "").lower()
+    title = re.sub(r"[\(\[].*?[\)\]]", "", title)  # drop (...) / [...] suffixes
+    return re.sub(r"\s+", " ", title).strip()
+
+
+def load_seen(path=SEEN_PATH):
+    """Load the shown-history map {item_key: 'YYYY-MM-DD' last shown}."""
+    if not os.path.exists(path):
+        return {}
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {}
+    except (json.JSONDecodeError, OSError):
+        return {}
+
+
+def save_seen(seen, path=SEEN_PATH):
+    """Persist the shown-history map."""
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(seen, f, sort_keys=True)
+
+
+def _days_between(d_from, d_to):
+    """Whole days from ISO date d_from to d_to; None if unparseable."""
+    try:
+        a = datetime.strptime(d_from, "%Y-%m-%d").date()
+        b = datetime.strptime(d_to, "%Y-%m-%d").date()
+        return (b - a).days
+    except (ValueError, TypeError):
+        return None
+
+
+def prioritize_unseen(items, seen, today, days=NOVELTY_WINDOW_DAYS):
+    """Reorder so items not shown on a previous day (within `days`) come first.
+
+    Stable within each group, so the existing relevance/source ordering is kept.
+    Items shown earlier *today* (a same-day re-run) are not penalised, so
+    re-running the pipeline reproduces the same edition rather than churning it.
+    A track is therefore never blanked: fresh items lead, repeats only fill in.
+    """
+    fresh, repeats = [], []
+    for it in items:
+        last = seen.get(_item_key(it))
+        gap = _days_between(last, today) if last else None
+        if gap is not None and 1 <= gap <= days:
+            repeats.append(it)
+        else:
+            fresh.append(it)
+    return fresh + repeats
+
+
+def record_shown(seen, items, today):
+    """Mark items as shown today in the history map."""
+    for it in items:
+        seen[_item_key(it)] = today
+
+
+def prune_seen(seen, today, retention=SEEN_RETENTION_DAYS):
+    """Drop history entries older than the retention window."""
+    return {k: v for k, v in seen.items()
+            if (_days_between(v, today) if _days_between(v, today) is not None else 0) <= retention}
+
+
 def load_yaml(filepath):
     """Load a YAML file, return empty dict if missing."""
     if not os.path.exists(filepath):
@@ -475,17 +551,29 @@ def build_html(template, profile, content, theme):
     events_energy = diversify_by_source(events_energy, _source_host)
     events_ai = diversify_by_source(events_ai, _source_host)
 
+    # Day-over-day novelty: prefer news/events not shown on a recent previous
+    # day, so each edition differs from the last. Repeats only fill a track when
+    # there aren't enough fresh items, so a section is never left blank.
+    seen = load_seen()
+    news_energy = prioritize_unseen(news_energy, seen, date_str)
+    news_ai = prioritize_unseen(news_ai, seen, date_str)
+    events_energy = prioritize_unseen(events_energy, seen, date_str)
+    events_ai = prioritize_unseen(events_ai, seen, date_str)
+
     # Load learned preferences for per-section item counts
     section_item_counts = load_learned_preferences()
+    max_news = get_max_items("news", section_item_counts)
+    max_events = get_max_items("events", section_item_counts)
 
     # Render section content — top N most relevant items per topic track
-    news_html = render_section_split(
-        news_energy, news_ai, render_news_html,
-        get_max_items("news", section_item_counts))
+    news_html = render_section_split(news_energy, news_ai, render_news_html, max_news)
     jobs_html = render_jobs_html(jobs, get_max_items("jobs", section_item_counts))
-    events_html = render_section_split(
-        events_energy, events_ai, render_events_html,
-        get_max_items("events", section_item_counts))
+    events_html = render_section_split(events_energy, events_ai, render_events_html, max_events)
+
+    # Record what was actually displayed so future editions avoid repeating it.
+    record_shown(seen, news_energy[:max_news] + news_ai[:max_news], date_str)
+    record_shown(seen, events_energy[:max_events] + events_ai[:max_events], date_str)
+    save_seen(prune_seen(seen, date_str))
 
     feedback_html = render_feedback_html()
 
