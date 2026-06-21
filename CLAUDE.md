@@ -100,7 +100,9 @@ launchctl load ~/Library/LaunchAgents/com.personalmentor.daily.plist    # Enable
 launchctl unload ~/Library/LaunchAgents/com.personalmentor.daily.plist  # Disable
 launchctl start com.personalmentor.daily                                # Manual trigger
 ```
-Plist at `~/Library/LaunchAgents/com.personalmentor.daily.plist`. Runs daily at 07:00. Logs to `memory/daily-run.log`.
+Plist at `~/Library/LaunchAgents/com.personalmentor.daily.plist`. Runs daily at 07:00. Logs to `~/Library/Logs/personalmentor-daily.log`.
+
+**Important (macOS TCC):** the project lives under `~/Desktop/`, which is a privacy-protected folder. A launchd agent runs without the Full Disk Access that Terminal/IDE inherit, so it fails with `EX_CONFIG` (exit 78) if it must `chdir` into or write logs under `~/Desktop/`. The working setup therefore: (1) the plist's log paths point to `~/Library/Logs/` (not protected), (2) the plist has **no** `WorkingDirectory` key (`run_daily.sh` resolves its own root via `BASH_SOURCE`), and (3) `/bin/bash` is granted **Full Disk Access** (System Settings → Privacy & Security → Full Disk Access) so the script can read/write the project at runtime. Verify a run with `launchctl kickstart -k gui/$(id -u)/com.personalmentor.daily` then check the log; `launchctl print gui/$(id -u)/com.personalmentor.daily | grep "last exit"` should show `0`.
 
 **Windows (Task Scheduler):**
 ```powershell

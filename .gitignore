@@ -16,3 +16,6 @@ __pycache__/
 # Personal Coach (Vite sub-app) — track source, ignore install/build cruft.
 /coach/node_modules/
 /coach/dist/
+
+# Playwright MCP scratch output
+.playwright-mcp/

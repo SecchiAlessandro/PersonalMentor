@@ -181,12 +181,14 @@ else
 fi
 
 # Step 9: Render HTML
+# Note: render_newspaper.py only accepts --profile-dir/--content-dir/--output.
+# It does not support --german-json/--calendar-json (the German/calendar sections
+# are not currently rendered), so passing them makes argparse abort the run.
 echo "[8/10] Rendering newspaper..."
 "$PYTHON_CMD" "${PROJECT_ROOT}/skills/daily-newspaper/scripts/render_newspaper.py" \
   --profile-dir "${PROJECT_ROOT}/profile/" \
   --content-dir "${CONTENT_DIR}" \
-  --output "${OUTPUT_FILE}" \
-  ${CALENDAR_ARGS} ${GERMAN_ARGS}
+  --output "${OUTPUT_FILE}"
 
 # Step 10: Start feedback server (if not already running)
 echo "[9/10] Starting feedback server..."

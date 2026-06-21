@@ -1736,3 +1736,33 @@ artifacts:
   - rss
   - jobs
   - events
+- id: 32a93e98
+  type: daily-newspaper
+  path: output/daily/2026-06-20.html
+  created_at: '2026-06-20T15:50:40.207865+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+- id: 75f6c009
+  type: daily-newspaper
+  path: output/daily/2026-06-21.html
+  created_at: '2026-06-21T08:18:24.694099+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini
