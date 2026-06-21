@@ -367,70 +367,54 @@
   })();
   </script>
 
+  <!-- FEEDBACK \u2192 GitHub issue. A static page can't authenticate to create an
+       issue silently, so we open a pre-filled issue the user submits with one
+       click. The pipeline's ingest_github_feedback.py reads it back into
+       memory/feedback.jsonl on the next run, so feedback is never lost and
+       needs no local server. -->
   <script>
   (function() {
-    var feedbackData = { date: '{{date}}', rating: null, section_ratings: {}, comment: '' };
-    var submitted = false;
-
+    var DATE = '{{date}}';
+    var REPO = 'SecchiAlessandro/PersonalMentor';
     var commentEl = document.querySelector('.feedback-comment');
-    if (commentEl) {
-      commentEl.addEventListener('input', function() {
-        feedbackData.comment = commentEl.value;
-      });
-    }
-
     var submitBtn = document.querySelector('.feedback-submit');
     var statusEl = document.querySelector('.feedback-status');
-    if (submitBtn) {
-      submitBtn.addEventListener('click', function() {
-        if (submitted) return;
-        if (!feedbackData.comment.trim()) {
-          statusEl.className = 'feedback-status error';
-          statusEl.textContent = 'Please write a few words first.';
-          return;
-        }
-        submitBtn.disabled = true;
-        statusEl.className = 'feedback-status';
-        statusEl.textContent = 'Sending...';
+    if (!submitBtn) return;
 
-        var controller = new AbortController();
-        var timeoutId = setTimeout(function() { controller.abort(); }, 2000);
-
-        fetch('http://localhost:9847/api/feedback', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(feedbackData),
-          signal: controller.signal
-        })
-        .then(function(res) { clearTimeout(timeoutId); return res.json(); })
-        .then(function(data) {
-          if (data.status === 'ok') {
-            submitted = true;
-            statusEl.className = 'feedback-status success';
-            statusEl.textContent = 'Thanks for your feedback!';
-          } else {
-            throw new Error(data.error || 'Unknown error');
-          }
-        })
-        .catch(function(err) {
-          clearTimeout(timeoutId);
-          // Fallback: open pre-filled GitHub Issue
-          var title = 'Feedback: ' + feedbackData.date;
-          var lines = ['## Daily Newspaper Feedback', ''];
-          lines.push('**Date:** ' + feedbackData.date);
-          lines.push('', '### Comment', feedbackData.comment);
-          var body = lines.join('\n');
-          var url = 'https://github.com/SecchiAlessandro/PersonalMentor/issues/new'
-            + '?title=' + encodeURIComponent(title)
-            + '&body=' + encodeURIComponent(body)
-            + '&labels=feedback';
-          window.open(url, '_blank');
-          submitted = true;
-          statusEl.className = 'feedback-status success';
-          statusEl.textContent = 'Feedback opened as GitHub Issue \u2014 thank you!';
-        });
-      });
+    function issueUrl(comment) {
+      var title = 'Feedback: ' + DATE;
+      var body = [
+        '## Daily Newspaper Feedback', '',
+        '**Date:** ' + DATE, '',
+        '### Comment', comment
+      ].join('\n');
+      return 'https://github.com/' + REPO + '/issues/new'
+        + '?title=' + encodeURIComponent(title)
+        + '&body=' + encodeURIComponent(body)
+        + '&labels=feedback';
     }
+
+    submitBtn.addEventListener('click', function() {
+      var comment = ((commentEl && commentEl.value) || '').trim();
+      if (!comment) {
+        statusEl.className = 'feedback-status error';
+        statusEl.textContent = 'Please write a few words first.';
+        return;
+      }
+      var url = issueUrl(comment);
+      // Opened from a click (user gesture), so the browser allows it; if a
+      // popup blocker still intervenes, fall back to a link the user can click.
+      var win = window.open(url, '_blank', 'noopener');
+      statusEl.className = 'feedback-status success';
+      if (win) {
+        statusEl.innerHTML = 'A GitHub issue opened in a new tab \u2014 click '
+          + '<strong>\u201cSubmit new issue\u201d</strong> there to send. Thanks!';
+      } else {
+        statusEl.innerHTML = 'Click to send your feedback: '
+          + '<a href="' + url + '" target="_blank" rel="noopener">open the GitHub issue</a>'
+          + ', then \u201cSubmit new issue\u201d.';
+      }
+    });
   })();
   </script>
 
