@@ -1766,3 +1766,110 @@ artifacts:
   - events
   - calendar
   - gemini
+- id: 3a8443ff
+  type: daily-newspaper
+  path: output/daily/2026-06-22.html
+  created_at: '2026-06-22T05:23:34.196266+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini
+- id: 5c151b99
+  type: daily-newspaper
+  path: output/daily/2026-06-23.html
+  created_at: '2026-06-23T05:07:03.177805+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini
+- id: 8239f37f
+  type: daily-newspaper
+  path: output/daily/2026-06-24.html
+  created_at: '2026-06-24T05:13:04.734955+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini
+- id: adc476d2
+  type: daily-newspaper
+  path: output/daily/2026-06-25.html
+  created_at: '2026-06-25T07:19:22.435400+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  - calendar-events
+  - german-sentence
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+  - calendar
+  - gemini
+- id: 496bb5ac
+  type: daily-newspaper
+  path: output/daily/2026-07-12.html
+  created_at: '2026-07-12T18:13:56.864083+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+- id: ce4e7e01
+  type: daily-newspaper
+  path: output/daily/2026-07-12.html
+  created_at: '2026-07-12T18:15:57.454278+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
+- id: ed3a255d
+  type: daily-newspaper
+  path: output/daily/2026-07-12.html
+  created_at: '2026-07-12T18:16:35.427797+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
