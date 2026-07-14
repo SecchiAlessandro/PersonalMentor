@@ -1,9 +1,13 @@
 name: Daily Newspaper
 
 # Runs the pipeline in GitHub's cloud so it fires even when the laptop is
-# off. Fires at both 05:00 and 06:00 UTC (covers CEST/CET); the gate step
-# below only lets one of the two actually run, whichever lands on 07:00
-# Europe/Zurich local time.
+# off. Fires at both 05:00 and 06:00 UTC (covers CEST/CET, one of which
+# lands near 07:00 Europe/Zurich local time). GitHub does not guarantee
+# scheduled runs fire on time — delays of an hour or more are common — so
+# the gate below does NOT check the wall clock. Instead it checks whether
+# today's edition has already been published; whichever of the two cron
+# firings runs first generates it, and the other (or a later re-fire of
+# the same slot) is a no-op. workflow_dispatch always runs.
 on:
   schedule:
     - cron: '0 5,6 * * *'
@@ -20,20 +24,21 @@ jobs:
     env:
       TZ: Europe/Zurich
     steps:
-      - name: Gate on Europe/Zurich local time
-        id: gate
-        run: |
-          HOUR=$(TZ=Europe/Zurich date +%H)
-          if [ "$HOUR" = "07" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "run=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "run=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - uses: actions/checkout@v4
-        if: steps.gate.outputs.run == 'true'
         with:
           fetch-depth: 0
+
+      - name: Gate on "already published today"
+        id: gate
+        run: |
+          TODAY=$(TZ=Europe/Zurich date +%F)
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          elif [ -f "output/daily/${TODAY}.html" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - uses: actions/setup-python@v5
         if: steps.gate.outputs.run == 'true'
