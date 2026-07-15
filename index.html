@@ -4,13 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PersonalMentor</title>
-  <script>
-    // Redirect to today's newspaper
-    const today = new Date().toISOString().slice(0, 10);
-    window.location.href = `output/daily/${today}.html`;
-  </script>
 </head>
 <body>
-  <p>Redirecting to today's newspaper...</p>
+  <p id="msg">Loading the latest newspaper…</p>
+  <script>
+    // Redirect to the newest available edition. Today's paper may not be
+    // published yet (the pipeline runs ~07:00 Europe/Zurich), so probe
+    // backwards day by day instead of assuming today's file exists.
+    (async () => {
+      const MAX_LOOKBACK_DAYS = 30;
+      const now = new Date();
+      for (let i = 0; i < MAX_LOOKBACK_DAYS; i++) {
+        const day = new Date(now.getTime() - i * 86400000);
+        const ymd = day.getFullYear() + '-' +
+          String(day.getMonth() + 1).padStart(2, '0') + '-' +
+          String(day.getDate()).padStart(2, '0');
+        const url = 'output/daily/' + ymd + '.html';
+        try {
+          // Cache-buster so a cached morning 404 doesn't mask a fresh edition.
+          const res = await fetch(url + '?t=' + Date.now(), { method: 'HEAD' });
+          if (res.ok) {
+            window.location.replace(url);
+            return;
+          }
+        } catch (e) {
+          break;
+        }
+      }
+      document.getElementById('msg').textContent =
+        'No edition found in the last ' + MAX_LOOKBACK_DAYS +
+        ' days. The daily pipeline may not have run recently.';
+    })();
+  </script>
 </body>
 </html>
