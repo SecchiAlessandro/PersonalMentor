@@ -1912,3 +1912,16 @@ artifacts:
   - rss
   - jobs
   - events
+- id: bb96fb44
+  type: daily-newspaper
+  path: output/daily/2026-07-15.html
+  created_at: '2026-07-15T05:25:05.075592+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
