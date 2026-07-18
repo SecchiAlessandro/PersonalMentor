@@ -232,15 +232,26 @@ def split_by_topic(items):
     return energy_items, ai_items
 
 
-def relevance_score(text, interests):
+def relevance_score(text, interests, learned=None):
     """Score how relevant a piece of text is to the user's profile.
 
     Whole-word, case-insensitive matching against the profile's weighted
     topics, industries, target roles, and relevance keywords. A score of 0
     means the text matched no profile signal and is treated as off-profile.
+
+    `learned` (content_preferences from learned-preferences.yaml, distilled
+    from written feedback) additionally boosts liked topics and penalises
+    disliked ones — a penalty can push an item to 0 and out of the edition.
     """
     text_l = text.lower()
     score = 0
+    if learned:
+        for topic in learned.get("liked_topics", []) or []:
+            if _word_match(topic, text_l):
+                score += 2
+        for topic in learned.get("disliked_topics", []) or []:
+            if _word_match(topic, text_l):
+                score -= 3
     for t in interests.get("professional", []) or []:
         if _word_match(t.get("topic", ""), text_l):
             score += int(t.get("weight", 1))
@@ -262,28 +273,58 @@ def relevance_score(text, interests):
     return score
 
 
-def rank_by_relevance(items, text_fn, interests):
+def _source_pref_adjust(source_text, learned):
+    """Score adjustment from learned source preferences.
+
+    Sources learned from feedback are free-form names ("techcrunch") while
+    items carry hosts or URLs ("techcrunch.com"), so this matches by
+    case-insensitive containment rather than whole words.
+    """
+    if not learned or not source_text:
+        return 0
+    source_l = str(source_text).lower()
+    adjust = 0
+    for src in learned.get("preferred_sources", []) or []:
+        if src and str(src).lower() in source_l:
+            adjust += 1
+    for src in learned.get("ignored_sources", []) or []:
+        if src and str(src).lower() in source_l:
+            adjust -= 2
+    return adjust
+
+
+def rank_by_relevance(items, text_fn, interests, learned=None, source_fn=None):
     """Sort items by profile relevance and drop off-profile ones (score 0).
 
     Falls back to the relevance-ranked full list when nothing matches the
     profile, so a section is never left blank on a quiet news day.
     """
-    scored = sorted(
-        items,
-        key=lambda it: relevance_score(text_fn(it), interests),
-        reverse=True,
-    )
-    relevant = [it for it in scored if relevance_score(text_fn(it), interests) > 0]
+    def score(it):
+        s = relevance_score(text_fn(it), interests, learned)
+        if source_fn is not None:
+            s += _source_pref_adjust(source_fn(it), learned)
+        return s
+
+    scored = sorted(items, key=score, reverse=True)
+    relevant = [it for it in scored if score(it) > 0]
     return relevant if relevant else scored
 
 
 def load_learned_preferences():
-    """Load learned-preferences.yaml and return section item counts."""
+    """Load learned-preferences.yaml.
+
+    Returns (section_item_counts, content_preferences) — the per-section
+    item counts driven by ratings, and the topic/source preferences
+    distilled from written feedback.
+    """
     if not os.path.exists(LEARNED_PREFS_PATH):
-        return {}
+        return {}, {}
     with open(LEARNED_PREFS_PATH, "r", encoding="utf-8") as f:
         prefs = yaml.safe_load(f) or {}
-    return prefs.get("reading_patterns", {}).get("section_item_counts", {})
+    return (
+        prefs.get("reading_patterns", {}).get("section_item_counts", {}),
+        prefs.get("content_preferences", {}) or {},
+    )
 
 
 def get_max_items(section, section_item_counts):
@@ -497,13 +538,19 @@ def render_section_split(energy_items, ai_items, render_fn, max_items):
 
 
 def render_feedback_html():
-    """Render the feedback section — a single free-text box for written feedback."""
-    return '''  <section class="section" id="feedback">
+    """Render the feedback section — a 1-5 rating row plus a free-text box."""
+    stars = "".join(
+        f'<button class="feedback-star" type="button" aria-label="{i} of 5">★</button>'
+        for i in range(1, 6)
+    )
+    return f'''  <section class="section" id="feedback">
     <h2 class="section-title">Today's Feedback</h2>
     <div class="feedback-card">
+      <div class="feedback-rating">{stars}</div>
       <textarea class="feedback-comment" placeholder="What did you think of today's edition? What should change tomorrow?"></textarea>
       <button class="feedback-submit">Send Feedback</button>
       <div class="feedback-status"></div>
+      <div class="feedback-settings"></div>
     </div>
   </section>'''
 
@@ -524,17 +571,26 @@ def build_html(template, profile, content, theme):
     jobs = content.get("jobs", [])
     events = dedupe_by_title(content.get("events", []))
 
+    # Learned preferences: rating-driven item counts plus topic/source
+    # preferences distilled from written feedback by analyze_feedback.py.
+    section_item_counts, learned_prefs = load_learned_preferences()
+
     # Rank news and events by relevance, dropping off-profile items
-    # (jobs arrive pre-scored and pre-filtered from fetch_jobs.py).
+    # (jobs arrive pre-scored and pre-filtered from fetch_jobs.py; learned
+    # preferences don't apply there — match quality matters more).
     articles = rank_by_relevance(
         articles,
         lambda a: f"{a.get('title','')} {a.get('summary','')} {a.get('category','')}",
         interests,
+        learned=learned_prefs,
+        source_fn=lambda a: a.get("source", ""),
     )
     events = rank_by_relevance(
         events,
         lambda e: f"{e.get('title','')} {e.get('description','')} {e.get('location','')}",
         interests,
+        learned=learned_prefs,
+        source_fn=_source_host,
     )
 
     # Split news and events into two tracks (Energy / AI & Tech), preserving
@@ -560,8 +616,7 @@ def build_html(template, profile, content, theme):
     events_energy = prioritize_unseen(events_energy, seen, date_str)
     events_ai = prioritize_unseen(events_ai, seen, date_str)
 
-    # Load learned preferences for per-section item counts
-    section_item_counts = load_learned_preferences()
+    # Per-section item counts from learned preferences (loaded above)
     max_news = get_max_items("news", section_item_counts)
     max_events = get_max_items("events", section_item_counts)
 

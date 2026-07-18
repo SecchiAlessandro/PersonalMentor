@@ -176,7 +176,18 @@ Jobs are scored 0.0–1.0 based on:
 
 ### Feedback System
 
-After reading your newspaper, rate sections via the built-in feedback widget (bottom of the page). Ratings are analyzed on the next run to adjust section sizes and item counts.
+After reading your newspaper, use the feedback card at the bottom of the page: pick a 1–5 star rating and/or write a comment. On the next pipeline run the rating adjusts how many items each section shows (2–7), and your written comments are analyzed by Gemini into topic and source preferences that reweight what news and events are picked.
+
+Feedback is delivered as a GitHub issue on this repo (label `feedback`), which the pipeline ingests and closes automatically.
+
+**Enable auto-submit (recommended, one-time per browser):** by default, sending feedback opens a pre-filled GitHub issue you still have to submit by hand. To make it fully automatic:
+
+1. Create a fine-grained personal access token at <https://github.com/settings/personal-access-tokens/new>:
+   - **Repository access:** only this repository
+   - **Permissions:** Issues → Read and write (nothing else)
+2. In the newspaper's feedback card, click **Enable auto-submit** and paste the token.
+
+The token is stored only in that browser's `localStorage` — it never appears in the page HTML, the repository, or git history. If it expires or is revoked, the card silently falls back to the manual pre-filled-issue flow.
 
 ---
 

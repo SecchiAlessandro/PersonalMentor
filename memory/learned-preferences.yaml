@@ -1,9 +1,19 @@
 content_preferences:
-  liked_topics: []
-  disliked_topics: []
+  liked_topics:
+  - hvdc
+  - grid
+  - energy storage
+  disliked_topics:
+  - crypto
   preferred_sources: []
-  ignored_sources: []
-  recent_comments: []
+  ignored_sources:
+  - cointelegraph
+  recent_comments:
+  - date: '2026-07-13'
+    comment: more HVDC and grid news please, and I love energy storage stories
+  - date: '2026-07-14'
+    comment: no crypto articles, and skip anything from cointelegraph
+  comments_hash: 18aea4d9a9e5f8af54b1d717afccd5100e5408afb3dbebcc4dc97627de43546d
 design_preferences:
   feedback: []
 reading_patterns:
@@ -11,9 +21,9 @@ reading_patterns:
   preferred_sections: []
   skipped_sections: []
   section_item_counts:
-    news: 3
-    jobs: 3
-    events: 3
-last_updated: '2026-06-25T07:19:22.059476+00:00'
-overall_avg_rating: 1.0
-total_feedback_count: 1
+    news: 4
+    jobs: 4
+    events: 4
+last_updated: '2026-07-15T08:35:32.291461+00:00'
+overall_avg_rating: 4.5
+total_feedback_count: 2

@@ -6,6 +6,8 @@ then writes adjustments to memory/learned-preferences.yaml so the next newspaper
 render reflects user preferences.
 """
 
+import concurrent.futures
+import hashlib
 import json
 import os
 import sys
@@ -23,10 +25,14 @@ PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "..", ".."))
 FEEDBACK_FILE = os.path.join(PROJECT_ROOT, "memory", "feedback.jsonl")
 PREFS_FILE = os.path.join(PROJECT_ROOT, "memory", "learned-preferences.yaml")
 
-# Top N most relevant items per section
+# Items shown per section: 2-7, scaled by ratings (see determine_item_counts)
 DEFAULT_ITEM_COUNT = 3
-MIN_ITEM_COUNT = 3
-MAX_ITEM_COUNT = 3
+MIN_ITEM_COUNT = 2
+MAX_ITEM_COUNT = 7
+
+# Gemini comment analysis (same conventions as generate_german.py)
+TEXT_MODELS = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.5-flash-lite"]
+API_TIMEOUT = 60  # seconds per API call
 
 # Thresholds
 HIGH_RATING_THRESHOLD = 4.0  # sections rated >= this get more items
@@ -79,6 +85,91 @@ def load_prefs():
         return yaml.safe_load(f) or {}
 
 
+def analyze_comments_with_gemini(comments):
+    """Distill free-text feedback comments into content preferences via Gemini.
+
+    Returns a dict with liked_topics / disliked_topics / preferred_sources /
+    ignored_sources lists, or None when analysis is unavailable (no API key,
+    SDK missing, or all models failed). Callers must treat None as "leave
+    existing preferences untouched" — the pipeline stays non-fatal.
+    """
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        print("  WARNING: GEMINI_API_KEY not set — skipping comment analysis.")
+        return None
+    try:
+        from google import genai
+        from google.genai import types
+    except ImportError:
+        print("  WARNING: google-genai not installed — skipping comment analysis.")
+        return None
+
+    client = genai.Client(api_key=api_key)
+    comment_block = "\n".join(
+        f"- [{c.get('date', '')}] {c.get('comment', '')}" for c in comments
+    )
+    prompt = f"""You curate a personal daily newspaper (sections: news, jobs, events) for one reader. Below is their recent written feedback, newest last:
+
+{comment_block}
+
+Distill it into content preferences. Respond in EXACTLY this JSON format (no markdown, no code fences):
+{{"liked_topics": [], "disliked_topics": [], "preferred_sources": [], "ignored_sources": []}}
+
+Rules:
+- Topics are short lowercase keyword phrases (1-3 words) suitable for whole-word matching against article titles, e.g. "hvdc", "grid", "energy storage" — not full sentences
+- Only include a source when the reader names a specific website or publication
+- Only extract preferences the reader actually expressed; leave lists empty rather than guessing
+- Newer comments override older ones if they conflict"""
+
+    last_error = None
+    for model in TEXT_MODELS:
+        try:
+            print(f"  Trying model: {model}")
+            executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+            future = executor.submit(
+                client.models.generate_content,
+                model=model,
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_modalities=["TEXT"],
+                    temperature=0.2,
+                ),
+            )
+            try:
+                response = future.result(timeout=API_TIMEOUT)
+            finally:
+                executor.shutdown(wait=False, cancel_futures=True)
+
+            text = response.text.strip()
+            # Strip markdown code fences if present
+            if text.startswith("```"):
+                text = text.split("\n", 1)[1] if "\n" in text else text[3:]
+                if text.endswith("```"):
+                    text = text[:-3].strip()
+
+            data = json.loads(text)
+            result = {}
+            for key in ("liked_topics", "disliked_topics",
+                        "preferred_sources", "ignored_sources"):
+                values = data.get(key, [])
+                if not isinstance(values, list):
+                    values = []
+                result[key] = [str(v).strip().lower() for v in values if str(v).strip()]
+            return result
+        except concurrent.futures.TimeoutError:
+            last_error = TimeoutError(f"API call timed out after {API_TIMEOUT}s")
+            print(f"  WARNING: {model} timed out after {API_TIMEOUT}s", file=sys.stderr)
+            continue
+        except Exception as e:
+            last_error = e
+            print(f"  WARNING: {model} failed: {e}", file=sys.stderr)
+            continue
+
+    print(f"  WARNING: all models failed for comment analysis. Last error: {last_error}",
+          file=sys.stderr)
+    return None
+
+
 def compute_averages(entries):
     """Compute per-section and overall averages from feedback entries."""
     section_totals = defaultdict(list)
@@ -103,11 +194,18 @@ def compute_averages(entries):
     return overall_avg, section_avgs
 
 
-def determine_item_counts(section_avgs):
-    """Determine per-section item counts based on average ratings."""
+def determine_item_counts(section_avgs, overall_avg=None):
+    """Determine per-section item counts based on average ratings.
+
+    The feedback form collects a single overall rating (no per-section
+    stars), so sections without their own average fall back to the overall
+    average rather than the static default.
+    """
     counts = {}
     for section in ALL_SECTIONS:
         avg = section_avgs.get(section)
+        if avg is None:
+            avg = overall_avg
         if avg is None:
             counts[section] = DEFAULT_ITEM_COUNT
         elif avg >= HIGH_RATING_THRESHOLD:
@@ -139,7 +237,7 @@ def update_preferences(entries, overall_avg, section_avgs):
     """Update learned-preferences.yaml with computed values."""
     prefs = load_prefs()
 
-    item_counts = determine_item_counts(section_avgs)
+    item_counts = determine_item_counts(section_avgs, overall_avg)
     preferred, skipped = determine_section_preferences(section_avgs)
 
     # Update content_preferences (preserve existing liked/disliked topics)
@@ -158,6 +256,28 @@ def update_preferences(entries, overall_avg, section_avgs):
         if e.get("comment", "").strip()
     ]
     cp["recent_comments"] = recent_comments[-10:]
+
+    # Distill comments into topic/source preferences via Gemini. The hash
+    # skips the API call when the comment window hasn't changed since the
+    # last successful analysis; on failure the hash is left stale so the
+    # next run retries. No comments → leave existing preferences untouched
+    # (quiet feedback shouldn't wipe what was learned).
+    if cp["recent_comments"]:
+        comments_hash = hashlib.sha256(
+            "\n".join(c["comment"] for c in cp["recent_comments"]).encode("utf-8")
+        ).hexdigest()
+        if cp.get("comments_hash") == comments_hash:
+            print("  Comments unchanged since last analysis — skipping Gemini call.")
+        else:
+            derived = analyze_comments_with_gemini(cp["recent_comments"])
+            if derived is not None:
+                cp["liked_topics"] = derived["liked_topics"]
+                cp["disliked_topics"] = derived["disliked_topics"]
+                cp["preferred_sources"] = derived["preferred_sources"]
+                cp["ignored_sources"] = derived["ignored_sources"]
+                cp["comments_hash"] = comments_hash
+                print(f"  Learned from comments: liked={cp['liked_topics']} "
+                      f"disliked={cp['disliked_topics']}")
 
     # Update reading_patterns
     if "reading_patterns" not in prefs:

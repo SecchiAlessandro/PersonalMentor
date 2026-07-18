@@ -204,6 +204,34 @@
     .feedback-comment::placeholder {
       color: var(--color-text-muted);
     }
+    .feedback-rating {
+      display: flex;
+      justify-content: center;
+      gap: 0.35rem;
+      margin-bottom: 1rem;
+    }
+    .feedback-star {
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      line-height: 1;
+      cursor: pointer;
+      color: var(--color-border);
+      transition: color 0.15s, transform 0.15s;
+      padding: 0.1em;
+    }
+    .feedback-star:hover { transform: scale(1.15); }
+    .feedback-star.selected { color: var(--color-accent); }
+    .feedback-settings {
+      text-align: center;
+      font-size: 0.75rem;
+      margin-top: 0.6rem;
+    }
+    .feedback-settings a {
+      color: var(--color-text-muted);
+      text-decoration: underline;
+      cursor: pointer;
+    }
     .feedback-submit {
       display: block;
       width: 100%;
@@ -367,52 +395,149 @@
   })();
   </script>
 
-  <!-- FEEDBACK \u2192 GitHub issue. A static page can't authenticate to create an
-       issue silently, so we open a pre-filled issue the user submits with one
-       click. The pipeline's ingest_github_feedback.py reads it back into
+  <!-- FEEDBACK \u2192 GitHub issue. With a fine-grained PAT (Issues: write, this
+       repo only) stored in this browser's localStorage, feedback is POSTed
+       straight to the GitHub Issues API \u2014 no manual step. Without a token we
+       fall back to opening a pre-filled issue the user submits with one click.
+       The pipeline's ingest_github_feedback.py reads issues back into
        memory/feedback.jsonl on the next run, so feedback is never lost and
-       needs no local server. -->
+       needs no local server. The token lives only in localStorage \u2014 it is
+       never part of this file or the git history. -->
   <script>
   (function() {
     var DATE = '{{date}}';
     var REPO = 'SecchiAlessandro/PersonalMentor';
+    var TOKEN_KEY = 'pm_github_token';
     var commentEl = document.querySelector('.feedback-comment');
     var submitBtn = document.querySelector('.feedback-submit');
     var statusEl = document.querySelector('.feedback-status');
+    var settingsEl = document.querySelector('.feedback-settings');
+    var starEls = document.querySelectorAll('.feedback-star');
     if (!submitBtn) return;
 
+    var rating = 0;
+    starEls.forEach(function(star, i) {
+      star.addEventListener('click', function() {
+        rating = (rating === i + 1) ? 0 : i + 1;  // click again to clear
+        starEls.forEach(function(s, j) {
+          s.classList.toggle('selected', j < rating);
+        });
+      });
+    });
+
+    function getToken() {
+      try { return localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { return ''; }
+    }
+
+    function renderSettings() {
+      if (!settingsEl) return;
+      if (getToken()) {
+        settingsEl.innerHTML = 'Auto-submit is on \u00b7 <a data-act="clear">disable</a>';
+      } else {
+        settingsEl.innerHTML = '<a data-act="set">Enable auto-submit</a> (one-time GitHub token setup)';
+      }
+    }
+
+    if (settingsEl) settingsEl.addEventListener('click', function(e) {
+      var act = e.target && e.target.getAttribute && e.target.getAttribute('data-act');
+      if (act === 'set') {
+        var t = prompt('Paste a fine-grained GitHub token scoped to ' + REPO
+          + ' with "Issues: Read & Write" only.\nStored only in this browser.');
+        if (t && t.trim()) {
+          try { localStorage.setItem(TOKEN_KEY, t.trim()); } catch (err) {}
+        }
+        renderSettings();
+      } else if (act === 'clear') {
+        try { localStorage.removeItem(TOKEN_KEY); } catch (err) {}
+        renderSettings();
+      }
+    });
+    renderSettings();
+
+    // Structured so ingest_github_feedback.py's regexes parse date, rating,
+    // and comment back out of the issue body.
+    function issueBody(comment) {
+      var lines = ['## Daily Newspaper Feedback', '', '**Date:** ' + DATE];
+      if (rating > 0) lines.push('**Overall rating:** ' + rating + '/5');
+      lines.push('', '### Comment', comment);
+      return lines.join('\n');
+    }
+
     function issueUrl(comment) {
-      var title = 'Feedback: ' + DATE;
-      var body = [
-        '## Daily Newspaper Feedback', '',
-        '**Date:** ' + DATE, '',
-        '### Comment', comment
-      ].join('\n');
       return 'https://github.com/' + REPO + '/issues/new'
-        + '?title=' + encodeURIComponent(title)
-        + '&body=' + encodeURIComponent(body)
+        + '?title=' + encodeURIComponent('Feedback: ' + DATE)
+        + '&body=' + encodeURIComponent(issueBody(comment))
         + '&labels=feedback';
     }
 
-    submitBtn.addEventListener('click', function() {
-      var comment = ((commentEl && commentEl.value) || '').trim();
-      if (!comment) {
-        statusEl.className = 'feedback-status error';
-        statusEl.textContent = 'Please write a few words first.';
-        return;
-      }
+    function setStatus(cls, html) {
+      statusEl.className = 'feedback-status ' + cls;
+      statusEl.innerHTML = html;
+    }
+
+    function fallbackSubmit(comment) {
       var url = issueUrl(comment);
       // Opened from a click (user gesture), so the browser allows it; if a
       // popup blocker still intervenes, fall back to a link the user can click.
       var win = window.open(url, '_blank', 'noopener');
-      statusEl.className = 'feedback-status success';
       if (win) {
-        statusEl.innerHTML = 'A GitHub issue opened in a new tab \u2014 click '
-          + '<strong>\u201cSubmit new issue\u201d</strong> there to send. Thanks!';
+        setStatus('success', 'A GitHub issue opened in a new tab \u2014 click '
+          + '<strong>\u201cSubmit new issue\u201d</strong> there to send. Thanks!');
       } else {
-        statusEl.innerHTML = 'Click to send your feedback: '
+        setStatus('success', 'Click to send your feedback: '
           + '<a href="' + url + '" target="_blank" rel="noopener">open the GitHub issue</a>'
-          + ', then \u201cSubmit new issue\u201d.';
+          + ', then \u201cSubmit new issue\u201d.');
+      }
+    }
+
+    function apiSubmit(comment, token) {
+      submitBtn.disabled = true;
+      setStatus('', 'Sending\u2026');
+      fetch('https://api.github.com/repos/' + REPO + '/issues', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: 'Feedback: ' + DATE,
+          body: issueBody(comment),
+          labels: ['feedback']
+        })
+      }).then(function(res) {
+        submitBtn.disabled = false;
+        if (res.ok) {
+          setStatus('success', 'Feedback sent \u2713 It will shape tomorrow\u2019s edition.');
+          if (commentEl) commentEl.value = '';
+          rating = 0;
+          starEls.forEach(function(s) { s.classList.remove('selected'); });
+        } else if (res.status === 401 || res.status === 403) {
+          // Token expired/revoked: drop it and use the manual flow instead.
+          try { localStorage.removeItem(TOKEN_KEY); } catch (err) {}
+          renderSettings();
+          fallbackSubmit(comment);
+        } else {
+          setStatus('error', 'GitHub returned ' + res.status + ' \u2014 trying the manual flow\u2026');
+          fallbackSubmit(comment);
+        }
+      }).catch(function() {
+        submitBtn.disabled = false;
+        fallbackSubmit(comment);
+      });
+    }
+
+    submitBtn.addEventListener('click', function() {
+      var comment = ((commentEl && commentEl.value) || '').trim();
+      if (!comment && rating === 0) {
+        setStatus('error', 'Pick a rating or write a few words first.');
+        return;
+      }
+      var token = getToken();
+      if (token) {
+        apiSubmit(comment, token);
+      } else {
+        fallbackSubmit(comment);
       }
     });
   })();
