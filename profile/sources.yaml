@@ -91,6 +91,12 @@ event_sources:
 # Energy events — Zurich area
 - url: https://www.eventbrite.com/d/switzerland--zurich/energy-technology/
   location_filter: ''
+# Meetup energy/sustainability searches — the meetup scraper is the most
+# reliable aggregator (it already feeds the AI track); give energy the same.
+- url: https://www.meetup.com/find/?keywords=energy&location=ch--zurich&source=EVENTS
+  location_filter: ''
+- url: https://www.meetup.com/find/?keywords=sustainability&location=ch--zurich&source=EVENTS
+  location_filter: ''
 # ETH Zurich events
 - url: https://ethz.ch/en/news-and-events/events.html
   location_filter: ''

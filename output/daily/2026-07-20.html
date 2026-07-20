@@ -204,24 +204,12 @@
     .feedback-comment::placeholder {
       color: var(--color-text-muted);
     }
-    .feedback-rating {
-      display: flex;
-      justify-content: center;
-      gap: 0.35rem;
-      margin-bottom: 1rem;
+    .feedback-note {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.9rem;
     }
-    .feedback-star {
-      background: none;
-      border: none;
-      font-size: 1.6rem;
-      line-height: 1;
-      cursor: pointer;
-      color: var(--color-border);
-      transition: color 0.15s, transform 0.15s;
-      padding: 0.1em;
-    }
-    .feedback-star:hover { transform: scale(1.15); }
-    .feedback-star.selected { color: var(--color-accent); }
     .feedback-settings {
       text-align: center;
       font-size: 0.75rem;
@@ -360,25 +348,25 @@
       <div class="item-summary">The United States’ top energy regulator has ordered grid operators to either overhaul how they connect data centers to the grid, or justify their current…</div>
     </div>
     <div class="item">
-      <div class="item-title"><a href="https://www.canarymedia.com/articles/offshore-wind/offshore-wind-new-england-heat" target="_blank">Here’s how offshore wind helped New England beat record heat</a></div>
+      <div class="item-title"><a href="https://www.montelnews.com/news/2512944b-054a-4936-b8be-333c08e1e447/germany-softens-grid-plan-but-lobbies-warn-of-uncertainty" target="_blank">Germany softens grid plan but lobbies warn of “uncertainty”</a></div>
       <div class="item-meta">
-        <span class="source">Canary Media</span>
-        <span class="tag">energy</span>
-      </div>
-      <div class="item-summary">America’s offshore wind farms have already shown their ability to keep electricity flowing during brutal winter storms.</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><a href="https://www.entsoe.eu/network_codes/" target="_blank">Network Codes & CEP</a></div>
-      <div class="item-meta">
-        <span class="source">Entsoe</span>
+        <span class="source">Montelnews</span>
         <span class="tag">energy</span>
       </div>
       
     </div>
     <div class="item">
-      <div class="item-title"><a href="https://iaee.org/news/iaee-welcomes-kapsarc-as-a-new-institutional-member" target="_blank">KAPSARC: A New Institutional Member</a></div>
+      <div class="item-title"><a href="https://www.canarymedia.com/articles/geothermal/ormat-next-gen-geothermal-popularity" target="_blank">An old-school geothermal giant rides the tech’s newfound popularity</a></div>
       <div class="item-meta">
-        <span class="source">Iaee</span>
+        <span class="source">Canary Media</span>
+        <span class="tag">energy</span>
+      </div>
+      <div class="item-summary">Over two decades ago, Ormat Technologies began a big experiment on a swath of rugged land near the Hot Springs Mountains in western Nevada.</div>
+    </div>
+    <div class="item">
+      <div class="item-title"><a href="https://www.entsoe.eu/network_codes/" target="_blank">Network Codes & CEP</a></div>
+      <div class="item-meta">
+        <span class="source">Entsoe</span>
         <span class="tag">energy</span>
       </div>
       
@@ -393,12 +381,20 @@
       <div class="item-summary">Across 157 enterprises, organizations are granting AI agents more autonomy while trusting the evaluations meant to gate that autonomy less.</div>
     </div>
     <div class="item">
-      <div class="item-title"><a href="https://www.producthunt.com/products/lunen-ai" target="_blank">Lunen.ai</a></div>
+      <div class="item-title"><a href="https://techcrunch.com/2026/07/20/natural-raises-30m-to-reinvent-payments-for-ai-agents-and-take-on-stripe/" target="_blank">Natural raises $30M to reinvent payments for AI agents — and take on Stripe</a></div>
+      <div class="item-meta">
+        <span class="source">TechCrunch</span>
+        <span class="tag">tech</span>
+      </div>
+      <div class="item-summary">The one-year-old startup aims to reinvent financial architecture for autonomous AI transactions.</div>
+    </div>
+    <div class="item">
+      <div class="item-title"><a href="https://www.producthunt.com/products/rex-7" target="_blank">Rex</a></div>
       <div class="item-meta">
         <span class="source">Product Hunt — The best new products, every day</span>
         <span class="tag">tech</span>
       </div>
-      <div class="item-summary">Build AI agents your whole team can run, and control Discussion | Link</div>
+      <div class="item-summary">AI agents that run order-to-cash operations Discussion | Link</div>
     </div>
     <div class="item">
       <div class="item-title"><a href="https://deepmind.google/blog/securing-the-future-of-ai-agents/" target="_blank">Securing the future of AI agents</a></div>
@@ -408,27 +404,58 @@
       </div>
       
     </div>
-    <div class="item">
-      <div class="item-title"><a href="https://www.technologyreview.com/2026/07/17/1140622/weather-data-sabotage/" target="_blank">The risk of weather data sabotage is rising</a></div>
-      <div class="item-meta">
-        <span class="source">Artificial intelligence – MIT Technology Review</span>
-        <span class="tag">ai</span>
-      </div>
-      <div class="item-summary">Every morning, airline dispatchers, grid operators, and farmers around the world make decisions based on the same thing: a weather forecast.</div>
-    </div>
   </section>
 
   <!-- JOBS -->
   <section class="section" id="jobs">
     <h2 class="section-title">Jobs</h2>
-    <p class="empty-state">No matching jobs today.</p>
+        <div class="job-item">
+      <div class="item-title"><a href="https://swissdevjobs.ch/jobs/Data-Purpose-AG-Senior-Consultant-SAP-Data--Analytics-60100-mwd?utm_source=our_rss_feed&utm_medium=our_rss_feed" target="_blank">Senior Consultant SAP Data & Analytics 60–100% (m/w/d) @ Data Purpose AG [CHF 120'000 - 150'000]</a></div>
+      <div class="item-meta">
+        
+        <span class="match-score">100% match</span>
+      </div>
+      <div class="item-summary">Salary: CHF 120'000 - 150'000 per year Requirements: 5+ Jahre SAP Data & AnalyticsTiefe in mindestens zwei Bereichen: BW/4HANA, SAC, Datasphere oder Embedded…</div>
+    </div>
+    <div class="job-item">
+      <div class="item-title"><a href="https://swissdevjobs.ch/jobs/NTT-DATA-Business-Solutions-AG-Senior-SAP-VIMCIM-Consultant-wmd?utm_source=our_rss_feed&utm_medium=our_rss_feed" target="_blank">Senior SAP VIM/CIM Consultant (w/m/d) @ NTT DATA Business Solutions AG [CHF 65'000 - 95'000]</a></div>
+      <div class="item-meta">
+        
+        <span class="match-score">100% match</span>
+      </div>
+      <div class="item-summary">Salary: CHF 65'000 - 95'000 per year Requirements: Abgeschlossenes Wirtschafts- oder InformatikstudiumFundierte Erfahrung in SAP Vendor Invoice Management /…</div>
+    </div>
+    <div class="job-item">
+      <div class="item-title"><a href="https://swissdevjobs.ch/jobs/NTT-DATA-Business-Solutions-AG-Senior-SAP-Consultant-MM-wmd?utm_source=our_rss_feed&utm_medium=our_rss_feed" target="_blank">Senior SAP Consultant MM (w/m/d) @ NTT DATA Business Solutions AG [CHF 65'000 - 95'000]</a></div>
+      <div class="item-meta">
+        
+        <span class="match-score">100% match</span>
+      </div>
+      <div class="item-summary">Salary: CHF 65'000 - 95'000 per year Requirements: Wir haben eine abgeschlossene Berufsausbildung mit Weiterbildung oder ein Studium, z.</div>
+    </div>
+    <div class="job-item">
+      <div class="item-title"><a href="https://swissdevjobs.ch/jobs/NTT-DATA-Business-Solutions-AG-Senior-Expert--Architect-Microsoft-Analytics-wmd?utm_source=our_rss_feed&utm_medium=our_rss_feed" target="_blank">Senior Expert / Architect Microsoft Analytics (w/m/d) @ NTT DATA Business Solutions AG [CHF 65'000 - 95'000]</a></div>
+      <div class="item-meta">
+        
+        <span class="match-score">100% match</span>
+      </div>
+      <div class="item-summary">Salary: CHF 65'000 - 95'000 per year Requirements: Eine abgeschlossene Berufsausbildung mit entsprechender Weiterbildung im BWL-Bereich und/oder eine höhere…</div>
+    </div>
   </section>
 
   <!-- EVENTS -->
   <section class="section" id="events">
     <h2 class="section-title">Events</h2>
         <h3 class="subsection-title">⚡ Energy</h3>
-<p class="empty-state">No upcoming events found.</p>
+    <div class="item">
+      <div class="item-title"><a href="https://www.meetup.com/energy-data-innovation-hub-edih/events/315424844/" target="_blank">Energy Data Hackdays 2026 - Brugg</a></div>
+      <div class="item-meta">
+        <span class="source">2026-09-10</span> · Fachhochschule Nordwestschweiz FHNW
+        <span class="tag">conference</span>
+        <a class="source-link" href="https://www.meetup.com/find/?keywords=energy&location=ch--zurich&source=EVENTS" target="_blank">meetup.com</a>
+      </div>
+      <div class="item-summary">Join Switzerland’s premier innovation event where data meets action.</div>
+    </div>
     <h3 class="subsection-title">🤖 AI &amp; Tech</h3>
     <div class="item">
       <div class="item-title"><a href="https://www.meetup.com/zurich-ai-machine-learning-and-computer-vision-meetup/events/315203407/" target="_blank">July 30 - Zurich AI, ML and Computer Vision Meetup</a></div>
@@ -440,6 +467,24 @@
       <div class="item-summary">Join our in-person Meetup to hear talks from experts on cutting-edge topics across AI, ML, and computer vision.</div>
     </div>
     <div class="item">
+      <div class="item-title"><a href="https://www.eventbrite.com/e/prompt-to-profit-learn-generative-ai-for-business-and-innovation-tickets-1987734648843" target="_blank">Prompt to Profit — Learn Generative AI for Business and Innovation</a></div>
+      <div class="item-meta">
+        <span class="source">2026-07-22</span> · TBD
+        <span class="tag">conference</span>
+        <a class="source-link" href="https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/" target="_blank">eventbrite.com</a>
+      </div>
+      <div class="item-summary">From Prompt to Profit — Learn Generative AI for Business and Creativity</div>
+    </div>
+    <div class="item">
+      <div class="item-title"><a href="https://luma.com/pzyb2lfg" target="_blank">unconference V @nunu.ai</a></div>
+      <div class="item-meta">
+        <span class="source">2026-07-24</span> · Zürich
+        <span class="tag">event</span>
+        <a class="source-link" href="https://lu.ma/zurich" target="_blank">lu.ma</a>
+      </div>
+      <div class="item-summary">Event in Zürich on 2026-07-24.</div>
+    </div>
+    <div class="item">
       <div class="item-title"><a href="https://www.meetup.com/zurich-ai-machine-learning-and-computer-vision-meetup/events/314913557/" target="_blank">July 29 - MCP, Agents and Skills Meetup</a></div>
       <div class="item-meta">
         <span class="source">2026-07-29</span> · TBD
@@ -448,31 +493,13 @@
       </div>
       <div class="item-summary">Join our virtual meetup to hear talks from experts on cutting-edge topics across MCP, Agents and Skills.</div>
     </div>
-    <div class="item">
-      <div class="item-title"><a href="https://www.meetup.com/zurich-ai-machine-learning-and-computer-vision-meetup/events/314913532/" target="_blank">July 23 - AI, ML, and Computer Vision Meetup</a></div>
-      <div class="item-meta">
-        <span class="source">2026-07-23</span> · TBD
-        <span class="tag">conference</span>
-        <a class="source-link" href="https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS" target="_blank">meetup.com</a>
-      </div>
-      <div class="item-summary">Join our virtual meetup to hear talks from experts on cutting-edge topics across AI, ML, and computer vision.</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><a href="https://www.meetup.com/zurich-data-sciece-odsc/events/315198215/" target="_blank">Personal AI Agents — LIVE</a></div>
-      <div class="item-meta">
-        <span class="source">2026-07-21</span> · TBD
-        <span class="tag">conference</span>
-        <a class="source-link" href="https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS" target="_blank">meetup.com</a>
-      </div>
-      <div class="item-summary">This Event has Free and Paid Passes.</div>
-    </div>
   </section>
 
   <!-- FEEDBACK -->
     <section class="section" id="feedback">
     <h2 class="section-title">Today's Feedback</h2>
     <div class="feedback-card">
-      <div class="feedback-rating"><button class="feedback-star" type="button" aria-label="1 of 5">★</button><button class="feedback-star" type="button" aria-label="2 of 5">★</button><button class="feedback-star" type="button" aria-label="3 of 5">★</button><button class="feedback-star" type="button" aria-label="4 of 5">★</button><button class="feedback-star" type="button" aria-label="5 of 5">★</button></div>
+      <p class="feedback-note">Your comment is automatically analyzed and shapes what tomorrow's edition shows.</p>
       <textarea class="feedback-comment" placeholder="What did you think of today's edition? What should change tomorrow?"></textarea>
       <button class="feedback-submit">Send Feedback</button>
       <div class="feedback-status"></div>
@@ -482,7 +509,7 @@
 
   <!-- FOOTER -->
   <footer class="newspaper-footer">
-    PersonalMentor Daily · Generated 2026-07-20 07:56 UTC · <a href="../daily/">Browse Archive</a>
+    PersonalMentor Daily · Generated 2026-07-20 20:02 UTC · <a href="../daily/">Browse Archive</a>
   </footer>
 
   </div><!-- /#tab-news -->
@@ -524,18 +551,7 @@
     var submitBtn = document.querySelector('.feedback-submit');
     var statusEl = document.querySelector('.feedback-status');
     var settingsEl = document.querySelector('.feedback-settings');
-    var starEls = document.querySelectorAll('.feedback-star');
     if (!submitBtn) return;
-
-    var rating = 0;
-    starEls.forEach(function(star, i) {
-      star.addEventListener('click', function() {
-        rating = (rating === i + 1) ? 0 : i + 1;  // click again to clear
-        starEls.forEach(function(s, j) {
-          s.classList.toggle('selected', j < rating);
-        });
-      });
-    });
 
     function getToken() {
       try { return localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { return ''; }
@@ -566,13 +582,11 @@
     });
     renderSettings();
 
-    // Structured so ingest_github_feedback.py's regexes parse date, rating,
-    // and comment back out of the issue body.
+    // Structured so ingest_github_feedback.py's regexes parse date and
+    // comment back out of the issue body.
     function issueBody(comment) {
-      var lines = ['## Daily Newspaper Feedback', '', '**Date:** ' + DATE];
-      if (rating > 0) lines.push('**Overall rating:** ' + rating + '/5');
-      lines.push('', '### Comment', comment);
-      return lines.join('\n');
+      return ['## Daily Newspaper Feedback', '', '**Date:** ' + DATE,
+        '', '### Comment', comment].join('\n');
     }
 
     function issueUrl(comment) {
@@ -622,8 +636,6 @@
         if (res.ok) {
           setStatus('success', 'Feedback sent \u2713 It will shape tomorrow\u2019s edition.');
           if (commentEl) commentEl.value = '';
-          rating = 0;
-          starEls.forEach(function(s) { s.classList.remove('selected'); });
         } else if (res.status === 401 || res.status === 403) {
           // Token expired/revoked: drop it and use the manual flow instead.
           try { localStorage.removeItem(TOKEN_KEY); } catch (err) {}
@@ -641,8 +653,8 @@
 
     submitBtn.addEventListener('click', function() {
       var comment = ((commentEl && commentEl.value) || '').trim();
-      if (!comment && rating === 0) {
-        setStatus('error', 'Pick a rating or write a few words first.');
+      if (!comment) {
+        setStatus('error', 'Please write a few words first.');
         return;
       }
       var token = getToken();

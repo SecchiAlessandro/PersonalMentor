@@ -124,6 +124,21 @@ AI_TECH_TERMS = [
     "openai", "anthropic", "deepmind", "nvidia", "developer", "app", "saas",
 ]
 
+# Minimum distinct ENERGY_TERMS an event must hit to earn a spot in the energy
+# events track. The word "energy" (or "power") alone appears incidentally in
+# wellness and networking blurbs ("Energizing yoga flow", "CEO Energy Break"),
+# so a single hit is too weak a signal. Genuine energy events mention several
+# ("energy", "grid", "power", "utilities", ...). Requiring 2+ drops the false
+# positives; a thin day then shows fewer real events instead of noise padding.
+MIN_ENERGY_TERMS_FOR_EVENT = 2
+
+
+def energy_term_count(item):
+    """Count distinct ENERGY_TERMS whole-word-matched across an item's text."""
+    text = " ".join(str(item.get(k, "")) for k in
+                    ("title", "summary", "description", "location", "source")).lower()
+    return sum(1 for t in ENERGY_TERMS if _word_match(t, text))
+
 
 def first_sentence(text, max_len=160):
     """Return a single-sentence summary, trimmed to max_len characters."""
@@ -599,6 +614,13 @@ def build_html(template, profile, content, theme):
     # relevance order within each. Jobs stay a single ranked list.
     news_energy, news_ai = split_by_topic(articles)
     events_energy, events_ai = split_by_topic(events)
+
+    # Keep only events with a genuine energy signal (see MIN_ENERGY_TERMS_FOR_EVENT)
+    # so the energy track isn't padded with one-word false positives; on a thin
+    # day it simply shows fewer real events (the template renders a graceful
+    # "no upcoming events" when a track is empty).
+    events_energy = [e for e in events_energy
+                     if energy_term_count(e) >= MIN_ENERGY_TERMS_FOR_EVENT]
 
     # Diversify by source so each shown item comes from a different reference.
     # Repeated sources fall to the back and only surface if there aren't enough
