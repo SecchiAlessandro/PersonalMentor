@@ -3,6 +3,10 @@ content_preferences:
   - hvdc
   - grid
   - energy storage
+  - energy conferences
+  - ai conferences
+  - energy seminars
+  - ai seminars
   disliked_topics:
   - crypto
   preferred_sources: []
@@ -13,7 +17,10 @@ content_preferences:
     comment: more HVDC and grid news please, and I love energy storage stories
   - date: '2026-07-14'
     comment: no crypto articles, and skip anything from cointelegraph
-  comments_hash: 18aea4d9a9e5f8af54b1d717afccd5100e5408afb3dbebcc4dc97627de43546d
+  - date: '2026-07-19'
+    comment: consider also conferences or seminars in the event section of energy
+      and ai
+  comments_hash: 7b0108476295a42b1d19d94c8f5672bf39b70707f0bb8bc5429480473e3efd13
 design_preferences:
   feedback: []
 reading_patterns:
@@ -24,6 +31,6 @@ reading_patterns:
     news: 4
     jobs: 4
     events: 4
-last_updated: '2026-07-19T07:25:28.226844+00:00'
-overall_avg_rating: 4.5
-total_feedback_count: 2
+last_updated: '2026-07-20T07:56:30.070851+00:00'
+overall_avg_rating: 4.33
+total_feedback_count: 3
