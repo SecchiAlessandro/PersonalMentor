@@ -5,8 +5,6 @@ content_preferences:
   - energy storage
   - energy conferences
   - ai conferences
-  - energy seminars
-  - ai seminars
   disliked_topics:
   - crypto
   preferred_sources: []
@@ -20,7 +18,9 @@ content_preferences:
   - date: '2026-07-19'
     comment: consider also conferences or seminars in the event section of energy
       and ai
-  comments_hash: 7b0108476295a42b1d19d94c8f5672bf39b70707f0bb8bc5429480473e3efd13
+  - date: '2026-07-20'
+    comment: events should be in zurich area
+  comments_hash: 7c9eb3023f3335ae15150b530ffb2bc8710d329112c00841fba2f1665fae60ff
 design_preferences:
   feedback: []
 reading_patterns:
@@ -31,6 +31,6 @@ reading_patterns:
     news: 4
     jobs: 4
     events: 4
-last_updated: '2026-07-20T07:56:30.070851+00:00'
+last_updated: '2026-07-20T20:19:12.232257+00:00'
 overall_avg_rating: 4.33
-total_feedback_count: 3
+total_feedback_count: 4

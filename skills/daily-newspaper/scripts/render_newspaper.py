@@ -140,6 +140,28 @@ def energy_term_count(item):
     return sum(1 for t in ENERGY_TERMS if _word_match(t, text))
 
 
+# Localities that are clearly NOT the Zürich area, per the "events should be in
+# Zürich area" feedback. Event locations are messy (venue names like "WestHive",
+# or "TBD" from Zürich-scoped meetup searches), so filtering by a positive
+# "contains zurich" rule would drop most legitimate local events. Instead we
+# keep everything EXCEPT events whose title or location names one of these
+# other localities (other cantons / cities / foreign). Whole-word matched, so
+# "basel" won't trip on Zürich's "Baselstrasse".
+NON_ZURICH_LOCALITIES = [
+    "brugg", "windisch", "nordwestschweiz", "fhnw",
+    "basel", "bern", "geneva", "genève", "geneve", "lausanne", "lugano",
+    "luzern", "lucerne", "st. gallen", "st gallen", "sankt gallen", "sion",
+    "brussels", "bruxelles", "santiago", "paris", "london", "berlin",
+    "vienna", "wien", "amsterdam", "milan", "milano", "munich", "münchen",
+]
+
+
+def in_zurich_area(event):
+    """True unless the event's title/location names a clearly non-Zürich place."""
+    text = f"{event.get('title', '')} {event.get('location', '')}".lower()
+    return not any(_word_match(loc, text) for loc in NON_ZURICH_LOCALITIES)
+
+
 def first_sentence(text, max_len=160):
     """Return a single-sentence summary, trimmed to max_len characters."""
     if not text:
@@ -587,6 +609,10 @@ def build_html(template, profile, content, theme):
     articles = dedupe_by_title(content.get("articles", []))
     jobs = content.get("jobs", [])
     events = dedupe_by_title(content.get("events", []))
+
+    # Keep events to the Zürich area (user feedback). Applied before ranking so
+    # out-of-area events (e.g. a Brugg or Santiago conference) never take a slot.
+    events = [e for e in events if in_zurich_area(e)]
 
     # Learned preferences: rating-driven item counts plus topic/source
     # preferences distilled from written feedback by analyze_feedback.py.
