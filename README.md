@@ -176,7 +176,7 @@ Jobs are scored 0.0–1.0 based on:
 
 ### Feedback System
 
-After reading your newspaper, use the feedback card at the bottom of the page: pick a 1–5 star rating and/or write a comment. On the next pipeline run the rating adjusts how many items each section shows (2–7), and your written comments are analyzed by Gemini into topic and source preferences that reweight what news and events are picked.
+After reading your newspaper, use the feedback card at the bottom of the page: just write a comment (no star rating). On the next pipeline run your comment is automatically analyzed by Gemini into topic and source preferences that reweight what news and events are picked — so what you write shapes the following edition.
 
 Feedback is delivered as a GitHub issue on this repo (label `feedback`), which the pipeline ingests and closes automatically.
 

@@ -538,15 +538,17 @@ def render_section_split(energy_items, ai_items, render_fn, max_items):
 
 
 def render_feedback_html():
-    """Render the feedback section — a 1-5 rating row plus a free-text box."""
-    stars = "".join(
-        f'<button class="feedback-star" type="button" aria-label="{i} of 5">★</button>'
-        for i in range(1, 6)
-    )
-    return f'''  <section class="section" id="feedback">
+    """Render the feedback section — a single free-text comment box.
+
+    There is no star rating: the written comment is the only input. It is
+    distilled by analyze_feedback.py into topic/source preferences that
+    automatically reweight the next edition, so the card tells the reader
+    their comment is taken into account for tomorrow.
+    """
+    return '''  <section class="section" id="feedback">
     <h2 class="section-title">Today's Feedback</h2>
     <div class="feedback-card">
-      <div class="feedback-rating">{stars}</div>
+      <p class="feedback-note">Your comment is automatically analyzed and shapes what tomorrow's edition shows.</p>
       <textarea class="feedback-comment" placeholder="What did you think of today's edition? What should change tomorrow?"></textarea>
       <button class="feedback-submit">Send Feedback</button>
       <div class="feedback-status"></div>
