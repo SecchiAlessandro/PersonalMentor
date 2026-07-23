@@ -2003,3 +2003,16 @@ artifacts:
   - rss
   - jobs
   - events
+- id: a81ad3c5
+  type: daily-newspaper
+  path: output/daily/2026-07-23.html
+  created_at: '2026-07-23T07:30:12.875525+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
