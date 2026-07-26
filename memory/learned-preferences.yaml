@@ -5,9 +5,11 @@ content_preferences:
   - energy storage
   - energy conferences
   - ai conferences
-  - ai
-  - business
-  - big tech
+  - energy seminars
+  - ai seminars
+  - ai jobs
+  - business jobs
+  - big tech jobs
   disliked_topics:
   - crypto
   preferred_sources: []
@@ -25,7 +27,9 @@ content_preferences:
     comment: events should be in zurich area
   - date: '2026-07-21'
     comment: Jobs should be more on AI and business in big tech companies
-  comments_hash: 8e7799d76db758726465eda1b35998677fd2ce2007ce61bcb9da7ce280e08908
+  - date: '2026-07-25'
+    comment: find also other sources for events in energy and AI
+  comments_hash: e693ed5b9ffdf2442936db416c6b81f70d939cd86853fad9864a3b5c95964fb0
 design_preferences:
   feedback: []
 reading_patterns:
@@ -36,6 +40,6 @@ reading_patterns:
     news: 4
     jobs: 4
     events: 4
-last_updated: '2026-07-25T07:12:45.624064+00:00'
+last_updated: '2026-07-26T07:33:47.532914+00:00'
 overall_avg_rating: 4.33
-total_feedback_count: 5
+total_feedback_count: 6
