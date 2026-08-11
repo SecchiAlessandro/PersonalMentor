@@ -2250,3 +2250,16 @@ artifacts:
   - rss
   - jobs
   - events
+- id: 0ca8b986
+  type: daily-newspaper
+  path: output/daily/2026-08-11.html
+  created_at: '2026-08-11T05:51:54.651100+00:00'
+  sections:
+  - news
+  - jobs
+  - events
+  item_count: 0
+  sources_used:
+  - rss
+  - jobs
+  - events
