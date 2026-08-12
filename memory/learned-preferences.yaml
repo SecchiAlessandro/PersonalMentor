@@ -3,13 +3,9 @@ content_preferences:
   - hvdc
   - grid
   - energy storage
-  - energy conferences
-  - ai conferences
-  - energy seminars
-  - ai seminars
-  - ai jobs
-  - business jobs
-  - big tech jobs
+  - energy
+  - ai
+  - business
   disliked_topics:
   - crypto
   preferred_sources: []
@@ -29,7 +25,9 @@ content_preferences:
     comment: Jobs should be more on AI and business in big tech companies
   - date: '2026-07-25'
     comment: find also other sources for events in energy and AI
-  comments_hash: e693ed5b9ffdf2442936db416c6b81f70d939cd86853fad9864a3b5c95964fb0
+  - date: '2026-08-11'
+    comment: i want to see also job offers in big tech
+  comments_hash: 3a9ff1132adaaea625b599f5eff4f2d947964d1b5123e139c833d7c1ed1f361f
 design_preferences:
   feedback: []
 reading_patterns:
@@ -40,6 +38,6 @@ reading_patterns:
     news: 4
     jobs: 4
     events: 4
-last_updated: '2026-08-11T05:51:53.870397+00:00'
+last_updated: '2026-08-12T06:10:56.822503+00:00'
 overall_avg_rating: 4.33
-total_feedback_count: 6
+total_feedback_count: 7
