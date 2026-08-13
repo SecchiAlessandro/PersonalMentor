@@ -1,19 +1,17 @@
 content_preferences:
   liked_topics:
-  - hvdc
-  - grid
-  - energy storage
   - energy
   - ai
+  - conferences
+  - seminars
   - business
+  - big tech
   disliked_topics:
   - crypto
   preferred_sources: []
   ignored_sources:
   - cointelegraph
   recent_comments:
-  - date: '2026-07-13'
-    comment: more HVDC and grid news please, and I love energy storage stories
   - date: '2026-07-14'
     comment: no crypto articles, and skip anything from cointelegraph
   - date: '2026-07-19'
@@ -27,7 +25,7 @@ content_preferences:
     comment: find also other sources for events in energy and AI
   - date: '2026-08-11'
     comment: i want to see also job offers in big tech
-  comments_hash: 3a9ff1132adaaea625b599f5eff4f2d947964d1b5123e139c833d7c1ed1f361f
+  comments_hash: aff89fce424d7dbd289a4d458e7ad32e455c0730724a61c572e5e1209e1d5e80
 design_preferences:
   feedback: []
 reading_patterns:
@@ -38,6 +36,6 @@ reading_patterns:
     news: 4
     jobs: 4
     events: 4
-last_updated: '2026-08-12T06:10:56.822503+00:00'
-overall_avg_rating: 4.33
-total_feedback_count: 7
+last_updated: '2026-08-13T06:13:45.160451+00:00'
+overall_avg_rating: 4.0
+total_feedback_count: 6
