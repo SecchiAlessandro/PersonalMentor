@@ -1,19 +1,16 @@
 content_preferences:
   liked_topics:
-  - energy
-  - ai
   - conferences
   - seminars
+  - energy
+  - ai
+  - zurich area
   - business
-  - big tech
-  disliked_topics:
-  - crypto
+  - big tech companies
+  disliked_topics: []
   preferred_sources: []
-  ignored_sources:
-  - cointelegraph
+  ignored_sources: []
   recent_comments:
-  - date: '2026-07-14'
-    comment: no crypto articles, and skip anything from cointelegraph
   - date: '2026-07-19'
     comment: consider also conferences or seminars in the event section of energy
       and ai
@@ -25,7 +22,7 @@ content_preferences:
     comment: find also other sources for events in energy and AI
   - date: '2026-08-11'
     comment: i want to see also job offers in big tech
-  comments_hash: aff89fce424d7dbd289a4d458e7ad32e455c0730724a61c572e5e1209e1d5e80
+  comments_hash: 4b2d1493896606f7007a741e1e3fca20c2894ab11c980433f78400f0d4ef951c
 design_preferences:
   feedback: []
 reading_patterns:
@@ -36,6 +33,6 @@ reading_patterns:
     news: 4
     jobs: 4
     events: 4
-last_updated: '2026-08-13T06:13:45.160451+00:00'
+last_updated: '2026-08-14T06:10:24.786773+00:00'
 overall_avg_rating: 4.0
-total_feedback_count: 6
+total_feedback_count: 5
