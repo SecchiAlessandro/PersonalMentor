@@ -1,19 +1,14 @@
 content_preferences:
   liked_topics:
-  - conferences
-  - seminars
-  - energy
+  - zurich
   - ai
-  - zurich area
   - business
-  - big tech companies
+  - big tech
+  - energy
   disliked_topics: []
   preferred_sources: []
   ignored_sources: []
   recent_comments:
-  - date: '2026-07-19'
-    comment: consider also conferences or seminars in the event section of energy
-      and ai
   - date: '2026-07-20'
     comment: events should be in zurich area
   - date: '2026-07-21'
@@ -22,7 +17,9 @@ content_preferences:
     comment: find also other sources for events in energy and AI
   - date: '2026-08-11'
     comment: i want to see also job offers in big tech
-  comments_hash: 4b2d1493896606f7007a741e1e3fca20c2894ab11c980433f78400f0d4ef951c
+  - date: '2026-08-18'
+    comment: I see the same info as the previous day, vary more
+  comments_hash: 26485a880d7861a0a4ef52b24c36fdf0fbd1d1659680239cf7f3d1c7541d976e
 design_preferences:
   feedback: []
 reading_patterns:
@@ -30,9 +27,9 @@ reading_patterns:
   preferred_sections: []
   skipped_sections: []
   section_item_counts:
-    news: 4
-    jobs: 4
-    events: 4
-last_updated: '2026-08-18T05:25:04.992722+00:00'
+    news: 3
+    jobs: 3
+    events: 3
+last_updated: '2026-08-19T05:25:20.349036+00:00'
 overall_avg_rating: 4.0
 total_feedback_count: 5
