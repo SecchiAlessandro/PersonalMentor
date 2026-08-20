@@ -1,6 +1,5 @@
 content_preferences:
   liked_topics:
-  - zurich
   - ai
   - business
   - big tech
@@ -9,8 +8,6 @@ content_preferences:
   preferred_sources: []
   ignored_sources: []
   recent_comments:
-  - date: '2026-07-20'
-    comment: events should be in zurich area
   - date: '2026-07-21'
     comment: Jobs should be more on AI and business in big tech companies
   - date: '2026-07-25'
@@ -19,7 +16,7 @@ content_preferences:
     comment: i want to see also job offers in big tech
   - date: '2026-08-18'
     comment: I see the same info as the previous day, vary more
-  comments_hash: 26485a880d7861a0a4ef52b24c36fdf0fbd1d1659680239cf7f3d1c7541d976e
+  comments_hash: 77e73e396ba0e3d49284d41a1a86cb74a435afeb9ded59689df11285e5ef261b
 design_preferences:
   feedback: []
 reading_patterns:
@@ -30,6 +27,6 @@ reading_patterns:
     news: 3
     jobs: 3
     events: 3
-last_updated: '2026-08-19T05:25:20.349036+00:00'
+last_updated: '2026-08-20T05:26:09.076043+00:00'
 overall_avg_rating: 4.0
-total_feedback_count: 5
+total_feedback_count: 4
