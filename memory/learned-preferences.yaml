@@ -1,22 +1,19 @@
 content_preferences:
   liked_topics:
-  - ai
-  - business
-  - big tech
   - energy
+  - ai
+  - big tech
   disliked_topics: []
   preferred_sources: []
   ignored_sources: []
   recent_comments:
-  - date: '2026-07-21'
-    comment: Jobs should be more on AI and business in big tech companies
   - date: '2026-07-25'
     comment: find also other sources for events in energy and AI
   - date: '2026-08-11'
     comment: i want to see also job offers in big tech
   - date: '2026-08-18'
     comment: I see the same info as the previous day, vary more
-  comments_hash: 77e73e396ba0e3d49284d41a1a86cb74a435afeb9ded59689df11285e5ef261b
+  comments_hash: faa5690ec4217613da6436020bbd1dabe92eb8dfbbf1fe5fe72e782e53ed92c5
 design_preferences:
   feedback: []
 reading_patterns:
@@ -27,6 +24,6 @@ reading_patterns:
     news: 3
     jobs: 3
     events: 3
-last_updated: '2026-08-20T05:26:09.076043+00:00'
+last_updated: '2026-08-21T05:28:51.540320+00:00'
 overall_avg_rating: 4.0
-total_feedback_count: 4
+total_feedback_count: 3
