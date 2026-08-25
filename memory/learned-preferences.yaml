@@ -1,19 +1,16 @@
 content_preferences:
   liked_topics:
-  - energy
-  - ai
   - big tech
-  disliked_topics: []
+  disliked_topics:
+  - duplicate content
   preferred_sources: []
   ignored_sources: []
   recent_comments:
-  - date: '2026-07-25'
-    comment: find also other sources for events in energy and AI
   - date: '2026-08-11'
     comment: i want to see also job offers in big tech
   - date: '2026-08-18'
     comment: I see the same info as the previous day, vary more
-  comments_hash: faa5690ec4217613da6436020bbd1dabe92eb8dfbbf1fe5fe72e782e53ed92c5
+  comments_hash: 5f2bb79aed6c28ffe8f1be06785f1eda867b252d8958b1810ba40cd3760fdd50
 design_preferences:
   feedback: []
 reading_patterns:
@@ -24,6 +21,6 @@ reading_patterns:
     news: 3
     jobs: 3
     events: 3
-last_updated: '2026-08-24T05:34:42.700204+00:00'
+last_updated: '2026-08-25T05:27:53.977305+00:00'
 overall_avg_rating: 4.0
-total_feedback_count: 3
+total_feedback_count: 2
