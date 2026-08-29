@@ -1,6 +1,13 @@
 # PersonalMentor — Specifications
 
-> **Core idea:** A fully autonomous agent that knows who you are — from your CV, interests, and personal website — and delivers a beautiful daily HTML artifact at 8 PM with curated news, job offers, events, calendar reminders, and birthdays, all tailored to you.
+> **Core idea:** A fully autonomous agent that knows who you are — from your CV,
+> interests, and personal website — and publishes a beautiful daily HTML
+> artifact at 07:00 with curated news and events, tailored to you and reshaped
+> every day by your feedback.
+
+> **Status:** this document describes the system as built. Where the original
+> design was abandoned, the reason is recorded rather than the intent deleted —
+> see §12.
 
 ---
 
@@ -9,65 +16,67 @@
 PersonalMentor is a **fully autonomous personal productivity agent** that:
 
 - **Knows you** — imports your CV, parses your personal website, and interviews you to build a rich profile
-- **Works daily** — at 8 PM every day, generates a single self-contained HTML page with everything you need to know
-- **Learns your preferences** — remembers your design style, topics of interest, and feedback to improve over time
-- **Uses existing skills** — leverages the 16 skills already built (theme-factory, frontend-design, web-artifacts-builder, gog, etc.) to produce high-quality output
+- **Works daily** — at 07:00 every day, generates a single self-contained HTML page with everything worth knowing
+- **Learns your preferences** — distills your written feedback and your per-item 👍/👎 into topic and source weights that reshape tomorrow's edition
+- **Publishes itself** — commits and pushes to GitHub Pages, so the edition is readable anywhere without the laptop being on
 - **Runs without asking** — fully autonomous, no approval needed for daily operations
 
 ---
 
 ## 2. The Daily Artifact
 
-A single, beautiful HTML file generated every day at 8 PM containing:
+A single, self-contained HTML file generated every day at 07:00, published to
+`output/daily/YYYY-MM-DD.html` and served from GitHub Pages.
+
+The page has two top-level tabs:
+
+1. **News · Events** — the daily pipeline's output (this document's subject)
+2. **Personal Coach** — a React/Vite energy check-in sub-app under `coach/`, built to `output/web/coach/` and embedded via an `<iframe>`. Not part of the daily pipeline; rebuilt only when its source changes.
 
 ### Content Sections
 
+Two sections. Each is split by keyword classification into an **⚡ Energy** and
+an **🤖 AI & Tech** track, showing `MAX_ITEMS` (3) items apiece — 12 items per
+edition.
+
 | Section | Source | Description |
 |---|---|---|
-| **Top Stories** | RSS feeds, web scraping | 3-5 news articles relevant to your industry and interests |
-| **Jobs For You** | Job boards, scraped listings | Open positions matching your profile, with a fit score |
-| **Today's Calendar** | Google Calendar via `gog` | Upcoming meetings, deadlines, and reminders |
-| **Birthdays** | Google Contacts via `gog` | Contacts with birthdays today or this week |
-| **Events Near You** | Event platforms, meetup sites | Conferences, meetups, webinars relevant to your field |
-| **Skill Spotlight** | Learning platforms | Trending skills in your domain + courses/resources |
-| **Industry Pulse** | News, funding trackers | Market trends, startup launches, funding rounds |
-| **Reading List** | Curated suggestions | Long-form articles and papers worth your time |
+| **News ⚡ Energy** | RSS feeds (`sources.yaml`) | Grid, power markets, storage, energy transition |
+| **News 🤖 AI & Tech** | RSS feeds (`sources.yaml`) | AI labs, research, applied ML, broad tech |
+| **Events ⚡ Energy** | Event sources (`sources.yaml`) | Zürich-area energy events |
+| **Events 🤖 AI & Tech** | Event sources (`sources.yaml`) | Zürich-area AI and tech events |
+| **Today's Feedback** | — | Free-text comment box + the batched item votes |
 
 ### Design Requirements
 
 - Single self-contained HTML file (inline CSS, no external dependencies)
 - Responsive (mobile + desktop)
-- Uses the user's preferred theme from `theme-factory`
+- Uses the user's preferred theme from `theme-factory`, applied as CSS variables at render time
 - Clean typography, generous whitespace, scannable layout
-- Every item has: title, source, 1-2 sentence summary, link, relevance tag
-- Header: "Good evening, [Name] — [Day, Date]"
+- Every item has: title, source, one-sentence summary, link, relevance tag, and a 👍/👎 control
+- Header: "Good morning, [Name] — [Day, Date]"
 - Archive navigation to browse past issues
 
 ### Page Layout
 
 ```
 ┌─────────────────────────────────────────┐
+│  [ News · Events ]  [ Personal Coach ]  │  ← tabs
+├─────────────────────────────────────────┤
 │  PersonalMentor Daily — [Date]          │
-│  "Good evening, [Name]"                 │
+│  "Good morning, [Name]"                 │
 ├─────────────────────────────────────────┤
-│  TOP STORIES (3-5 articles)             │
-│  Curated by relevance to your profile   │
-├──────────────────┬──────────────────────┤
-│  JOBS FOR YOU    │  CALENDAR & BIRTHDAYS│
-│  Matching roles  │  Today's schedule    │
-│  with fit score  │  Upcoming birthdays  │
-├──────────────────┴──────────────────────┤
-│  EVENTS NEAR YOU                        │
-│  Conferences, meetups, webinars         │
+│  NEWS                                   │
+│    ⚡ Energy        3 items      👍 👎   │
+│    🤖 AI & Tech     3 items      👍 👎   │
 ├─────────────────────────────────────────┤
-│  SKILL SPOTLIGHT                        │
-│  Trending skills + learning resources   │
+│  EVENTS                                 │
+│    ⚡ Energy        3 items      👍 👎   │
+│    🤖 AI & Tech     3 items      👍 👎   │
 ├─────────────────────────────────────────┤
-│  INDUSTRY PULSE                         │
-│  Market trends, funding, launches       │
-├─────────────────────────────────────────┤
-│  READING LIST                           │
-│  Long-form articles worth your time     │
+│  TODAY'S FEEDBACK                       │
+│  Comment box + pending vote count       │
+│  [ Send Feedback ]                      │
 └─────────────────────────────────────────┘
 ```
 
@@ -81,7 +90,7 @@ Three complementary methods, run during onboarding:
 
 1. **Import CV** — Parse the user's CV (PDF/DOCX) using `pdf` or `docx` skills to extract name, title, skills, experience, education
 2. **Parse personal website** — Scrape the user's website to extract bio, projects, interests, writing style
-3. **Interactive interview** — Ask focused questions to fill gaps: preferred topics, job search status, design taste, content sources, location
+3. **Interactive interview** — Ask focused questions to fill gaps: preferred topics, design taste, content sources, location
 
 ### 3.2 Profile Structure
 
@@ -89,113 +98,102 @@ Three complementary methods, run during onboarding:
 profile/
 ├── identity.yaml          # Name, title, bio, contact info
 ├── experience.yaml        # Work history, education, projects, skills
-├── interests.yaml         # Professional topics, industries, personal hobbies
+├── interests.yaml         # Professional topics, industries, target roles
 ├── preferences.yaml       # Design theme, writing tone, content preferences
-└── sources.yaml           # RSS feeds, job boards, news sites to monitor
+└── sources.yaml           # RSS feeds and event sources to monitor
 ```
 
-**identity.yaml**
-```yaml
-name: ""
-title: ""
-location: ""
-bio: ""
-contact:
-  email: ""
-  linkedin: ""
-  website: ""
-  github: ""
-```
+**interests.yaml** — read by `relevance_score()` when ranking news and events.
+`job_search.target_roles` is still live even though the Jobs section was retired:
+a target-role match scores **+3** on an article or event.
 
-**interests.yaml**
 ```yaml
 professional:
   - topic: ""
-    weight: 1-10             # Relevance priority
-industries: []
-personal: []
+    weight: 1-10             # Added to the score on a whole-word match
+industries: []               # +2 each
+relevance_keywords: []       # bare string (+2) or {term, weight}
 job_search:
-  active: true/false
-  target_roles: []
+  target_roles: []           # +3 each
   target_locations: []
-  salary_range: ""
 ```
 
 **preferences.yaml**
 ```yaml
 design:
   theme: ""                  # theme-factory theme name
-  colors: []
 writing:
   tone: ""                   # formal, conversational, technical
-  length: ""                 # concise, detailed
   language: ""               # en, it, de, etc.
 daily_artifact:
-  delivery_time: "20:00"
-  sections_enabled: []       # Which sections to include
-  max_items_per_section: 5
+  delivery_time: "07:00"
 ```
 
 **sources.yaml**
 ```yaml
 rss_feeds:
   - url: ""
-    category: ""             # news, tech, industry, etc.
-job_boards:
-  - url: ""
-    search_terms: []
+    category: ""             # ai | energy | tech | news → picks the track
+    type: html               # omit for real RSS/Atom; "html" scrapes the page
 event_sources:
   - url: ""
-    location_filter: ""
+    type: ""                 # html | api | eth_api | playwright
+    location_filter: ""      # substring match; '' = no filter
+# job_boards: retired — see §12
 ```
+
+Prefer real RSS over `type: html`. HTML scrapes carry no publication date, which
+degrades the day-over-day novelty ranking and tends to pick up site navigation
+as "articles".
 
 ---
 
 ## 4. Memory System
 
-All memory is local, file-based, and private.
+All memory is local and file-based. Everything except `seen-items.json` is
+committed, because the pipeline also runs in GitHub Actions on a fresh checkout.
 
 ### 4.1 Storage Layout
 
 ```
 memory/
-├── session-log.jsonl          # Append-only log of every action
+├── session-log.jsonl          # Append-only log of every action (gitignored)
 ├── artifacts.yaml             # Registry of generated artifacts
-└── learned-preferences.yaml   # Preferences inferred from usage
+├── feedback.jsonl             # One entry per submitted feedback issue
+├── learned-preferences.yaml   # Preferences distilled from feedback
+└── seen-items.json            # Day-over-day novelty history (machine-local)
 ```
 
 ### 4.2 How Memory Works
 
 ```
-User interacts with PersonalMentor
+Reader clicks 👍/👎 and/or writes a comment
        │
        ▼
-  Log action → session-log.jsonl
+  Batched in browser localStorage (pm_votes_<DATE>)
        │
        ▼
-  If artifact produced → update artifacts.yaml
+  "Send Feedback" → one GitHub issue per day
        │
        ▼
-  Analyze patterns in session-log
+  ingest_github_feedback.py → feedback.jsonl, issue closed
        │
        ▼
-  Update learned-preferences.yaml
+  analyze_feedback.py → Gemini distillation
        │
        ▼
-  Distill key insights into CLAUDE.md
+  learned-preferences.yaml
+    liked_topics / disliked_topics / preferred_sources / ignored_sources
+       │
+       ▼
+  render_newspaper.py reweights tomorrow's ranking
 ```
 
 ### 4.3 CLAUDE.md as Working Memory
 
-`CLAUDE.md` is the agent's always-loaded context. It contains a distilled summary of:
-
-- Who the user is (name, role, key facts)
-- Top preferences (theme, tone, format)
-- Recent artifacts and their status
-- Active goals
-- Known strong opinions or quirks
-
-Updated automatically after each session. Manually editable by the user.
+`CLAUDE.md` is the agent's always-loaded context: who the user is, top
+preferences, architecture and key design decisions, and the commands to run
+each part of the pipeline. Manually editable by the user.
 
 ---
 
@@ -205,160 +203,223 @@ Updated automatically after each session. Manually editable by the user.
 PersonalMentor/
 ├── SPECIFICATIONS.md          # This document
 ├── CLAUDE.md                  # Active memory / user context
+├── index.html                 # Redirects to the newest edition
+├── .github/workflows/
+│   ├── daily-newspaper.yml    # Runs the pipeline at 05:00 & 06:00 UTC
+│   └── pages-deploy.yml       # Publishes the repo to GitHub Pages
 ├── profile/                   # User profile (YAML)
-├── memory/                    # Session logs, artifact registry, learned prefs
+├── memory/                    # Feedback, artifact registry, learned prefs
+├── coach/                     # Personal Coach sub-app (React/Vite source)
 ├── output/
 │   ├── daily/                 # Daily newspaper HTML files
-│   │   ├── 2026-02-13.html
-│   │   └── ...
-│   ├── cv/                    # Generated CVs
-│   ├── documents/             # Reports, letters, proposals
-│   └── web/                   # Websites, dashboards
-├── skills/                    # 16 existing + new skills
-│   ├── daily-newspaper/       # NEW: generate the daily artifact
-│   ├── profile-manager/       # NEW: ingest and manage user profile
-│   ├── web-scraper/           # NEW: fetch RSS, news, job listings
-│   ├── memory-manager/        # NEW: read/write persistent memory
-│   └── ... (16 existing skills)
-└── workflows/                 # Multi-step workflow YAML files
+│   └── web/coach/             # Built Personal Coach (committed)
+└── skills/
+    ├── daily-newspaper/       # Pipeline orchestrator + renderer + feedback
+    ├── profile-manager/       # CV parsing, website scrape, onboarding
+    ├── web-scraper/           # RSS and event fetching
+    ├── memory-manager/        # Logging, artifact registry, preferences
+    └── ...                    # Supporting skills (docx, pdf, theme-factory, …)
 ```
 
 ---
 
 ## 6. Skills
 
-### 6.1 Existing Skills (16)
+### 6.1 Four Core Skills
+
+| Skill | Entry Point | Purpose |
+|---|---|---|
+| `daily-newspaper` | `scripts/run_daily.py` | Pipeline orchestrator, HTML renderer, German generator, feedback system |
+| `web-scraper` | `scripts/fetch_*.py` | RSS and event content fetching |
+| `profile-manager` | `scripts/` | CV parsing (PDF/DOCX), website scraping, onboarding interview |
+| `memory-manager` | `scripts/` | Append-only logging, artifact registry, preference learning |
+
+### 6.2 Supporting Skills
 
 | Category | Skill | Used By Daily Artifact? |
 |---|---|---|
-| **Documents** | `docx`, `pdf`, `xlsx`, `pptx`, `Jinja2-cv` | CV updates |
-| **Visual** | `theme-factory`, `canvas-design`, `algorithmic-art`, `nano-banana-pro`, `frontend-design` | Theme + design |
+| **Documents** | `docx`, `pdf`, `xlsx`, `pptx` | CV updates |
+| **Visual** | `theme-factory`, `algorithmic-art`, `nano-banana-pro`, `frontend-design` | Theme + design |
 | **Web** | `web-artifacts-builder`, `webapp-testing` | HTML rendering |
-| **Integration** | `gog` | Calendar + birthdays + contacts |
-| **Orchestration** | `workflow-mapper`, `agent-factory`, `skill-creator` | Workflow coordination |
+| **Integration** | `gog` | Calendar (optional — pipeline continues without it) |
 
-### 6.2 New Skills Needed
+### 6.3 Not Built
 
-| Skill | Priority | Purpose |
-|---|---|---|
-| `profile-manager` | **P0** | Ingest CV/website, run interview, maintain profile YAML |
-| `web-scraper` | **P0** | Fetch RSS feeds, scrape job boards, extract structured content |
-| `daily-newspaper` | **P0** | Orchestrate content collection, ranking, and HTML generation |
-| `memory-manager` | **P0** | Log actions, track artifacts, update learned preferences |
-| `job-tracker` | P1 | Monitor job boards, track applications, tailor CVs per role |
-| `email-digest` | P2 | Summarize inbox, surface important threads |
-| `calendar-planner` | P2 | Proactive scheduling suggestions |
+`job-tracker`, `email-digest`, and `calendar-planner` were scoped in the
+original design and never built. `job-tracker` is now out of scope — see §12.
 
 ---
 
 ## 7. Daily Artifact Pipeline
 
-The end-to-end flow for generating the daily HTML:
-
 ```
-[8 PM trigger]
+[07:00 local — launchd / Task Scheduler / cron]
+[05:00 & 06:00 UTC — GitHub Actions, gated on "already published today"]
       │
       ▼
   1. Load user profile (profile/*.yaml)
       │
       ▼
-  2. Fetch content (web-scraper skill)
-     ├── RSS feeds → news articles
-     ├── Job boards → matching positions
-     ├── Event platforms → upcoming events
-     └── Google Calendar/Contacts (gog) → schedule + birthdays
+  2. Fetch content in parallel (web-scraper)
+     ├── fetch_rss.py    → rss.json
+     └── fetch_events.py → events.json
       │
       ▼
-  3. Rank & filter (daily-newspaper skill)
-     ├── Score each item by relevance to profile
-     ├── Deduplicate
-     ├── Select top items per section
-     └── Generate 1-2 sentence summaries
+  3. Ingest + analyze feedback (daily-newspaper)
+     ├── ingest_github_feedback.py → feedback.jsonl, close issues
+     └── analyze_feedback.py       → learned-preferences.yaml (Gemini)
       │
       ▼
-  4. Render HTML (frontend-design + theme-factory)
-     ├── Apply user's preferred theme
-     ├── Build responsive layout
-     ├── Inline all CSS
-     └── Add archive navigation
+  4. Rank & filter (render_newspaper.py)
+     ├── Deduplicate by title
+     ├── Keep events to the Zürich area
+     ├── Score by profile relevance ± learned preferences
+     ├── Split into Energy / AI & Tech tracks
+     ├── Diversify by source
+     ├── Push day-over-day repeats to the back (novelty)
+     └── Take the top 3 per track
       │
       ▼
-  5. Save to output/daily/YYYY-MM-DD.html
+  5. Render HTML (theme applied as CSS variables, all inline)
       │
       ▼
-  6. Log to memory (memory-manager skill)
-     └── Record what was generated, sources used, item count
+  6. Save to output/daily/YYYY-MM-DD.html
+      │
+      ▼
+  7. Log to memory + git commit & push → GitHub Pages
 ```
+
+### 7.1 Ranking Rules
+
+| Signal | Effect on score |
+|---|---|
+| `interests.professional[].topic` match | + its `weight` |
+| `interests.industries` match | +2 |
+| `job_search.target_roles` match | +3 |
+| `relevance_keywords` match | +2 (or its `weight`) |
+| `learned.liked_topics` match | +2 |
+| `learned.disliked_topics` match | −3 |
+| `learned.preferred_sources` match | +1 |
+| `learned.ignored_sources` match | −2 |
+
+Items scoring 0 or less are dropped — **unless nothing scores above 0**, in
+which case the full relevance-ranked list is used, so a section is never blank.
+A 👎 therefore *demotes*; it never blocks a URL outright.
+
+### 7.2 Other Rules
+
+- **Novelty** — items shown on a previous day within `NOVELTY_WINDOW_DAYS` (7) are pushed to the back. Items shown *today* are not penalised, so a same-day re-run reproduces the edition. History is pruned after `SEEN_RETENTION_DAYS` (45).
+- **Zürich filter** — an event is kept unless its title or location names a clearly non-Zürich locality. A positive "contains zurich" rule was tried and dropped: event locations are messy ("WestHive", "TBD") and it removed most legitimate local events.
+- **Energy event floor** — an event needs `MIN_ENERGY_TERMS_FOR_EVENT` (1) distinct energy terms for the energy track. Set to 2 originally to block wellness noise ("CEO Energy Break"), relaxed to 1 because no Zürich energy event on a typical day mentions two, leaving the track empty. The occasional false positive is accepted.
 
 ---
 
-## 8. Autonomy Model
+## 8. Feedback Model
+
+Two inputs, one submission, one issue per day.
+
+| Input | Collected by | Sent as |
+|---|---|---|
+| Per-item 👍/👎 | Control on every news/event card; batched in `localStorage` | `### Item votes` block, `vote \| section \| track \| source \| title` rows |
+| Free-text comment | Card at the bottom of the page | `### Comment` block |
+
+Submission POSTs directly to the GitHub Issues API when a fine-grained PAT
+(Issues: R/W, this repo only) is in the browser's `localStorage`; otherwise it
+opens a pre-filled issue the reader submits with one click. The token lives only
+in the browser — never in the HTML or in git.
+
+`analyze_feedback.py` hands voted titles to Gemini as **examples of the kind of
+item** wanted more or less of, never as a blocklist. A source is only added to
+`ignored_sources` when several disliked items came from it. A skip-hash over
+comments *and* votes avoids re-calling the model when nothing changed.
+
+There is no star rating: it was removed because the written comment and the item
+votes carry strictly more information.
+
+---
+
+## 9. Autonomy Model
 
 | Action | Level | Details |
 |---|---|---|
-| Daily newspaper generation | **Fully autonomous** | Runs at 8 PM, no approval |
-| Profile updates from new data | **Fully autonomous** | New experience → update profile |
+| Daily newspaper generation | **Fully autonomous** | Runs at 07:00, no approval |
+| Commit + push of the edition | **Fully autonomous** | Straight to `main`; Pages deploys from it |
+| Feedback ingestion + issue closing | **Fully autonomous** | Silent, background |
 | Preference learning | **Fully autonomous** | Silent, background |
+| Profile updates from new data | **Fully autonomous** | New experience → update profile |
 | CV regeneration | **Semi-autonomous** | Generates draft, user reviews |
 | Sending emails | **User-triggered only** | Never sends without explicit request |
 | Deleting files/data | **Always confirm** | Destructive actions require approval |
 
 ---
 
-## 9. Technical Stack
+## 10. Technical Stack
 
 | Layer | Technology |
 |---|---|
 | Runtime | Claude Code CLI (Claude Opus) |
-| Scheduling | cron / launchd (macOS) |
+| Scheduling | GitHub Actions (primary), launchd / Task Scheduler / cron (local) |
+| Hosting | GitHub Pages |
 | Languages | Python 3.11+, Node.js 18+, Bash |
 | Documents | pypdf, reportlab, python-docx, openpyxl |
 | Web rendering | HTML + inline CSS (self-contained) |
-| Scraping | BeautifulSoup, requests, feedparser (RSS) |
-| Google integration | `gog` CLI |
+| Scraping | BeautifulSoup, requests, feedparser, Playwright (JS-rendered pages) |
+| LLM | Gemini via `google-genai` (fallback: 2.5-flash → 2.0-flash → 2.5-flash-lite) |
+| Google integration | `gog` CLI (optional) |
+| Sub-app | React + Vite (Personal Coach) |
 | Storage | Local filesystem (YAML, JSON, JSONL) |
 | Themes | `theme-factory` (10 built-in themes) |
 
 ---
 
-## 10. Implementation Roadmap
+## 11. Implementation Status
 
-### Phase 1: Foundation
-- [x] 16 working skills
-- [x] Theme system
-- [x] Workflow mapper + agent factory
-- [ ] Create directory structure (`profile/`, `memory/`, `output/`)
-- [ ] Write initial `CLAUDE.md`
+### Phase 1: Foundation — done
+- [x] Skill library, theme system, directory structure, initial `CLAUDE.md`
 
-### Phase 2: Profile & Memory
-- [ ] Build `profile-manager` skill
-- [ ] Build `memory-manager` skill
-- [ ] Run first onboarding (import CV + website + interview)
-- [ ] Auto-populate `CLAUDE.md` from profile
+### Phase 2: Profile & Memory — done
+- [x] `profile-manager` and `memory-manager` skills
+- [x] Onboarding (CV + website + interview) via `feedback_server.py`
 
-### Phase 3: Daily Newspaper
-- [ ] Build `web-scraper` skill
-- [ ] Build `daily-newspaper` skill
-- [ ] Design HTML template with `theme-factory`
-- [ ] Configure content sources in `sources.yaml`
-- [ ] Set up 8 PM cron job
-- [ ] Test with real data for 1 week
+### Phase 3: Daily Newspaper — done
+- [x] `web-scraper` and `daily-newspaper` skills
+- [x] Themed HTML template, content sources configured
+- [x] Scheduled delivery (GitHub Actions + local launchd)
+- [x] Publishing to GitHub Pages
 
 ### Phase 4: Polish & Expand
-- [ ] Feedback loop (mark articles as relevant/irrelevant)
+- [x] Feedback loop — written comments distilled into topic/source weights
+- [x] Per-item 👍/👎 feedback
+- [x] Day-over-day novelty so editions differ
+- [x] Archive browser for past issues (`index.html` + archive link)
+- [x] Personal Coach sub-app
 - [ ] Artifact auto-update (CV stays current)
-- [ ] `job-tracker` skill
-- [ ] Archive browser for past daily issues
 - [ ] Additional integrations (Notion, Slack)
 
 ---
 
-## 11. Success Criteria
+## 12. Retired Scope
+
+Decisions that reversed part of the original design. Kept here so the reasoning
+survives.
+
+| Dropped | When | Why |
+|---|---|---|
+| **Jobs For You** section | Aug 2026 | Not acted on by the reader. `fetch_jobs.py` and the `job_boards:` block in `sources.yaml` are kept on disk (the latter commented out) so it can be switched back on; nothing in the pipeline reads them. `interests.yaml`'s `job_search:` stays live — it feeds news/event ranking. |
+| **`job-tracker` skill** | Aug 2026 | Followed the Jobs section out of scope. |
+| **Birthdays** | — | `gog` contacts integration never built; calendar is optional as it is. |
+| **Skill Spotlight, Industry Pulse, Reading List** | — | Never built. Four thin sections read worse than two well-ranked ones; the Energy / AI & Tech split covers the same ground. |
+| **Star ratings** | Jul 2026 | Replaced by the free-text comment, then by per-item votes — both carry more signal than a 1-5 number. |
+| **20:00 delivery** | — | Moved to 07:00; the edition is a morning read. |
+
+---
+
+## 13. Success Criteria
 
 PersonalMentor is successful when:
 
-1. **The daily artifact is useful** — the user opens it every evening and finds content worth reading
-2. **Jobs are relevant** — at least 3 out of 5 job suggestions match what the user would actually apply for
-3. **Calendar/birthdays are accurate** — no missed events, no stale data
-4. **It learns** — after 2 weeks, the content quality is noticeably better than day 1
+1. **The daily artifact is useful** — the user opens it every morning and finds content worth reading
+2. **Both tracks stay full** — 3 energy and 3 AI items in each section, without padding from irrelevant sources
+3. **Editions differ** — the same story does not lead two days running
+4. **It learns** — after 2 weeks of 👍/👎, the content is noticeably better than day 1
 5. **Zero effort** — the user doesn't configure anything after onboarding; it just works
