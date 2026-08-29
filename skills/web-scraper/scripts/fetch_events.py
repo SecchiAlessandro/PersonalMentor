@@ -4,8 +4,10 @@
 import argparse
 import json
 import os
+import re
 import sys
 import time
+from datetime import datetime
 from urllib.parse import urljoin
 
 try:
@@ -301,6 +303,93 @@ def fetch_playwright_events(url, location_filter=""):
         return []
 
 
+# ETH Zurich publishes its whole public event calendar as JSON (the same feed
+# the ethz.ch event pages consume). Entry types below are the ones worth
+# surfacing — talks and conferences; the rest of the calendar is doctoral
+# exams, guided tours and permanent exhibitions.
+ETH_EVENT_TYPES = {
+    "Seminar", "Colloquium", "Congress", "Convention (Conference)",
+    "Public lecture", "Presentation", "Forum", "Workshop", "Webinar",
+    "Summer School", "Inaugural lecture",
+}
+
+
+def _eth_slug(title):
+    """Slugify an event title for the (cosmetic) ETH details URL."""
+    slug = re.sub(r"[^a-z0-9]+", "-", str(title).lower()).strip("-")
+    return slug[:60] or "event"
+
+
+def fetch_eth_events(url, location_filter=""):
+    """Fetch events from the ETH Zurich public event calendar API.
+
+    The payload nests differently from the generic JSON handler: entries live
+    under `entry-array`, the title sits in `content`, and dates come either as a
+    `date-with-times-array` of single occurrences or, for multi-day events such
+    as congresses and summer schools, as an `opening-hours` date range.
+    """
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    for attempt in range(MAX_RETRIES):
+        try:
+            resp = requests.get(url, headers=HEADERS, timeout=REQUEST_TIMEOUT)
+            resp.raise_for_status()
+            entries = resp.json().get("entry-array", [])
+
+            events = []
+            for entry in entries:
+                content = entry.get("content", {}) or {}
+                title = (content.get("title") or "").strip()
+                if not title:
+                    continue
+
+                classification = entry.get("classification", {}) or {}
+                if classification.get("entry-type-desc") not in ETH_EVENT_TYPES:
+                    continue
+
+                # Earliest occurrence still to come. Single-date events list
+                # every occurrence; multi-day ones give a from/to range, which
+                # counts as upcoming while it is still running.
+                timing = entry.get("date-time-indication", {}) or {}
+                dates = sorted(
+                    d.get("date", "")
+                    for d in timing.get("date-with-times-array", [])
+                    if d.get("date", "") >= today
+                )
+                if dates:
+                    date = dates[0]
+                else:
+                    hours = timing.get("opening-hours", {}) or {}
+                    date_from = hours.get("date-from", "")
+                    if not date_from or hours.get("date-to", "") < today:
+                        continue
+                    date = max(date_from, today)
+
+                address = (entry.get("location", {}) or {}).get("address", {}) or {}
+                internal = (entry.get("location", {}) or {}).get("internal", {}) or {}
+                location = (address.get("3rd-line") or internal.get("area-desc")
+                            or "Zürich")
+
+                events.append({
+                    "title": title,
+                    "date": date,
+                    "location": location,
+                    "url": content.get("link-url") or (
+                        "https://ethz.ch/en/news-and-events/events/"
+                        f"details.{_eth_slug(title)}.{entry.get('id')}.html"
+                    ),
+                    "source": url,
+                    "type": classification.get("entry-type-desc", "event").lower(),
+                })
+            return events
+        except Exception as e:
+            if attempt < MAX_RETRIES - 1:
+                time.sleep(RETRY_DELAY * (attempt + 1))
+            else:
+                print(f"WARNING: Failed to fetch ETH calendar {url}: {e}", file=sys.stderr)
+                return []
+
+
 def fetch_event_source(url, location_filter=""):
     """Fetch events from a single source URL (HTML + JSON-LD)."""
     for attempt in range(MAX_RETRIES):
@@ -352,6 +441,8 @@ def main():
         print(f"Fetching events ({source_type}): {url}")
         if source_type == "api":
             return fetch_api_events(url, location_filter)
+        elif source_type == "eth_api":
+            return fetch_eth_events(url, location_filter)
         elif source_type == "playwright":
             return fetch_playwright_events(url, location_filter)
         else:

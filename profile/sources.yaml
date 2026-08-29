@@ -1,122 +1,152 @@
 # PersonalMentor — Content Sources
+#
+# Every source below was verified live on 2026-08-29: it returns items, and
+# those items survive the profile relevance filter. Prefer real RSS over
+# `type: html` scraping — HTML scrapes return no publication date, which
+# degrades day-over-day novelty ranking (see prioritize_unseen in
+# render_newspaper.py) and tends to pick up site navigation as "articles".
 
 rss_feeds:
-# --- AI / ML ---
+# --- AI labs & research ---
 - url: https://www.technologyreview.com/topic/artificial-intelligence/feed/
   category: ai
 - url: https://venturebeat.com/category/ai/feed/
   category: ai
-# --- AI company blogs ---
-- url: https://www.anthropic.com/news
+- url: https://openai.com/news/rss.xml
   category: ai
-  type: html
-- url: https://deepmind.google/discover/blog/
+- url: https://deepmind.google/blog/rss.xml
   category: ai
-  type: html
-# --- Energy / power / clean tech ---
+- url: https://research.google/blog/rss/
+  category: ai
+- url: https://spectrum.ieee.org/feeds/topic/artificial-intelligence.rss
+  category: ai
+# Import AI — Jack Clark's weekly analysis newsletter
+- url: https://jack-clark.net/feed/
+  category: ai
+# --- Energy: markets, grid, storage ---
 - url: https://spectrum.ieee.org/feeds/topic/energy.rss
   category: energy
 - url: https://www.canarymedia.com/articles.rss
   category: energy
-# --- Energy industry & markets ---
-- url: https://www.entsoe.eu/news/
+# ENTSO-E — real RSS feed (the /news/ HTML page scrapes as navigation)
+- url: https://www.entsoe.eu/rss/news.xml
   category: energy
-  type: html
-- url: https://iaee.org/news
+# Energy Monitor — the feed works even though the /news/ page returns 403
+- url: https://www.energymonitor.ai/feed/
   category: energy
-  type: html
-- url: https://www.energymonitor.ai/news/
+# Latitude Media — energy x AI x data centres, the exact profile intersection
+- url: https://www.latitudemedia.com/feed
   category: energy
-  type: html
+- url: https://www.energy-storage.news/feed/
+  category: energy
+- url: https://www.utilitydive.com/feeds/news/
+  category: energy
+- url: https://www.powermag.com/feed/
+  category: energy
+# Montel — best power-market coverage available; no RSS, HTML scrape is clean
 - url: https://www.montelnews.com/
   category: energy
   type: html
-# --- Broad tech (kept; profile relevance filter trims off-profile items) ---
+# --- Big-tech strategy & management (MTEC / strategy lane) ---
+- url: https://stratechery.com/feed/
+  category: tech
+- url: https://www.mckinsey.com/insights/rss
+  category: tech
+# --- ETH Zurich ---
+# ETH's AEM feeds (the `_jcr_content.feed.html` suffix) — real RSS with dated
+# entries, unlike the news/event *pages*, which scrape as site navigation.
+# Left as `category: news` so classify_topic routes each story to the energy or
+# AI track on its own keywords rather than forcing the whole feed into one.
+- url: https://www.ethz.ch/en/news-and-events/eth-news/news/_jcr_content.feed.html
+  category: news
+- url: https://ai.ethz.ch/news-and-events/ai-center-news/_jcr_content.feed.html
+  category: ai
+# --- Broad tech (profile relevance filter trims off-profile items) ---
 - url: https://hnrss.org/frontpage
   category: tech
 - url: https://techcrunch.com/feed/
   category: tech
-- url: https://www.producthunt.com/feed
-  category: tech
-# --- ETH Zurich news/events ---
-- url: https://ethz.ch/en/news-and-events/events.html
-  category: news
-  type: html
-- url: https://gess.ethz.ch/en/news-and-events.html
-  category: news
-  type: html
-- url: https://cepe.ethz.ch/news-and-events.html
-  category: energy
-  type: html
-job_boards:
-# Hitachi (primary target company) — Zurich area
-- url: https://www.datacareer.ch/jobs/?q=Hitachi&location=Zurich
-  type: html
-  site: datacareer
-  search_terms:
-  - Hitachi
-  - energy
-  - AI
-# SwissDevJobs (broad RSS, filtered by keywords + Zurich)
-- url: https://swissdevjobs.ch/rss
-  type: rss
-  site: swissdevjobs
-  filter_keywords:
-  - Hitachi
-  - AI
-  - energy
-  - economics
-  - data
-  - python
-  - Zurich
-  - Zürich
-  # AI + Energy roles — Zurich area
-- url: https://www.datacareer.ch/jobs/?q=AI+energy&location=Zurich
-  type: html
-  site: datacareer
-  search_terms:
-  - AI
-  - energy
-  - Hitachi
+
+# --- RETIRED: the Jobs section was removed from the newspaper. Nothing in
+# the pipeline reads this any more; kept (with fetch_jobs.py) so the
+# section can be switched back on by uncommenting both. ---
+# # --- RETIRED: the Jobs section was removed from the dashboard and
+# fetch_jobs.py is no longer run by the pipeline. Kept (commented out) so
+# jobs can be switched back on by uncommenting this block and restoring the
+# fetcher task in run_daily.py. Boards verified live 2026-08-29.
+# job_boards:
+# # # LinkedIn guest job-search API — the workhorse. One board per target lane
+# # # (see job_search.target_roles in interests.yaml). Scored by fetch_jobs.py
+# # # against target roles / preferred companies / locations.
+# # # --- Primary target company ---
+# # - url: 'https://ch.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=Hitachi%20Energy&location=Switzerland&start=0'
+# #   type: html
+# #   site: linkedin
+# # # --- Energy: markets, engineering leadership ---
+# # - url: 'https://ch.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=electricity%20markets&location=Switzerland&start=0'
+# #   type: html
+# #   site: linkedin
+# # - url: 'https://ch.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=program%20manager%20energy&location=Switzerland&start=0'
+# #   type: html
+# #   site: linkedin
+# # # --- AI ---
+# # - url: 'https://ch.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=artificial%20intelligence&location=Zurich%2C%20Switzerland&start=0'
+# #   type: html
+# #   site: linkedin
+# # - url: 'https://ch.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=AI%20product%20manager&location=Switzerland&start=0'
+# #   type: html
+# #   site: linkedin
+# # # --- Big-tech commercial / solutions ---
+# # - url: 'https://ch.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=solutions%20architect&location=Zurich%2C%20Switzerland&start=0'
+# #   type: html
+# #   site: linkedin
+# # # --- Strategy / business development ---
+# # - url: 'https://ch.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=strategy%20consultant&location=Zurich%2C%20Switzerland&start=0'
+# #   type: html
+# #   site: linkedin
+# # # SwissDevJobs — broad Swiss tech RSS, filtered by keyword
+# # - url: https://swissdevjobs.ch/rss
+# #   type: rss
+# #   site: swissdevjobs
+# #   filter_keywords:
+# #   - Hitachi
+# #   - AI
+# #   - energy
+# #   - data
+# #   - python
+# #   - lead
+# #   - manager
+# #   - Zurich
+# #   - Zürich
+
 event_sources:
 # Luma Zurich — tech/AI/startup events (JS-rendered, requires Playwright)
 - url: https://lu.ma/zurich
   type: playwright
   location_filter: ''
-# AI events — Zurich area
-- url: https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/
-  location_filter: ''
+# Meetup — the most reliable aggregator. Keywords are chosen to avoid the
+# wellness sense of "energy" (a bare energy/sustainability search returns
+# aura readings and yoga); the AI/ML/data terms stay on-profile.
 - url: https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS
   location_filter: ''
-# Energy events — Zurich area
+- url: https://www.meetup.com/find/?keywords=machine+learning&location=ch--zurich&source=EVENTS
+  location_filter: ''
+- url: https://www.meetup.com/find/?keywords=data+science&location=ch--zurich&source=EVENTS
+  location_filter: ''
+# Eventbrite — Zurich area
+- url: https://www.eventbrite.com/d/switzerland--zurich/artificial-intelligence/
+  location_filter: ''
 - url: https://www.eventbrite.com/d/switzerland--zurich/energy-technology/
   location_filter: ''
-# Meetup energy/sustainability searches — the meetup scraper is the most
-# reliable aggregator (it already feeds the AI track); give energy the same.
-- url: https://www.meetup.com/find/?keywords=energy&location=ch--zurich&source=EVENTS
+- url: https://www.eventbrite.com/d/switzerland--zurich/science-and-tech--events/
   location_filter: ''
-- url: https://www.meetup.com/find/?keywords=sustainability&location=ch--zurich&source=EVENTS
+# ETH Zurich public event calendar (JSON API behind the ethz.ch event pages).
+# Filtered by fetch_eth_events to talks and conferences — seminars, colloquia,
+# congresses, public lectures — over the next 60 days.
+- url: 'https://idapps.ethz.ch/pcm-pub-services/v2/entries?rs-first=0&rs-size=400&filters[0].min-till-end=0&filters[0].max-till-start=60&filters[0].cals=1&lang=en&client-id=wcms&comp-ext=true'
+  type: eth_api
   location_filter: ''
-# ETH Zurich events
-- url: https://ethz.ch/en/news-and-events/events.html
-  location_filter: ''
-- url: https://gess.ethz.ch/en/news-and-events.html
-  type: html
-  location_filter: ''
-- url: https://cepe.ethz.ch/news-and-events.html
-  type: html
-  location_filter: ''
-- url: https://cepe.ethz.ch/education/lunchseminar.html
-  type: html
-  location_filter: ''
-# Industry events — ENTSO-E, IAEE
-- url: https://www.entsoe.eu/events/
-  type: html
-  location_filter: ''
+# IAEE — energy-economics conferences (low volume, high relevance)
 - url: https://iaee.org/events
-  type: html
-  location_filter: ''
-# EU Energy events
-- url: https://energy.ec.europa.eu/topics/funding-and-financing/investors-dialogue-energy/events_en
   type: html
   location_filter: ''
