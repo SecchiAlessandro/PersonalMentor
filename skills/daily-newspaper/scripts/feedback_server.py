@@ -198,6 +198,7 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             "rating": rating,
             "section_ratings": data.get("section_ratings", {}),
             "comment": data.get("comment", ""),
+            "item_votes": data.get("item_votes", []),
         }
 
         # Append to feedback.jsonl

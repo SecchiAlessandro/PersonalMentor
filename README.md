@@ -1,6 +1,6 @@
 # PersonalMentor
 
-A fully autonomous personal productivity agent that delivers a beautiful daily newspaper — curated news, job offers, events, calendar reminders, and a German sentence of the day — all tailored to your profile.
+A fully autonomous personal productivity agent that delivers a beautiful daily newspaper — curated news, events, calendar reminders, and a German sentence of the day — all tailored to your profile.
 
 **Live daily newspaper:** [alessandrosecchi.com/PersonalMentor](http://alessandrosecchi.com/PersonalMentor/)
 
@@ -10,8 +10,8 @@ A fully autonomous personal productivity agent that delivers a beautiful daily n
 
 Every day at 07:00, PersonalMentor runs a pipeline that:
 
-1. **Fetches content** — RSS feeds, job boards, event platforms, Google Calendar
-2. **Scores & ranks** — matches jobs to your profile (role, location, preferred companies), ranks articles by interest
+1. **Fetches content** — RSS feeds, event platforms, Google Calendar
+2. **Scores & ranks** — ranks articles and events by profile relevance, split into an Energy and an AI & Tech track
 3. **Generates a German sentence** — daily A1-B1 sentence with AI-generated illustration (via Gemini)
 4. **Renders a single HTML page** — self-contained, responsive, themed newspaper
 5. **Pushes to GitHub** — auto-commits the newspaper so it's viewable via GitHub Pages
@@ -20,7 +20,6 @@ Every day at 07:00, PersonalMentor runs a pipeline that:
 [07:00 trigger — launchd (macOS) / Task Scheduler (Windows) / cron (Linux)]
       │
       ├── Fetch RSS feeds (10 sources)
-      ├── Scrape job boards (8 boards, LinkedIn + datacareer + SwissDevJobs)
       ├── Fetch events (WikiCFP)
       │        ↓ (parallel)
       ├── Fetch Google Calendar (via gog CLI)
@@ -81,7 +80,7 @@ This opens the **Welcome Page** in your browser at `http://localhost:9847/` wher
 
 - Upload your CV (PDF or DOCX) — auto-extracts name, skills, experience
 - Provide your personal website URL — scrapes bio and projects
-- Fill in a short form: topics, job preferences, preferred companies, design theme
+- Fill in a short form: topics, preferred companies, design theme
 - All data is saved locally as YAML files in `profile/`
 
 After onboarding, re-run the script to generate your first newspaper.
@@ -157,26 +156,31 @@ The `run_daily.py` pipeline auto-commits and pushes each day's HTML after genera
 
 ## Newspaper Sections
 
+The edition has two sections, each split into an **⚡ Energy** and an
+**🤖 AI & Tech** track showing 3 items apiece — 12 items in total.
+
 | Section | Source | Description |
 |---------|--------|-------------|
-| **Top Stories** | 10 RSS feeds | AI, energy, tech, Swiss news — ranked by your interests |
-| **Jobs For You** | 8 job boards | LinkedIn, datacareer.ch, SwissDevJobs — scored by role, location, and preferred company match |
+| **News** | RSS feeds in `profile/sources.yaml` | Ranked by profile relevance, then split Energy / AI & Tech |
+| **Events** | Event sources in `profile/sources.yaml` | Zürich-area events, split Energy / AI & Tech |
 | **Calendar Events** | Google Calendar (gog) | Today's meetings and events |
 | **German Sentence** | Gemini API | Daily A1-B1 sentence with translation and AI illustration |
-| **Events Near You** | WikiCFP | Upcoming conferences in AI and energy |
 
-### Job Scoring
+### Retired: Jobs
 
-Jobs are scored 0.0–1.0 based on:
-
-- **Role match** (+0.3) — matches target roles from your profile
-- **Location match** (+0.2) — matches target locations
-- **Company match** (+0.2) — matches preferred companies (e.g., Hitachi, Google, Microsoft)
-- **Base score** (+0.3) — every job gets a baseline
+The **Jobs For You** section was removed from the newspaper. `fetch_jobs.py` and
+the `job_boards:` block in `profile/sources.yaml` are kept on disk (the latter
+commented out) so the section can be switched back on; nothing in the pipeline
+reads them today.
 
 ### Feedback System
 
-After reading your newspaper, use the feedback card at the bottom of the page: just write a comment (no star rating). On the next pipeline run your comment is automatically analyzed by Gemini into topic and source preferences that reweight what news and events are picked — so what you write shapes the following edition.
+Two ways to steer the next edition:
+
+- **👍 / 👎 on any item.** Every news article and event carries a thumbs pair in its top-right corner. Clicks are remembered in your browser and ride along with the feedback card below — they are not sent one at a time.
+- **A written comment** in the feedback card at the bottom of the page (no star rating).
+
+On the next pipeline run, both are analyzed by Gemini into topic and source preferences that reweight what news and events get picked. A 👎 tells the system *less of this kind of item* — it lowers that topic's and source's score rather than blocking the URL, so a disliked item can still appear if it is genuinely the most relevant thing that day.
 
 Feedback is delivered as a GitHub issue on this repo (label `feedback`), which the pipeline ingests and closes automatically.
 
@@ -203,9 +207,9 @@ PersonalMentor/
 ├── profile/                   # User profile (YAML, local only)
 │   ├── identity.yaml          # Name, title, bio, contact
 │   ├── experience.yaml        # Work history, education, skills
-│   ├── interests.yaml         # Topics, job search, preferred companies
+│   ├── interests.yaml         # Topics, target roles, preferred companies
 │   ├── preferences.yaml       # Theme, tone, delivery time
-│   └── sources.yaml           # RSS feeds, job boards, event sources
+│   └── sources.yaml           # RSS feeds, event sources (job boards retired)
 │
 ├── memory/                    # Runtime data (local only)
 │   ├── artifacts.yaml         # Registry of generated artifacts
@@ -233,7 +237,7 @@ PersonalMentor/
 │   ├── web-scraper/           # Content fetching
 │   │   └── scripts/
 │   │       ├── fetch_rss.py          # RSS feed fetcher
-│   │       ├── fetch_jobs.py         # Job board scraper + scoring
+│   │       ├── fetch_jobs.py         # Job board scraper (retired, not run)
 │   │       └── fetch_events.py       # Event scraper
 │   │
 │   ├── profile-manager/       # Profile ingestion
@@ -256,7 +260,7 @@ PersonalMentor/
 |-------|---------|
 | **daily-newspaper** | Orchestrate content collection, ranking, and HTML generation |
 | **profile-manager** | Ingest CV/website, run onboarding interview, maintain profile |
-| **web-scraper** | Fetch RSS feeds, scrape job boards, extract structured content |
+| **web-scraper** | Fetch RSS feeds and events, extract structured content |
 | **memory-manager** | Log actions, track artifacts, update learned preferences |
 
 ### Existing Skills (16)

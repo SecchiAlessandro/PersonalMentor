@@ -55,9 +55,6 @@ This runs all steps: fetch content, generate German sentence, analyze feedback, 
 # RSS feeds
 python3 skills/web-scraper/scripts/fetch_rss.py --config profile/sources.yaml --output rss.json
 
-# Job boards (scored against profile)
-python3 skills/web-scraper/scripts/fetch_jobs.py --config profile/sources.yaml --interests profile/interests.yaml --output jobs.json
-
 # Events
 python3 skills/web-scraper/scripts/fetch_events.py --config profile/sources.yaml --output events.json
 
@@ -76,7 +73,7 @@ python3 skills/daily-newspaper/scripts/analyze_feedback.py
 
 ### Build the Personal Coach sub-app
 
-The newspaper has two sections shown as top tabs: **News · Events · Jobs** (the
+The newspaper has two sections shown as top tabs: **News · Events** (the
 daily pipeline above) and **Personal Coach** (an embedded energy check-in app).
 The coach is a React/Vite app under `coach/`; its build is committed to
 `output/web/coach/` and the newspaper embeds it via an `<iframe>`. It is **not**
@@ -114,17 +111,17 @@ schtasks /delete /tn "PersonalMentor Daily"  # Remove
 
 ## Architecture
 
-PersonalMentor is an autonomous agent that generates a daily HTML newspaper tailored to the user's profile. It runs unattended via macOS launchd or Windows Task Scheduler, fetches content from RSS/job boards/calendar, and publishes to GitHub Pages. The pipeline is cross-platform (macOS, Linux, Windows).
+PersonalMentor is an autonomous agent that generates a daily HTML newspaper tailored to the user's profile. It runs unattended via macOS launchd or Windows Task Scheduler, fetches content from RSS feeds, event platforms, and the calendar, and publishes to GitHub Pages. The pipeline is cross-platform (macOS, Linux, Windows).
 
-The newspaper is split into two top-tab sections: **News · Events · Jobs** (the daily pipeline) and **Personal Coach** (a React/Vite energy check-in sub-app under `coach/`, built to `output/web/coach/` and embedded via an `<iframe>` — see the build command above and `coach/README.md`). The tab shell lives in `skills/daily-newspaper/assets/template.html`; the `{{coach_url}}` placeholder is filled by `render_newspaper.py`.
+The newspaper is split into two top-tab sections: **News · Events** (the daily pipeline) and **Personal Coach** (a React/Vite energy check-in sub-app under `coach/`, built to `output/web/coach/` and embedded via an `<iframe>` — see the build command above and `coach/README.md`). The tab shell lives in `skills/daily-newspaper/assets/template.html`; the `{{coach_url}}` placeholder is filled by `render_newspaper.py`.
 
 ### Daily Pipeline (run_daily.py / run_daily.sh)
 
 ```
 Scheduler trigger (07:00) — launchd (macOS) / Task Scheduler (Windows) / cron (Linux)
     │
-    ├─ [PARALLEL] fetch_rss.py + fetch_jobs.py + fetch_events.py
-    │  (10 RSS feeds, 8 job boards, 2 event sources → JSON files in /tmp/pm_daily_DATE/)
+    ├─ [PARALLEL] fetch_rss.py + fetch_events.py
+    │  (RSS feeds + event sources from profile/sources.yaml → JSON in /tmp/pm_daily_DATE/)
     │
     ├─ [SEQUENTIAL] gog calendar → parse_gog.py → calendar.json
     ├─ generate_german.py (Gemini API) → german.json
@@ -141,10 +138,12 @@ Scheduler trigger (07:00) — launchd (macOS) / Task Scheduler (Windows) / cron 
 ### Key Design Decisions
 
 - **Single-file HTML output**: All CSS inlined, no external dependencies. Files can be 1+ MB when Gemini illustrations are embedded.
-- **Job scoring algorithm** (`fetch_jobs.py`): role match +0.3, location match +0.2, company match +0.2, base +0.3. Target roles/companies/locations come from `profile/interests.yaml`.
-- **Adaptive content**: the feedback card collects a single free-text **comment** (no star rating). `analyze_feedback.py` reads `memory/feedback.jsonl` and distills the comments via Gemini (model fallback chain) into `liked_topics` / `disliked_topics` / `preferred_sources` / `ignored_sources`, which `render_newspaper.py` uses to reweight news/event ranking (+2 liked, −3 disliked topics; +1/−2 sources). A `comments_hash` skips the Gemini call when comments haven't changed. Per-section item counts (range 2-7) still derive from any ratings carried in `feedback.jsonl` history, but the card no longer collects new ones. Stored in `memory/learned-preferences.yaml`.
-- **Feedback submission**: the newspaper's feedback card (free-text comment) POSTs directly to the GitHub Issues API when a fine-grained PAT (Issues: R/W, this repo only) is stored in the browser's localStorage (`pm_github_token`, one-time setup via the card's "Enable auto-submit" link — never in the HTML or git). Without a token it falls back to opening a pre-filled issue. `ingest_github_feedback.py` reads issues into `feedback.jsonl` on the next pipeline run and closes them.
-- **Day-over-day novelty** (`render_newspaper.py`): news/event items shown on a previous day within `NOVELTY_WINDOW_DAYS` (7) are pushed to the back via `prioritize_unseen`, so each edition differs from recent ones; repeats only fill a track when there aren't enough fresh items (never blanks). Displayed items are recorded in `memory/seen-items.json` (machine-local, gitignored, pruned after `SEEN_RETENTION_DAYS`). Same-day re-runs reproduce the edition (items shown *today* aren't penalised). Jobs are not subject to novelty (match quality matters more there).
+- **Two sections, two tracks each**: the edition is News and Events only. Each is split by `classify_topic` into an **⚡ Energy** and an **🤖 AI & Tech** track showing `MAX_ITEMS` (3) items apiece — 12 items total. Rendered by `render_section_split` in `render_newspaper.py`.
+- **Jobs is retired**: the section was removed from the dashboard and `fetch_jobs.py` is no longer run by the pipeline. The script and the `job_boards:` block in `profile/sources.yaml` are kept (the latter commented out) so it can be switched back on by uncommenting both and restoring the fetcher task in `run_daily.py`. `profile/interests.yaml`'s `job_search:` block stays live — `relevance_score` scores target roles +3 when ranking news and events.
+- **Per-item feedback**: every news and event item carries a 👍/👎 control (`render_vote_html`). Clicks batch in the browser's localStorage (`pm_votes_<DATE>`) and are submitted together with the comment as one GitHub issue, under an `### Item votes` block of `vote | section | track | source | title` rows. `ingest_github_feedback.py` parses them into `item_votes` on each `feedback.jsonl` entry, and `analyze_feedback.py` hands them to Gemini as examples of the *kind* of item wanted more or less of. A 👎 lowers topic/source scores — it never blocks a URL, so a disliked item can still appear if it is the most relevant thing that day.
+- **Adaptive content**: the feedback card collects a free-text **comment** plus the batched item votes (no star rating). `analyze_feedback.py` reads `memory/feedback.jsonl` and distills the comments *and item votes* via Gemini (model fallback chain) into `liked_topics` / `disliked_topics` / `preferred_sources` / `ignored_sources`, which `render_newspaper.py` uses to reweight news/event ranking (+2 liked, −3 disliked topics; +1/−2 sources). A `comments_hash` (over comments **and** votes) skips the Gemini call when neither has changed. Per-section item counts (range 2-7) still derive from any ratings carried in `feedback.jsonl` history, but the card no longer collects new ones. Stored in `memory/learned-preferences.yaml`.
+- **Feedback submission**: the newspaper's feedback card (free-text comment + batched item votes) POSTs directly to the GitHub Issues API when a fine-grained PAT (Issues: R/W, this repo only) is stored in the browser's localStorage (`pm_github_token`, one-time setup via the card's "Enable auto-submit" link — never in the HTML or git). Without a token it falls back to opening a pre-filled issue. `ingest_github_feedback.py` reads issues into `feedback.jsonl` on the next pipeline run and closes them.
+- **Day-over-day novelty** (`render_newspaper.py`): news/event items shown on a previous day within `NOVELTY_WINDOW_DAYS` (7) are pushed to the back via `prioritize_unseen`, so each edition differs from recent ones; repeats only fill a track when there aren't enough fresh items (never blanks). Displayed items are recorded in `memory/seen-items.json` (machine-local, gitignored, pruned after `SEEN_RETENTION_DAYS`). Same-day re-runs reproduce the edition (items shown *today* aren't penalised).
 - **Gemini model fallback chain**: gemini-2.5-flash → gemini-2.0-flash → gemini-2.5-flash-lite (for German sentence generation).
 - **10 color themes** in `skills/theme-factory/themes/`. Current theme: golden-hour. Applied via CSS variables at render time.
 
@@ -153,7 +152,7 @@ Scheduler trigger (07:00) — launchd (macOS) / Task Scheduler (Windows) / cron 
 | Skill | Entry Point | Purpose |
 |---|---|---|
 | `daily-newspaper` | `skills/daily-newspaper/scripts/run_daily.py` | Pipeline orchestrator + HTML renderer + German generator + feedback system |
-| `web-scraper` | `skills/web-scraper/scripts/fetch_*.py` | RSS, job board, and event content fetching |
+| `web-scraper` | `skills/web-scraper/scripts/fetch_*.py` | RSS and event content fetching (`fetch_jobs.py` is retired — see Key Design Decisions) |
 | `profile-manager` | `skills/profile-manager/scripts/` | CV parsing (PDF/DOCX), website scraping, onboarding interview |
 | `memory-manager` | `skills/memory-manager/scripts/` | Append-only logging, artifact registry, preference learning |
 

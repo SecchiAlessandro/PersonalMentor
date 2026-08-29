@@ -84,8 +84,8 @@ echo ""
 mkdir -p "${CONTENT_DIR}"
 mkdir -p "${PROJECT_ROOT}/output/daily"
 
-# Steps 2-4: Fetch RSS, jobs, and events in parallel
-echo "[1-3/10] Fetching RSS feeds, job listings, and events in parallel..."
+# Steps 2-3: Fetch RSS and events in parallel
+echo "[1-2/10] Fetching RSS feeds and events in parallel..."
 
 ("$PYTHON_CMD" "${PROJECT_ROOT}/skills/web-scraper/scripts/fetch_rss.py" \
   --config "${PROJECT_ROOT}/profile/sources.yaml" \
@@ -93,12 +93,6 @@ echo "[1-3/10] Fetching RSS feeds, job listings, and events in parallel..."
   || echo "WARNING: RSS fetch failed, continuing with empty data") &
 PID_RSS=$!
 
-("$PYTHON_CMD" "${PROJECT_ROOT}/skills/web-scraper/scripts/fetch_jobs.py" \
-  --config "${PROJECT_ROOT}/profile/sources.yaml" \
-  --interests "${PROJECT_ROOT}/profile/interests.yaml" \
-  --output "${CONTENT_DIR}/jobs.json" \
-  || echo "WARNING: Jobs fetch failed, continuing with empty data") &
-PID_JOBS=$!
 
 ("$PYTHON_CMD" "${PROJECT_ROOT}/skills/web-scraper/scripts/fetch_events.py" \
   --config "${PROJECT_ROOT}/profile/sources.yaml" \
@@ -108,7 +102,6 @@ PID_EVENTS=$!
 
 # Wait for all three fetchers to complete
 wait $PID_RSS  || true
-wait $PID_JOBS || true
 wait $PID_EVENTS || true
 echo "  All fetchers complete."
 
@@ -204,9 +197,9 @@ echo "[10/10] Registering artifact..."
 "$PYTHON_CMD" "${PROJECT_ROOT}/skills/memory-manager/scripts/register_artifact.py" \
   --type daily-newspaper \
   --path "output/daily/${TODAY}.html" \
-  --sections "news,jobs,events,calendar-events,german-sentence" \
+  --sections "news,events,calendar-events,german-sentence" \
   --item-count 0 \
-  --sources "rss,jobs,events,calendar,gemini"
+  --sources "rss,events,calendar,gemini"
 
 "$PYTHON_CMD" "${PROJECT_ROOT}/skills/memory-manager/scripts/log_action.py" \
   --action artifact_generated \

@@ -7,6 +7,7 @@ import os
 import re
 import sys
 from datetime import datetime, timezone
+from html import escape as html_escape
 
 try:
     import yaml
@@ -125,12 +126,12 @@ AI_TECH_TERMS = [
 ]
 
 # Minimum distinct ENERGY_TERMS an event must hit to earn a spot in the energy
-# events track. The word "energy" (or "power") alone appears incidentally in
-# wellness and networking blurbs ("Energizing yoga flow", "CEO Energy Break"),
-# so a single hit is too weak a signal. Genuine energy events mention several
-# ("energy", "grid", "power", "utilities", ...). Requiring 2+ drops the false
-# positives; a thin day then shows fewer real events instead of noise padding.
-MIN_ENERGY_TERMS_FOR_EVENT = 2
+# events track. Requiring 2+ was too strict for the Zürich event supply: on a
+# typical day no local energy event mentions two distinct terms, so the track
+# rendered empty and genuine hits (e.g. an ETH district-heating seminar) were
+# dropped along with the noise. Relaxed to 1 — a filled track with the
+# occasional wellness false positive ("CEO Energy Break") beats a blank one.
+MIN_ENERGY_TERMS_FOR_EVENT = 1
 
 
 def energy_term_count(item):
@@ -462,7 +463,37 @@ def get_theme(preferences):
     return THEMES.get(theme_name, DEFAULT_THEME)
 
 
-def render_news_html(articles, max_items=MAX_ITEMS):
+def render_vote_html(item, section, track):
+    """Render the 👍/👎 control shown next to one news article or event.
+
+    The buttons carry everything the feedback submission needs to describe the
+    item back to the preference distillation: a stable key (the same identity
+    `seen-items.json` uses), the section and track it appeared in, its source
+    and its title. Attribute values are escaped, and the title additionally has
+    any '|' replaced because the GitHub issue body is pipe-delimited.
+    """
+    def attr(value):
+        return html_escape(str(value or ""), quote=True)
+
+    title = str(item.get("title", "") or "").replace("|", "/")
+    # News carries a source name ("TechCrunch"); events carry a source URL.
+    source = item.get("source", "") or ""
+    if str(source).startswith("http"):
+        source = _source_host(item)
+
+    return (
+        f'<div class="vote" data-key="{attr(_item_key(item))}"'
+        f' data-section="{attr(section)}" data-track="{attr(track)}"'
+        f' data-source="{attr(source)}" data-title="{attr(title)}">'
+        '<button type="button" class="vote-btn" data-vote="like"'
+        ' aria-label="More like this" title="More like this">👍</button>'
+        '<button type="button" class="vote-btn" data-vote="dislike"'
+        ' aria-label="Less like this" title="Less like this">👎</button>'
+        '</div>'
+    )
+
+
+def render_news_html(articles, max_items=MAX_ITEMS, section="news", track=""):
     """Render RSS articles to HTML."""
     if not articles:
         return '<p class="empty-state">No news available today.</p>'
@@ -480,6 +511,7 @@ def render_news_html(articles, max_items=MAX_ITEMS):
         desc_html = f'<div class="item-summary">{desc}</div>' if desc else ""
 
         html_parts.append(f'''    <div class="item">
+      {render_vote_html(item, section, track)}
       <div class="item-title"><a href="{url}" target="_blank">{title}</a></div>
       <div class="item-meta">
         <span class="source">{source}</span>
@@ -491,41 +523,7 @@ def render_news_html(articles, max_items=MAX_ITEMS):
     return "\n".join(html_parts)
 
 
-def render_jobs_html(jobs, max_items=MAX_ITEMS):
-    """Render job listings to HTML."""
-    if not jobs:
-        return '<p class="empty-state">No matching jobs today.</p>'
-
-    html_parts = []
-    for job in jobs[:max_items]:
-        url = job.get("url", "#")
-        title = job.get("title", "Untitled")
-        company = job.get("company", "Unknown")
-        location = job.get("location", "")
-        score = min(100, int(job.get("match_score", 0) * 100))
-
-        meta_company = f'<span class="source">{company}</span>' if company else ""
-        meta_sep = " · " if company and location else ""
-        desc = first_sentence(job.get("description", ""))
-        if not desc:
-            where = f" in {location}" if location else ""
-            at = f" at {company}" if company else ""
-            desc = f"{title}{at}{where}.".strip()
-        desc_html = f'<div class="item-summary">{desc}</div>'
-
-        html_parts.append(f'''    <div class="job-item">
-      <div class="item-title"><a href="{url}" target="_blank">{title}</a></div>
-      <div class="item-meta">
-        {meta_company}{meta_sep}{location}
-        <span class="match-score">{score}% match</span>
-      </div>
-      {desc_html}
-    </div>''')
-
-    return "\n".join(html_parts)
-
-
-def render_events_html(events, max_items=MAX_ITEMS):
+def render_events_html(events, max_items=MAX_ITEMS, section="events", track=""):
     """Render events to HTML."""
     if not events:
         return '<p class="empty-state">No upcoming events found.</p>'
@@ -548,6 +546,7 @@ def render_events_html(events, max_items=MAX_ITEMS):
             desc = f"{etype.title()}{where}{when}.".strip()
         desc_html = f'<div class="item-summary">{desc}</div>'
         html_parts.append(f'''    <div class="item">
+      {render_vote_html(event, section, track)}
       <div class="item-title"><a href="{url}" target="_blank">{title}</a></div>
       <div class="item-meta">
         <span class="source">{date}</span> · {location}
@@ -560,33 +559,37 @@ def render_events_html(events, max_items=MAX_ITEMS):
     return "\n".join(html_parts)
 
 
-def render_section_split(energy_items, ai_items, render_fn, max_items):
+def render_section_split(energy_items, ai_items, render_fn, max_items, section):
     """Render a section as two labelled tracks: Energy, then AI & Tech.
 
     Each track shows up to `max_items`, rendered by `render_fn` (which already
     handles its own empty-state line, so a quiet track degrades gracefully).
+    `section` and the track name are passed down so each item's 👍/👎 control
+    records where it appeared.
     """
     return (
         '    <h3 class="subsection-title">⚡ Energy</h3>\n'
-        + render_fn(energy_items, max_items)
+        + render_fn(energy_items, max_items, section, "energy")
         + '\n    <h3 class="subsection-title">🤖 AI &amp; Tech</h3>\n'
-        + render_fn(ai_items, max_items)
+        + render_fn(ai_items, max_items, section, "ai")
     )
 
 
 def render_feedback_html():
-    """Render the feedback section — a single free-text comment box.
+    """Render the feedback section — a free-text comment box plus vote summary.
 
-    There is no star rating: the written comment is the only input. It is
-    distilled by analyze_feedback.py into topic/source preferences that
-    automatically reweight the next edition, so the card tells the reader
-    their comment is taken into account for tomorrow.
+    There is no star rating. Two inputs feed the next edition: the written
+    comment, and the per-item 👍/👎 the reader clicked while reading (batched in
+    the browser and submitted alongside the comment). Both are distilled by
+    analyze_feedback.py into topic/source preferences that reweight tomorrow's
+    ranking, so the card tells the reader their input is taken into account.
     """
     return '''  <section class="section" id="feedback">
     <h2 class="section-title">Today's Feedback</h2>
     <div class="feedback-card">
-      <p class="feedback-note">Your comment is automatically analyzed and shapes what tomorrow's edition shows.</p>
+      <p class="feedback-note">Your comment and your 👍/👎 on individual items are automatically analyzed and shape what tomorrow's edition shows.</p>
       <textarea class="feedback-comment" placeholder="What did you think of today's edition? What should change tomorrow?"></textarea>
+      <div class="feedback-votes"></div>
       <button class="feedback-submit">Send Feedback</button>
       <div class="feedback-status"></div>
       <div class="feedback-settings"></div>
@@ -607,7 +610,6 @@ def build_html(template, profile, content, theme):
 
     interests = profile.get("interests", {})
     articles = dedupe_by_title(content.get("articles", []))
-    jobs = content.get("jobs", [])
     events = dedupe_by_title(content.get("events", []))
 
     # Keep events to the Zürich area (user feedback). Applied before ranking so
@@ -618,9 +620,7 @@ def build_html(template, profile, content, theme):
     # preferences distilled from written feedback by analyze_feedback.py.
     section_item_counts, learned_prefs = load_learned_preferences()
 
-    # Rank news and events by relevance, dropping off-profile items
-    # (jobs arrive pre-scored and pre-filtered from fetch_jobs.py; learned
-    # preferences don't apply there — match quality matters more).
+    # Rank news and events by relevance, dropping off-profile items.
     articles = rank_by_relevance(
         articles,
         lambda a: f"{a.get('title','')} {a.get('summary','')} {a.get('category','')}",
@@ -637,7 +637,7 @@ def build_html(template, profile, content, theme):
     )
 
     # Split news and events into two tracks (Energy / AI & Tech), preserving
-    # relevance order within each. Jobs stay a single ranked list.
+    # relevance order within each.
     news_energy, news_ai = split_by_topic(articles)
     events_energy, events_ai = split_by_topic(events)
 
@@ -653,7 +653,6 @@ def build_html(template, profile, content, theme):
     # distinct sources to fill a track.
     news_energy = diversify_by_source(news_energy, lambda a: a.get("source", ""))
     news_ai = diversify_by_source(news_ai, lambda a: a.get("source", ""))
-    jobs = diversify_by_source(jobs, lambda j: j.get("source", ""))
     events_energy = diversify_by_source(events_energy, _source_host)
     events_ai = diversify_by_source(events_ai, _source_host)
 
@@ -671,9 +670,8 @@ def build_html(template, profile, content, theme):
     max_events = get_max_items("events", section_item_counts)
 
     # Render section content — top N most relevant items per topic track
-    news_html = render_section_split(news_energy, news_ai, render_news_html, max_news)
-    jobs_html = render_jobs_html(jobs, get_max_items("jobs", section_item_counts))
-    events_html = render_section_split(events_energy, events_ai, render_events_html, max_events)
+    news_html = render_section_split(news_energy, news_ai, render_news_html, max_news, "news")
+    events_html = render_section_split(events_energy, events_ai, render_events_html, max_events, "events")
 
     # Record what was actually displayed so future editions avoid repeating it.
     record_shown(seen, news_energy[:max_news] + news_ai[:max_news], date_str)
@@ -706,7 +704,6 @@ def build_html(template, profile, content, theme):
 
     # Replace section content placeholders
     html = html.replace("{{news_content}}", news_html)
-    html = html.replace("{{jobs_content}}", jobs_html)
     html = html.replace("{{events_content}}", events_html)
     html = html.replace("{{feedback_content}}", feedback_html)
 
@@ -732,7 +729,6 @@ def main():
     # Load content
     content = {
         "articles": load_json(os.path.join(args.content_dir, "rss.json")),
-        "jobs": load_json(os.path.join(args.content_dir, "jobs.json")),
         "events": load_json(os.path.join(args.content_dir, "events.json")),
     }
 
@@ -751,13 +747,12 @@ def main():
     with open(args.output, "w", encoding="utf-8") as f:
         f.write(html)
 
-    total_items = len(content["articles"]) + len(content["jobs"]) + len(content["events"])
+    total_items = len(content["articles"]) + len(content["events"])
     print(f"Generated daily newspaper: {args.output}")
     print(f"  Theme: {profile['preferences'].get('design', {}).get('theme', 'modern-minimalist')}")
     print(f"  Total content items: {total_items}")
-    print(f"  Articles: {len(content['articles'])} (showing max {MAX_ITEMS})")
-    print(f"  Jobs: {len(content['jobs'])} (showing max {MAX_ITEMS})")
-    print(f"  Events: {len(content['events'])} (showing max {MAX_ITEMS})")
+    print(f"  Articles: {len(content['articles'])} (showing max {MAX_ITEMS} per track)")
+    print(f"  Events: {len(content['events'])} (showing max {MAX_ITEMS} per track)")
 
 
 if __name__ == "__main__":

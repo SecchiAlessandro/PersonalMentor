@@ -38,7 +38,7 @@ Reads `rss_feeds[]` from `profile/sources.yaml`, fetches each feed, and outputs:
 ]
 ```
 
-### 2. Fetch Job Listings
+### 2. Fetch Job Listings (retired — not run by the pipeline)
 
 Scrape job board pages for matching positions:
 
@@ -119,7 +119,7 @@ The daily-newspaper skill calls the web-scraper scripts during content collectio
 
 ```
 1. fetch_rss.py → news articles for Top Stories, Industry Pulse, Reading List
-2. fetch_jobs.py → positions for Jobs For You
+2. fetch_jobs.py → retired; the Jobs section was removed from the newspaper
 3. fetch_events.py → events for Events Near You
 4. gog calendar/contacts → Calendar, Birthdays (handled by gog skill directly)
 ```

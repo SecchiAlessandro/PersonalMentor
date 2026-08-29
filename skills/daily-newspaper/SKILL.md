@@ -29,7 +29,7 @@ Read all profile YAML files to understand the user:
 # profile/identity.yaml   → name, title, location
 # profile/interests.yaml  → topics, industries, job_search
 # profile/preferences.yaml → theme, tone, sections_enabled
-# profile/sources.yaml    → RSS feeds, job boards, event sources
+# profile/sources.yaml    → RSS feeds, event sources
 ```
 
 ### 2. Fetch Content
@@ -43,12 +43,6 @@ mkdir -p /tmp/pm_daily
 python3 skills/web-scraper/scripts/fetch_rss.py \
   --config profile/sources.yaml \
   --output /tmp/pm_daily/rss.json
-
-# Job listings
-python3 skills/web-scraper/scripts/fetch_jobs.py \
-  --config profile/sources.yaml \
-  --interests profile/interests.yaml \
-  --output /tmp/pm_daily/jobs.json
 
 # Events
 python3 skills/web-scraper/scripts/fetch_events.py \
@@ -104,7 +98,7 @@ After rendering, register the artifact:
 python3 skills/memory-manager/scripts/register_artifact.py \
   --type daily-newspaper \
   --path "output/daily/$(date +%Y-%m-%d).html" \
-  --sections "top-stories,jobs,calendar,birthdays,events,skills,pulse,reading" \
+  --sections "news,events,calendar-events,german-sentence" \
   --item-count <total_items> \
   --sources "<comma-separated-sources>"
 
@@ -129,7 +123,6 @@ Or use `scripts/run_daily.sh` which wraps the full pipeline.
 | Section | Source Data | Content |
 |---|---|---|
 | Top Stories | rss.json | 3-5 news articles by relevance |
-| Jobs For You | jobs.json | Matching positions with fit score |
 | Today's Calendar | gog calendar | Meetings, deadlines, reminders |
 | Birthdays | gog contacts | Contacts with birthdays today/this week |
 | Events Near You | events.json | Conferences, meetups, webinars |

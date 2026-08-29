@@ -68,6 +68,34 @@ def fetch_open_feedback_issues():
     return list(seen.values())
 
 
+# Placeholder the newspaper writes when the reader submitted votes but no text.
+NO_COMMENT = "(no comment)"
+
+# One voted item: "- like | news | energy | canarymedia.com | Headline text"
+VOTE_LINE_RE = re.compile(
+    r"-\s*(like|dislike)\s*\|([^|]*)\|([^|]*)\|([^|]*)\|(.*)"
+)
+
+
+def split_sections(body):
+    """Split an issue body into {heading: text} for its '### ' headings.
+
+    Splitting on the headings is more robust than one regex per field: the body
+    gained an "Item votes" section after "Comment", and a greedy comment regex
+    would otherwise swallow it whole.
+    """
+    sections = {}
+    current = None
+    for line in body.splitlines():
+        heading = re.match(r"###\s+(.*?)\s*$", line)
+        if heading:
+            current = heading.group(1).lower()
+            sections[current] = []
+        elif current is not None:
+            sections[current].append(line)
+    return {k: "\n".join(v).strip() for k, v in sections.items()}
+
+
 def parse_issue(issue):
     """Parse a GitHub Issue body into a feedback.jsonl entry.
 
@@ -75,40 +103,54 @@ def parse_issue(issue):
         ## Daily Newspaper Feedback
 
         **Date:** YYYY-MM-DD
-        **Overall rating:** N/5
-
-        ### Section ratings
-        - **news:** N/5
-        - **jobs:** N/5
-        ...
 
         ### Comment
-        Free-form text
+        Free-form text (or "(no comment)" when only items were voted on)
+
+        ### Item votes
+        - like | news | energy | canarymedia.com | Headline text
+        - dislike | events | ai | meetup.com | Event title
+
+    Older issues also carried "**Overall rating:** N/5" and a "Section ratings"
+    list; those are still parsed so historical issues keep ingesting cleanly.
     """
     body = issue.get("body", "")
     title = issue.get("title", "")
+    sections = split_sections(body)
 
     # Extract date from title "Feedback: YYYY-MM-DD"
     date_match = re.search(r"(\d{4}-\d{2}-\d{2})", title)
     date = date_match.group(1) if date_match else None
 
-    # Extract overall rating
+    # Extract overall rating (legacy issues only)
     rating_match = re.search(r"\*\*Overall rating:\*\*\s*(\d+)/5", body)
     rating = int(rating_match.group(1)) if rating_match else None
 
-    # Extract section ratings
+    # Extract section ratings (legacy issues only)
     section_ratings = {}
     for m in re.finditer(r"-\s*\*\*(\w+):\*\*\s*(\d+)/5", body):
         section_ratings[m.group(1)] = int(m.group(2))
 
-    # Extract comment (everything after "### Comment")
-    comment = ""
-    comment_match = re.search(r"###\s*Comment\s*\n(.*)", body, re.DOTALL)
-    if comment_match:
-        comment = comment_match.group(1).strip()
+    comment = sections.get("comment", "")
+    if comment == NO_COMMENT:
+        comment = ""
 
-    # Validate minimum fields
-    if date is None and rating is None:
+    # Extract per-item 👍/👎 votes
+    item_votes = []
+    for line in sections.get("item votes", "").splitlines():
+        m = VOTE_LINE_RE.match(line.strip())
+        if not m:
+            continue
+        item_votes.append({
+            "vote": m.group(1),
+            "section": m.group(2).strip(),
+            "track": m.group(3).strip(),
+            "source": m.group(4).strip(),
+            "title": m.group(5).strip(),
+        })
+
+    # Validate minimum fields — an entry needs something to learn from.
+    if date is None and rating is None and not comment and not item_votes:
         return None
 
     return {
@@ -117,6 +159,7 @@ def parse_issue(issue):
         "rating": rating,
         "section_ratings": section_ratings,
         "comment": comment,
+        "item_votes": item_votes,
     }
 
 
@@ -168,9 +211,16 @@ def main():
         close_issue(number)
         ingested += 1
 
-        rating_str = f"{entry['rating']}/5" if entry['rating'] else "no rating"
-        print(f"  Ingested issue #{number}: {rating_str} for {entry['date']}")
-        log_action(f"GitHub issue #{number}: {rating_str} for {entry['date']}")
+        votes = entry["item_votes"]
+        parts = []
+        if entry["comment"]:
+            parts.append("comment")
+        if votes:
+            likes = sum(1 for v in votes if v["vote"] == "like")
+            parts.append(f"{likes} like / {len(votes) - likes} dislike")
+        summary = ", ".join(parts) or "no content"
+        print(f"  Ingested issue #{number}: {summary} for {entry['date']}")
+        log_action(f"GitHub issue #{number}: {summary} for {entry['date']}")
 
     print(f"  Ingested {ingested} feedback issue(s).")
 

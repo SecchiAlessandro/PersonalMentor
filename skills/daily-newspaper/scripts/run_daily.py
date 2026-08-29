@@ -127,8 +127,8 @@ def fetch_content(content_dir: Path, script: str, extra_args: list[str] | None =
 
 
 def fetch_all_parallel(content_dir: Path):
-    """Fetch RSS, jobs, and events in parallel."""
-    print("[1-3/10] Fetching RSS feeds, job listings, and events in parallel...")
+    """Fetch RSS and events in parallel."""
+    print("[1-2/10] Fetching RSS feeds and events in parallel...")
     tasks = [
         (
             str(PROJECT_ROOT / "skills" / "web-scraper" / "scripts" / "fetch_rss.py"),
@@ -136,18 +136,12 @@ def fetch_all_parallel(content_dir: Path):
              "--output", str(content_dir / "rss.json")],
         ),
         (
-            str(PROJECT_ROOT / "skills" / "web-scraper" / "scripts" / "fetch_jobs.py"),
-            ["--config", str(PROJECT_ROOT / "profile" / "sources.yaml"),
-             "--interests", str(PROJECT_ROOT / "profile" / "interests.yaml"),
-             "--output", str(content_dir / "jobs.json")],
-        ),
-        (
             str(PROJECT_ROOT / "skills" / "web-scraper" / "scripts" / "fetch_events.py"),
             ["--config", str(PROJECT_ROOT / "profile" / "sources.yaml"),
              "--output", str(content_dir / "events.json")],
         ),
     ]
-    with ThreadPoolExecutor(max_workers=3) as pool:
+    with ThreadPoolExecutor(max_workers=2) as pool:
         futures = {pool.submit(fetch_content, content_dir, s, a): s for s, a in tasks}
         for future in as_completed(futures):
             name, ok = future.result()
@@ -206,9 +200,9 @@ def register_artifact(today: str):
         str(PROJECT_ROOT / "skills" / "memory-manager" / "scripts" / "register_artifact.py"),
         "--type", "daily-newspaper",
         "--path", f"output/daily/{today}.html",
-        "--sections", "news,jobs,events",
+        "--sections", "news,events",
         "--item-count", "0",
-        "--sources", "rss,jobs,events",
+        "--sources", "rss,events",
     ])
     _run([
         _python(),
@@ -288,7 +282,7 @@ def main():
     content_dir.mkdir(parents=True, exist_ok=True)
     (PROJECT_ROOT / "output" / "daily").mkdir(parents=True, exist_ok=True)
 
-    # Steps 2-4: Parallel fetchers
+    # Steps 2-3: Parallel fetchers
     fetch_all_parallel(content_dir)
 
     # Step 5: GitHub feedback
