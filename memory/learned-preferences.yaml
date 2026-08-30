@@ -11,6 +11,7 @@ content_preferences:
   - date: '2026-08-18'
     comment: I see the same info as the previous day, vary more
   comments_hash: 5f2bb79aed6c28ffe8f1be06785f1eda867b252d8958b1810ba40cd3760fdd50
+  recent_votes: []
 design_preferences:
   feedback: []
 reading_patterns:
@@ -19,8 +20,7 @@ reading_patterns:
   skipped_sections: []
   section_item_counts:
     news: 3
-    jobs: 3
     events: 3
-last_updated: '2026-08-29T11:27:45.886774+00:00'
+last_updated: '2026-08-30T10:14:52.110401+00:00'
 overall_avg_rating: 4.0
 total_feedback_count: 2
