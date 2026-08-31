@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PersonalMentor Daily — 2026-08-31</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* === RESET === */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* === THEME VARIABLES (replaced at render time) === */
+    :root {
+      --color-bg: #faf6f0;
+      --color-surface: #ffffff;
+      --color-primary: #5c4033;
+      --color-secondary: #b8860b;
+      --color-accent: #daa520;
+      --color-text: #2d2017;
+      --color-text-muted: #8b7355;
+      --color-border: #e8dcc8;
+      --font-heading: 'Libre Baskerville', serif;
+      --font-body: 'Nunito', sans-serif;
+    }
+
+    /* === BASE === */
+    body {
+      font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+
+    /* === HEADER === */
+    .newspaper-header {
+      position: relative;
+      padding-bottom: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .newspaper-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-accent), var(--color-secondary), transparent);
+      border-radius: 2px;
+    }
+    .newspaper-header h1 {
+      font-family: var(--font-heading), Georgia, serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      letter-spacing: -0.02em;
+    }
+    .newspaper-header .greeting {
+      font-size: 1.1rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+    .newspaper-header .date-line {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      margin-top: 0.5rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* === SECTIONS === */
+    .section {
+      margin-bottom: 2.5rem;
+    }
+    .section-title {
+      font-family: var(--font-heading), Georgia, serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      letter-spacing: -0.01em;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .subsection-title {
+      font-family: var(--font-heading), Georgia, serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-secondary);
+      margin: 1.25rem 0 0.6rem;
+    }
+    .subsection-title:first-child { margin-top: 0; }
+
+    /* === ITEMS === */
+    .item {
+      position: relative;
+      background: var(--color-surface);
+      border-left: 3px solid var(--color-accent);
+      padding: 1rem 1.25rem;
+      padding-right: 4.5rem;
+      margin-bottom: 0.75rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .item:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transform: translateY(-1px);
+    }
+    .item-title {
+      font-family: var(--font-heading), Georgia, serif;
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+    .item-title a {
+      color: var(--color-text);
+      text-decoration: none;
+    }
+    .item-title a:hover {
+      color: var(--color-accent);
+      text-decoration: underline;
+    }
+    .item-meta {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.35rem;
+    }
+    .item-meta .source { font-weight: 600; }
+    .item-meta .tag {
+      display: inline-block;
+      background: var(--color-primary);
+      color: var(--color-bg);
+      padding: 0.1em 0.5em;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      margin-left: 0.5rem;
+      border-radius: 4px;
+    }
+    .item-meta .source-link {
+      margin-left: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--color-accent);
+      text-decoration: none;
+      opacity: 0.8;
+    }
+    .item-meta .source-link:hover { opacity: 1; text-decoration: underline; }
+    .item-summary {
+      font-size: 0.9rem;
+      color: var(--color-text);
+      line-height: 1.5;
+    }
+
+    /* === PER-ITEM VOTES === */
+    /* Anchored to the card's top-right corner; the card reserves room for it
+       with padding-right so a long headline never runs underneath. */
+    .vote {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.7rem;
+      display: flex;
+      gap: 0.15rem;
+    }
+    .vote-btn {
+      appearance: none;
+      background: none;
+      border: none;
+      border-radius: 6px;
+      padding: 0.15rem 0.3rem;
+      font-size: 0.95rem;
+      line-height: 1;
+      cursor: pointer;
+      opacity: 0.35;
+      filter: grayscale(1);
+      transition: opacity 0.15s ease, filter 0.15s ease, background 0.15s ease;
+    }
+    .vote-btn:hover { opacity: 0.85; filter: grayscale(0.3); }
+    .vote-btn.on {
+      opacity: 1;
+      filter: none;
+      background: var(--color-border);
+    }
+
+    /* === FEEDBACK === */
+    .feedback-card {
+      background: var(--color-surface);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .feedback-comment {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      resize: vertical;
+      min-height: 48px;
+      margin-bottom: 1rem;
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+    .feedback-comment::placeholder {
+      color: var(--color-text-muted);
+    }
+    .feedback-votes {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+      min-height: 1.2em;
+    }
+    .feedback-note {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.9rem;
+    }
+    .feedback-settings {
+      text-align: center;
+      font-size: 0.75rem;
+      margin-top: 0.6rem;
+    }
+    .feedback-settings a {
+      color: var(--color-text-muted);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .feedback-submit {
+      display: block;
+      width: 100%;
+      padding: 0.6rem;
+      background: var(--color-accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .feedback-submit:hover {
+      opacity: 0.9;
+    }
+    .feedback-submit:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+    .feedback-status {
+      text-align: center;
+      font-size: 0.85rem;
+      margin-top: 0.75rem;
+      min-height: 1.2em;
+    }
+    .feedback-status.success { color: #16a34a; }
+    .feedback-status.error { color: #dc2626; }
+
+    /* === FOOTER === */
+    .newspaper-footer {
+      border-top: 1px solid var(--color-border);
+      padding-top: 1.25rem;
+      margin-top: 2.5rem;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-align: center;
+    }
+    .newspaper-footer a {
+      color: var(--color-accent);
+      text-decoration: none;
+    }
+    .newspaper-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* === EMPTY STATE === */
+    .empty-state {
+      color: var(--color-text-muted);
+      font-style: italic;
+      padding: 1rem 0;
+    }
+
+    /* === SECTION TABS === */
+    .tab-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .tab-btn {
+      appearance: none;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      padding: 0.6rem 0.25rem;
+      font-family: var(--font-heading), Georgia, serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .tab-btn:hover { color: var(--color-secondary); }
+    .tab-btn.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-accent);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Personal Coach sub-app is embedded in its own document via an iframe, so
+       its Tailwind styles stay isolated from the newspaper's. */
+    .coach-frame {
+      width: 100%;
+      height: calc(100vh - 170px);
+      min-height: 560px;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      background: var(--color-surface);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SECTION TABS -->
+  <nav class="tab-bar">
+    <button type="button" class="tab-btn active" data-tab="news">News · Events</button>
+    <button type="button" class="tab-btn" data-tab="coach">Personal Coach</button>
+  </nav>
+
+  <!-- ============ SECTION 1: NEWS · EVENTS ============ -->
+  <div class="tab-panel active" id="tab-news">
+
+  <!-- HEADER -->
+  <header class="newspaper-header">
+    <h1>PersonalMentor Daily</h1>
+    <div class="greeting">Good morning, Alessandro Secchi</div>
+    <div class="date-line">Monday, August 31, 2026</div>
+  </header>
+
+  <!-- NEWS -->
+  <section class="section" id="news">
+    <h2 class="section-title">News</h2>
+        <h3 class="subsection-title">⚡ Energy</h3>
+    <div class="item">
+      <div class="vote" data-key="https://spectrum.ieee.org/ieee-course-ai-power-grids" data-section="news" data-track="energy" data-source="IEEE Spectrum" data-title="IEEE Course Teaches How to Use AI to Modernize Power Grids"><button type="button" class="vote-btn" data-vote="like" aria-label="More like this" title="More like this">👍</button><button type="button" class="vote-btn" data-vote="dislike" aria-label="Less like this" title="Less like this">👎</button></div>
+      <div class="item-title"><a href="https://spectrum.ieee.org/ieee-course-ai-power-grids" target="_blank">IEEE Course Teaches How to Use AI to Modernize Power Grids</a></div>
+      <div class="item-meta">
+        <span class="source">IEEE Spectrum</span>
+        <span class="tag">energy</span>
+      </div>
+      <div class="item-summary">Today’s U.S.</div>
+    </div>
+    <div class="item">
+      <div class="vote" data-key="https://www.energy-storage.news/australia-is-a-market-made-for-batteries-wartsila-strategy-lead-on-volatility-and-the-business-case-for-energy-storage/" data-section="news" data-track="energy" data-source="Energy-Storage.News" data-title="‘Australia is a market made for batteries’: Wärtsilä strategy lead on volatility and the business case for energy storage"><button type="button" class="vote-btn" data-vote="like" aria-label="More like this" title="More like this">👍</button><button type="button" class="vote-btn" data-vote="dislike" aria-label="Less like this" title="Less like this">👎</button></div>
+      <div class="item-title"><a href="https://www.energy-storage.news/australia-is-a-market-made-for-batteries-wartsila-strategy-lead-on-volatility-and-the-business-case-for-energy-storage/" target="_blank">‘Australia is a market made for batteries’: Wärtsilä strategy lead on volatility and the business case for energy storage</a></div>
+      <div class="item-meta">
+        <span class="source">Energy-Storage.News</span>
+        <span class="tag">energy</span>
+      </div>
+      <div class="item-summary">Speaking to ESN Premium, Kashish Shah of Wärtsilä explains why Australia's volatile market structure makes it uniquely suited for battery storage.</div>
+    </div>
+    <div class="item">
+      <div class="vote" data-key="https://www.powermag.com/nvidia-cloverleaf-partnering-to-advance-data-center-development/" data-section="news" data-track="energy" data-source="POWER Magazine" data-title="NVIDIA, Cloverleaf Partnering to Advance Data Center Development"><button type="button" class="vote-btn" data-vote="like" aria-label="More like this" title="More like this">👍</button><button type="button" class="vote-btn" data-vote="dislike" aria-label="Less like this" title="Less like this">👎</button></div>
+      <div class="item-title"><a href="https://www.powermag.com/nvidia-cloverleaf-partnering-to-advance-data-center-development/" target="_blank">NVIDIA, Cloverleaf Partnering to Advance Data Center Development</a></div>
+      <div class="item-meta">
+        <span class="source">POWER Magazine</span>
+        <span class="tag">energy</span>
+      </div>
+      <div class="item-summary">Technology giant NVIDIA is furthering its support of artificial intelligence (AI) and data center construction.</div>
+    </div>
+    <h3 class="subsection-title">🤖 AI &amp; Tech</h3>
+    <div class="item">
+      <div class="vote" data-key="https://venturebeat.com/ai/enterprise-ais-real-risk-isnt-autonomous-agents-its-the-complexity-between-them" data-section="news" data-track="ai" data-source="AI | VentureBeat" data-title="Enterprise AI&#x27;s real risk isn&#x27;t autonomous agents. It&#x27;s the complexity between them."><button type="button" class="vote-btn" data-vote="like" aria-label="More like this" title="More like this">👍</button><button type="button" class="vote-btn" data-vote="dislike" aria-label="Less like this" title="Less like this">👎</button></div>
+      <div class="item-title"><a href="https://venturebeat.com/ai/enterprise-ais-real-risk-isnt-autonomous-agents-its-the-complexity-between-them" target="_blank">Enterprise AI's real risk isn't autonomous agents. It's the complexity between them.</a></div>
+      <div class="item-meta">
+        <span class="source">AI | VentureBeat</span>
+        <span class="tag">ai</span>
+      </div>
+      <div class="item-summary">Presented by Gravitee Agent complexity is the insidious shadow lurking inside enterprises right now that needs a light shone on it.That’s because enterprises…</div>
+    </div>
+    <div class="item">
+      <div class="vote" data-key="https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/your-ai-agents-need-performance-management-too" data-section="news" data-track="ai" data-source="McKinsey Insights &amp; Publications" data-title="Your AI agents need performance management, too"><button type="button" class="vote-btn" data-vote="like" aria-label="More like this" title="More like this">👍</button><button type="button" class="vote-btn" data-vote="dislike" aria-label="Less like this" title="Less like this">👎</button></div>
+      <div class="item-title"><a href="https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/your-ai-agents-need-performance-management-too" target="_blank">Your AI agents need performance management, too</a></div>
+      <div class="item-meta">
+        <span class="source">McKinsey Insights & Publications</span>
+        <span class="tag">tech</span>
+      </div>
+      <div class="item-summary">People are at the heart of any technology transformation.</div>
+    </div>
+    <div class="item">
+      <div class="vote" data-key="https://www.technologyreview.com/2026/08/25/1141907/dispatch-shanghai-humanoid-robot-carnival/" data-section="news" data-track="ai" data-source="Artificial intelligence – MIT Technology Review" data-title="I spent a day at a robot “carnival” in Shanghai. Here’s what I saw."><button type="button" class="vote-btn" data-vote="like" aria-label="More like this" title="More like this">👍</button><button type="button" class="vote-btn" data-vote="dislike" aria-label="Less like this" title="Less like this">👎</button></div>
+      <div class="item-title"><a href="https://www.technologyreview.com/2026/08/25/1141907/dispatch-shanghai-humanoid-robot-carnival/" target="_blank">I spent a day at a robot “carnival” in Shanghai. Here’s what I saw.</a></div>
+      <div class="item-meta">
+        <span class="source">Artificial intelligence – MIT Technology Review</span>
+        <span class="tag">ai</span>
+      </div>
+      <div class="item-summary">Humanoid robots are having a moment in China.</div>
+    </div>
+  </section>
+
+  <!-- EVENTS -->
+  <section class="section" id="events">
+    <h2 class="section-title">Events</h2>
+        <h3 class="subsection-title">⚡ Energy</h3>
+    <div class="item">
+      <div class="vote" data-key="https://swissnex.org/event/swiss-japan-energy-days-2026/" data-section="events" data-track="energy" data-source="idapps.ethz.ch" data-title="Swiss-Japan Energy Days 2026"><button type="button" class="vote-btn" data-vote="like" aria-label="More like this" title="More like this">👍</button><button type="button" class="vote-btn" data-vote="dislike" aria-label="Less like this" title="Less like this">👎</button></div>
+      <div class="item-title"><a href="https://swissnex.org/event/swiss-japan-energy-days-2026/" target="_blank">Swiss-Japan Energy Days 2026</a></div>
+      <div class="item-meta">
+        <span class="source">2026-09-02</span> · 1024 Ecublens
+        <span class="tag">congress</span>
+        <a class="source-link" href="https://idapps.ethz.ch/pcm-pub-services/v2/entries?rs-first=0&rs-size=400&filters[0].min-till-end=0&filters[0].max-till-start=60&filters[0].cals=1&lang=en&client-id=wcms&comp-ext=true" target="_blank">idapps.ethz.ch</a>
+      </div>
+      <div class="item-summary">Congress in 1024 Ecublens on 2026-09-02.</div>
+    </div>
+    <div class="item">
+      <div class="vote" data-key="https://www.launchpad.energy" data-section="events" data-track="energy" data-source="idapps.ethz.ch" data-title="Energy Launchpad Summer School 2026"><button type="button" class="vote-btn" data-vote="like" aria-label="More like this" title="More like this">👍</button><button type="button" class="vote-btn" data-vote="dislike" aria-label="Less like this" title="Less like this">👎</button></div>
+      <div class="item-title"><a href="https://www.launchpad.energy" target="_blank">Energy Launchpad Summer School 2026</a></div>
+      <div class="item-meta">
+        <span class="source">2026-09-08</span> · Zürich
+        <span class="tag">summer school</span>
+        <a class="source-link" href="https://idapps.ethz.ch/pcm-pub-services/v2/entries?rs-first=0&rs-size=400&filters[0].min-till-end=0&filters[0].max-till-start=60&filters[0].cals=1&lang=en&client-id=wcms&comp-ext=true" target="_blank">idapps.ethz.ch</a>
+      </div>
+      <div class="item-summary">Summer School in Zürich on 2026-09-08.</div>
+    </div>
+    <h3 class="subsection-title">🤖 AI &amp; Tech</h3>
+    <div class="item">
+      <div class="vote" data-key="https://www.meetup.com/zurich-ai-developers-group/events/316236058/" data-section="events" data-track="ai" data-source="meetup.com" data-title="Enterprise AI - Agents in Production with Google and Snowflake"><button type="button" class="vote-btn" data-vote="like" aria-label="More like this" title="More like this">👍</button><button type="button" class="vote-btn" data-vote="dislike" aria-label="Less like this" title="Less like this">👎</button></div>
+      <div class="item-title"><a href="https://www.meetup.com/zurich-ai-developers-group/events/316236058/" target="_blank">Enterprise AI - Agents in Production with Google and Snowflake</a></div>
+      <div class="item-meta">
+        <span class="source">2026-08-31</span> · TBD
+        <span class="tag">conference</span>
+        <a class="source-link" href="https://www.meetup.com/find/?keywords=machine+learning&location=ch--zurich&source=EVENTS" target="_blank">meetup.com</a>
+      </div>
+      <div class="item-summary">Important: Register on the [event website](https://www.aicamp.ai/event/eventdetails/W2026082501) to receive the joining link.</div>
+    </div>
+    <div class="item">
+      <div class="vote" data-key="https://ethz.ch/en/news-and-events/events/details.eth-ai-center-doctoral-seminar-2026.76322.html" data-section="events" data-track="ai" data-source="idapps.ethz.ch" data-title="ETH AI Center Doctoral Seminar 2026"><button type="button" class="vote-btn" data-vote="like" aria-label="More like this" title="More like this">👍</button><button type="button" class="vote-btn" data-vote="dislike" aria-label="Less like this" title="Less like this">👎</button></div>
+      <div class="item-title"><a href="https://ethz.ch/en/news-and-events/events/details.eth-ai-center-doctoral-seminar-2026.76322.html" target="_blank">ETH AI Center Doctoral Seminar 2026</a></div>
+      <div class="item-meta">
+        <span class="source">2026-09-03</span> · Zürich
+        <span class="tag">seminar</span>
+        <a class="source-link" href="https://idapps.ethz.ch/pcm-pub-services/v2/entries?rs-first=0&rs-size=400&filters[0].min-till-end=0&filters[0].max-till-start=60&filters[0].cals=1&lang=en&client-id=wcms&comp-ext=true" target="_blank">idapps.ethz.ch</a>
+      </div>
+      <div class="item-summary">Seminar in Zürich on 2026-09-03.</div>
+    </div>
+    <div class="item">
+      <div class="vote" data-key="https://www.meetup.com/owaspswitzerland/events/314556680/" data-section="events" data-track="ai" data-source="meetup.com" data-title="OWASP Switzerland Event - 25th Anniversary Edition"><button type="button" class="vote-btn" data-vote="like" aria-label="More like this" title="More like this">👍</button><button type="button" class="vote-btn" data-vote="dislike" aria-label="Less like this" title="Less like this">👎</button></div>
+      <div class="item-title"><a href="https://www.meetup.com/owaspswitzerland/events/314556680/" target="_blank">OWASP Switzerland Event - 25th Anniversary Edition</a></div>
+      <div class="item-meta">
+        <span class="source">2026-10-14</span> · ETH Zurich, Zurich Information Security and Privacy Center
+        <span class="tag">conference</span>
+        <a class="source-link" href="https://www.meetup.com/find/?keywords=artificial+intelligence&location=ch--zurich&source=EVENTS" target="_blank">meetup.com</a>
+      </div>
+      <div class="item-summary">Join OWASP Switzerland for our OWASP Foundation 25th Anniversary Celebration Meetup; marking 25 years of advancing application security worldwide.</div>
+    </div>
+  </section>
+
+  <!-- FEEDBACK -->
+    <section class="section" id="feedback">
+    <h2 class="section-title">Today's Feedback</h2>
+    <div class="feedback-card">
+      <p class="feedback-note">Your comment and your 👍/👎 on individual items are automatically analyzed and shape what tomorrow's edition shows.</p>
+      <textarea class="feedback-comment" placeholder="What did you think of today's edition? What should change tomorrow?"></textarea>
+      <div class="feedback-votes"></div>
+      <button class="feedback-submit">Send Feedback</button>
+      <div class="feedback-status"></div>
+      <div class="feedback-settings"></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="newspaper-footer">
+    PersonalMentor Daily · Generated 2026-08-31 11:19 UTC · <a href="../daily/">Browse Archive</a>
+  </footer>
+
+  </div><!-- /#tab-news -->
+
+  <!-- ============ SECTION 2: PERSONAL COACH ============ -->
+  <div class="tab-panel" id="tab-coach">
+    <iframe class="coach-frame" src="../web/coach/index.html" title="Personal Coach" loading="lazy"></iframe>
+  </div><!-- /#tab-coach -->
+
+  <!-- TAB TOGGLE -->
+  <script>
+  (function() {
+    var btns = document.querySelectorAll('.tab-btn');
+    var panels = document.querySelectorAll('.tab-panel');
+    btns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var tab = btn.getAttribute('data-tab');
+        btns.forEach(function(b) { b.classList.toggle('active', b === btn); });
+        panels.forEach(function(p) { p.classList.toggle('active', p.id === 'tab-' + tab); });
+      });
+    });
+  })();
+  </script>
+
+  <!-- PER-ITEM VOTES. Clicking 👍/👎 records the item in this browser's
+       localStorage (keyed by edition date, so a reload keeps the state
+       visible). Nothing is sent on click: the batch rides along with the
+       feedback submission below, producing one GitHub issue per day instead
+       of one per click. analyze_feedback.py then feeds the voted titles to
+       the preference distillation as examples of the *kind* of item wanted
+       more or less of — a 👎 never blacklists a URL. -->
+  <script>
+  (function() {
+    var DATE = '2026-08-31';
+    var KEY = 'pm_votes_' + DATE;
+
+    function load() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function save(votes) {
+      try { localStorage.setItem(KEY, JSON.stringify(votes)); } catch (e) {}
+    }
+
+    var votes = load();
+    var summaryEl = document.querySelector('.feedback-votes');
+
+    function paint() {
+      document.querySelectorAll('.vote').forEach(function(box) {
+        var rec = votes[box.getAttribute('data-key')];
+        box.querySelectorAll('.vote-btn').forEach(function(btn) {
+          btn.classList.toggle('on', !!rec && rec.v === btn.getAttribute('data-vote'));
+        });
+      });
+      if (!summaryEl) return;
+      var likes = 0, dislikes = 0;
+      Object.keys(votes).forEach(function(k) {
+        if (votes[k].v === 'like') { likes++; } else { dislikes++; }
+      });
+      var total = likes + dislikes;
+      summaryEl.textContent = total
+        ? total + (total === 1 ? ' vote' : ' votes') + ' ready \u2014 sent with your feedback ('
+            + likes + ' \uD83D\uDC4D \u00b7 ' + dislikes + ' \uD83D\uDC4E)'
+        : '';
+    }
+
+    document.querySelectorAll('.vote').forEach(function(box) {
+      box.addEventListener('click', function(e) {
+        var btn = e.target.closest && e.target.closest('.vote-btn');
+        if (!btn) return;
+        var key = box.getAttribute('data-key');
+        var vote = btn.getAttribute('data-vote');
+        // Clicking the side that is already active clears the vote.
+        if (votes[key] && votes[key].v === vote) {
+          delete votes[key];
+        } else {
+          votes[key] = {
+            v: vote,
+            s: box.getAttribute('data-section') || '',
+            t: box.getAttribute('data-track') || '',
+            src: box.getAttribute('data-source') || '',
+            title: box.getAttribute('data-title') || ''
+          };
+        }
+        save(votes);
+        paint();
+      });
+    });
+
+    paint();
+
+    // Consumed by the feedback submission script below.
+    window.__pmVotes = {
+      list: function() {
+        return Object.keys(votes).map(function(k) { return votes[k]; });
+      },
+      clear: function() {
+        votes = {};
+        save(votes);
+        paint();
+      }
+    };
+  })();
+  </script>
+
+  <!-- FEEDBACK \u2192 GitHub issue. With a fine-grained PAT (Issues: write, this
+       repo only) stored in this browser's localStorage, feedback is POSTed
+       straight to the GitHub Issues API \u2014 no manual step. Without a token we
+       fall back to opening a pre-filled issue the user submits with one click.
+       The pipeline's ingest_github_feedback.py reads issues back into
+       memory/feedback.jsonl on the next run, so feedback is never lost and
+       needs no local server. The token lives only in localStorage \u2014 it is
+       never part of this file or the git history. -->
+  <script>
+  (function() {
+    var DATE = '2026-08-31';
+    var REPO = 'SecchiAlessandro/PersonalMentor';
+    var TOKEN_KEY = 'pm_github_token';
+    var commentEl = document.querySelector('.feedback-comment');
+    var submitBtn = document.querySelector('.feedback-submit');
+    var statusEl = document.querySelector('.feedback-status');
+    var settingsEl = document.querySelector('.feedback-settings');
+    if (!submitBtn) return;
+
+    function getToken() {
+      try { return localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { return ''; }
+    }
+
+    function renderSettings() {
+      if (!settingsEl) return;
+      if (getToken()) {
+        settingsEl.innerHTML = 'Auto-submit is on \u00b7 <a data-act="clear">disable</a>';
+      } else {
+        settingsEl.innerHTML = '<a data-act="set">Enable auto-submit</a> (one-time GitHub token setup)';
+      }
+    }
+
+    if (settingsEl) settingsEl.addEventListener('click', function(e) {
+      var act = e.target && e.target.getAttribute && e.target.getAttribute('data-act');
+      if (act === 'set') {
+        var t = prompt('Paste a fine-grained GitHub token scoped to ' + REPO
+          + ' with "Issues: Read & Write" only.\nStored only in this browser.');
+        if (t && t.trim()) {
+          try { localStorage.setItem(TOKEN_KEY, t.trim()); } catch (err) {}
+        }
+        renderSettings();
+      } else if (act === 'clear') {
+        try { localStorage.removeItem(TOKEN_KEY); } catch (err) {}
+        renderSettings();
+      }
+    });
+    renderSettings();
+
+    function pendingVotes() {
+      return (window.__pmVotes && window.__pmVotes.list()) || [];
+    }
+
+    // Structured so ingest_github_feedback.py's regexes parse the date, the
+    // comment and the per-item votes back out of the issue body. Vote rows are
+    // pipe-delimited: vote | section | track | source | title.
+    function issueBody(comment, votes) {
+      var lines = ['## Daily Newspaper Feedback', '', '**Date:** ' + DATE,
+        '', '### Comment', comment || '(no comment)'];
+      if (votes && votes.length) {
+        lines.push('', '### Item votes');
+        votes.forEach(function(v) {
+          lines.push('- ' + v.v + ' | ' + v.s + ' | ' + v.t + ' | '
+            + v.src + ' | ' + v.title);
+        });
+      }
+      return lines.join('\n');
+    }
+
+    function issueUrl(comment, votes) {
+      return 'https://github.com/' + REPO + '/issues/new'
+        + '?title=' + encodeURIComponent('Feedback: ' + DATE)
+        + '&body=' + encodeURIComponent(issueBody(comment, votes))
+        + '&labels=feedback';
+    }
+
+    function setStatus(cls, html) {
+      statusEl.className = 'feedback-status ' + cls;
+      statusEl.innerHTML = html;
+    }
+
+    function fallbackSubmit(comment, votes) {
+      var url = issueUrl(comment, votes);
+      // Opened from a click (user gesture), so the browser allows it; if a
+      // popup blocker still intervenes, fall back to a link the user can click.
+      var win = window.open(url, '_blank', 'noopener');
+      if (win) {
+        // The votes are baked into the prefilled issue now, so clear the local
+        // batch — leaving it would resend them with tomorrow's submission.
+        if (window.__pmVotes) window.__pmVotes.clear();
+        setStatus('success', 'A GitHub issue opened in a new tab \u2014 click '
+          + '<strong>\u201cSubmit new issue\u201d</strong> there to send. Thanks!');
+      } else {
+        setStatus('success', 'Click to send your feedback: '
+          + '<a href="' + url + '" target="_blank" rel="noopener">open the GitHub issue</a>'
+          + ', then \u201cSubmit new issue\u201d.');
+      }
+    }
+
+    function apiSubmit(comment, votes, token) {
+      submitBtn.disabled = true;
+      setStatus('', 'Sending\u2026');
+      fetch('https://api.github.com/repos/' + REPO + '/issues', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: 'Feedback: ' + DATE,
+          body: issueBody(comment, votes),
+          labels: ['feedback']
+        })
+      }).then(function(res) {
+        submitBtn.disabled = false;
+        if (res.ok) {
+          setStatus('success', 'Feedback sent \u2713 It will shape tomorrow\u2019s edition.');
+          if (commentEl) commentEl.value = '';
+          if (window.__pmVotes) window.__pmVotes.clear();
+        } else if (res.status === 401 || res.status === 403) {
+          // Token expired/revoked: drop it and use the manual flow instead.
+          try { localStorage.removeItem(TOKEN_KEY); } catch (err) {}
+          renderSettings();
+          fallbackSubmit(comment, votes);
+        } else {
+          setStatus('error', 'GitHub returned ' + res.status + ' \u2014 trying the manual flow\u2026');
+          fallbackSubmit(comment, votes);
+        }
+      }).catch(function() {
+        submitBtn.disabled = false;
+        fallbackSubmit(comment, votes);
+      });
+    }
+
+    submitBtn.addEventListener('click', function() {
+      var comment = ((commentEl && commentEl.value) || '').trim();
+      var votes = pendingVotes();
+      if (!comment && !votes.length) {
+        setStatus('error', 'Write a few words, or rate some items with \uD83D\uDC4D / \uD83D\uDC4E first.');
+        return;
+      }
+      var token = getToken();
+      if (token) {
+        apiSubmit(comment, votes, token);
+      } else {
+        fallbackSubmit(comment, votes);
+      }
+    });
+  })();
+  </script>
+
+</body>
+</html>
