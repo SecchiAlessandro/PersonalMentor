@@ -2530,3 +2530,14 @@ artifacts:
   sources_used:
   - rss
   - events
+- id: 0a8d07b5
+  type: daily-newspaper
+  path: output/daily/2026-09-02.html
+  created_at: '2026-09-02T09:16:26.410187+00:00'
+  sections:
+  - news
+  - events
+  item_count: 0
+  sources_used:
+  - rss
+  - events
