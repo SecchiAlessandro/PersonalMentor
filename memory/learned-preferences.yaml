@@ -1,8 +1,15 @@
 content_preferences:
   liked_topics:
+  - job offers
   - big tech
-  disliked_topics:
-  - duplicate content
+  - data centers
+  - energy storage
+  - grid
+  - ai companies
+  - enterprise ai
+  - ai workflows
+  - ai agents
+  disliked_topics: []
   preferred_sources: []
   ignored_sources: []
   recent_comments:
@@ -10,8 +17,30 @@ content_preferences:
     comment: i want to see also job offers in big tech
   - date: '2026-08-18'
     comment: I see the same info as the previous day, vary more
-  comments_hash: 5f2bb79aed6c28ffe8f1be06785f1eda867b252d8958b1810ba40cd3760fdd50
-  recent_votes: []
+  comments_hash: 1a7372deb06574b141e4bf4e2e7edd14aa7711e5e8b7ac1fbc071134607e1c44
+  recent_votes:
+  - vote: like
+    section: news
+    track: energy
+    source: Energy-Storage.News
+    title: Italy gives national strategic interest designation to Sardinia data centre
+      with hybrid energy storage hub
+  - vote: like
+    section: news
+    track: energy
+    source: Utility Dive - Latest News
+    title: 3 principles to make AI data centers good grid citizens
+  - vote: like
+    section: news
+    track: ai
+    source: OpenAI News
+    title: How AI-native companies turn workflows into operating capability
+  - vote: like
+    section: news
+    track: ai
+    source: AI
+    title: VentureBeat | Enterprise AI's real risk isn't autonomous agents. It's the
+      complexity between them.
 design_preferences:
   feedback: []
 reading_patterns:
@@ -21,6 +50,6 @@ reading_patterns:
   section_item_counts:
     news: 3
     events: 3
-last_updated: '2026-09-03T09:25:21.241286+00:00'
+last_updated: '2026-09-04T09:18:19.017328+00:00'
 overall_avg_rating: 4.0
-total_feedback_count: 2
+total_feedback_count: 3
