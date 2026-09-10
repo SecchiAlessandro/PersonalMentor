@@ -2618,3 +2618,14 @@ artifacts:
   sources_used:
   - rss
   - events
+- id: c31839d5
+  type: daily-newspaper
+  path: output/daily/2026-09-10.html
+  created_at: '2026-09-10T09:22:00.711678+00:00'
+  sections:
+  - news
+  - events
+  item_count: 0
+  sources_used:
+  - rss
+  - events
