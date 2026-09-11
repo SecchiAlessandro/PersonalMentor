@@ -2629,3 +2629,14 @@ artifacts:
   sources_used:
   - rss
   - events
+- id: ff459602
+  type: daily-newspaper
+  path: output/daily/2026-09-11.html
+  created_at: '2026-09-11T09:20:33.302754+00:00'
+  sections:
+  - news
+  - events
+  item_count: 0
+  sources_used:
+  - rss
+  - events

@@ -1,23 +1,19 @@
 content_preferences:
   liked_topics:
-  - job offers
-  - big tech
-  - data centers
+  - data centre
   - energy storage
-  - grid
-  - ai companies
-  - enterprise ai
-  - ai workflows
-  - ai agents
+  - grid integration
+  - ai business
+  - ai risk
+  - ai complexity
+  - autonomous agents
   disliked_topics: []
   preferred_sources: []
   ignored_sources: []
   recent_comments:
-  - date: '2026-08-11'
-    comment: i want to see also job offers in big tech
   - date: '2026-08-18'
     comment: I see the same info as the previous day, vary more
-  comments_hash: 1a7372deb06574b141e4bf4e2e7edd14aa7711e5e8b7ac1fbc071134607e1c44
+  comments_hash: 3d551002e5f9baf5cca6e85848d2f4c9ee195c09324912e0697ff52a32b9d371
   recent_votes:
   - vote: like
     section: news
@@ -50,6 +46,6 @@ reading_patterns:
   section_item_counts:
     news: 3
     events: 3
-last_updated: '2026-09-10T09:21:59.529844+00:00'
+last_updated: '2026-09-11T09:20:31.954497+00:00'
 overall_avg_rating: 4.0
-total_feedback_count: 3
+total_feedback_count: 2
