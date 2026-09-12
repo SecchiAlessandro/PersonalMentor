@@ -11,7 +11,9 @@ __pycache__/
 !/output/web/coach
 !/output/**/.gitkeep
 /memory/session-log.jsonl
-/memory/seen-items.json
+# memory/seen-items.json is NOT ignored: the pipeline runs in GitHub
+# Actions on a fresh checkout, so the novelty history has to be in the
+# repo or prioritize_unseen has nothing to compare against.
 /tmp/
 
 # Personal Coach (Vite sub-app) — track source, ignore install/build cruft.

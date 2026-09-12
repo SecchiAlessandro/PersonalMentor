@@ -65,7 +65,10 @@ jobs:
       - name: Commit memory state updates
         if: steps.gate.outputs.run == 'true'
         run: |
-          git add -u memory/
+          # `add memory/` rather than `add -u memory/`: -u stages only files
+          # already tracked, which silently skipped seen-items.json and left
+          # the day-over-day novelty history empty on every fresh checkout.
+          git add memory/
           if ! git diff --cached --quiet; then
             git commit -m "Update memory state from scheduled run"
             git pull --rebase --autostash origin main
