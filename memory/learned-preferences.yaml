@@ -1,19 +1,19 @@
 content_preferences:
   liked_topics:
-  - data centre
+  - data centers
   - energy storage
+  - hybrid energy
   - grid integration
-  - ai business
+  - ai companies
+  - ai workflows
+  - enterprise ai
   - ai risk
-  - ai complexity
   - autonomous agents
   disliked_topics: []
   preferred_sources: []
   ignored_sources: []
-  recent_comments:
-  - date: '2026-08-18'
-    comment: I see the same info as the previous day, vary more
-  comments_hash: 3d551002e5f9baf5cca6e85848d2f4c9ee195c09324912e0697ff52a32b9d371
+  recent_comments: []
+  comments_hash: 14d3d711ac2c7765f61d4c7de9d41ce89dffc98c3ee8ddc1a2a08a1d9a01be3e
   recent_votes:
   - vote: like
     section: news
@@ -46,6 +46,6 @@ reading_patterns:
   section_item_counts:
     news: 3
     events: 3
-last_updated: '2026-09-17T09:48:11.073175+00:00'
+last_updated: '2026-09-18T09:21:46.762803+00:00'
 overall_avg_rating: 4.0
-total_feedback_count: 2
+total_feedback_count: 1
