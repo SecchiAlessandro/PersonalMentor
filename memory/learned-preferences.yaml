@@ -1,19 +1,32 @@
 content_preferences:
   liked_topics:
-  - data centers
+  - data center energy
+  - hybrid energy storage
   - energy storage
-  - hybrid energy
+  - ai data centers
   - grid integration
-  - ai companies
+  - ai-native companies
   - ai workflows
   - enterprise ai
+  - ai complexity
   - ai risk
-  - autonomous agents
-  disliked_topics: []
-  preferred_sources: []
+  - ai events
+  - ai policy
+  - ai summit
+  disliked_topics:
+  - apac ai
+  - ml meetup
+  - computer vision
+  preferred_sources:
+  - energy-storage.news
+  - utility dive
+  - openai news
+  - venturebeat
+  - meetup.com
+  - idapps.ethz.ch
   ignored_sources: []
   recent_comments: []
-  comments_hash: 14d3d711ac2c7765f61d4c7de9d41ce89dffc98c3ee8ddc1a2a08a1d9a01be3e
+  comments_hash: 363a516276e6e585b0aea4aac0229ab9b2987ae2b1b4ecc544ee3b1e58d30c6f
   recent_votes:
   - vote: like
     section: news
@@ -37,6 +50,21 @@ content_preferences:
     source: AI
     title: VentureBeat | Enterprise AI's real risk isn't autonomous agents. It's the
       complexity between them.
+  - vote: like
+    section: events
+    track: ai
+    source: meetup.com
+    title: Oktober 2026 @ Microsoft Switzerland, The Cirlce
+  - vote: like
+    section: events
+    track: ai
+    source: idapps.ethz.ch
+    title: AI Policy Summit 2026
+  - vote: dislike
+    section: events
+    track: ai
+    source: meetup.com
+    title: Oct 1 - APAC AI, ML and Computer Vision Meetup
 design_preferences:
   feedback: []
 reading_patterns:
@@ -46,6 +74,6 @@ reading_patterns:
   section_item_counts:
     news: 3
     events: 3
-last_updated: '2026-09-19T09:09:39.549025+00:00'
+last_updated: '2026-09-20T09:35:05.277488+00:00'
 overall_avg_rating: 4.0
-total_feedback_count: 1
+total_feedback_count: 2
