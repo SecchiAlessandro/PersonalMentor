@@ -2860,3 +2860,14 @@ artifacts:
   sources_used:
   - rss
   - events
+- id: dbf25a4b
+  type: daily-newspaper
+  path: output/daily/2026-10-02.html
+  created_at: '2026-10-02T10:51:45.710364+00:00'
+  sections:
+  - news
+  - events
+  item_count: 0
+  sources_used:
+  - rss
+  - events
