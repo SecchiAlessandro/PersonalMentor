@@ -1,55 +1,20 @@
 content_preferences:
   liked_topics:
-  - data center energy
-  - hybrid energy storage
-  - energy storage
-  - ai data centers
-  - grid integration
-  - ai-native companies
-  - ai workflows
-  - enterprise ai
-  - ai complexity
-  - ai risk
   - ai events
+  - swiss ai
   - ai policy
-  - ai summit
+  - microsoft ai
+  - eth zurich
   disliked_topics:
   - apac ai
-  - ml meetup
   - computer vision
+  - machine learning
   preferred_sources:
-  - energy-storage.news
-  - utility dive
-  - openai news
-  - venturebeat
-  - meetup.com
   - idapps.ethz.ch
   ignored_sources: []
   recent_comments: []
-  comments_hash: 363a516276e6e585b0aea4aac0229ab9b2987ae2b1b4ecc544ee3b1e58d30c6f
+  comments_hash: 7cbbe6300f30e6985ee4413a5944b596a7b3509d5844b5e7a0e85e7ceb5b3d96
   recent_votes:
-  - vote: like
-    section: news
-    track: energy
-    source: Energy-Storage.News
-    title: Italy gives national strategic interest designation to Sardinia data centre
-      with hybrid energy storage hub
-  - vote: like
-    section: news
-    track: energy
-    source: Utility Dive - Latest News
-    title: 3 principles to make AI data centers good grid citizens
-  - vote: like
-    section: news
-    track: ai
-    source: OpenAI News
-    title: How AI-native companies turn workflows into operating capability
-  - vote: like
-    section: news
-    track: ai
-    source: AI
-    title: VentureBeat | Enterprise AI's real risk isn't autonomous agents. It's the
-      complexity between them.
   - vote: like
     section: events
     track: ai
@@ -74,6 +39,6 @@ reading_patterns:
   section_item_counts:
     news: 3
     events: 3
-last_updated: '2026-10-04T10:52:46.690994+00:00'
+last_updated: '2026-10-05T12:01:19.561049+00:00'
 overall_avg_rating: 4.0
-total_feedback_count: 2
+total_feedback_count: 1
