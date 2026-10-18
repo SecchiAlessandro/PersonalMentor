@@ -3036,3 +3036,14 @@ artifacts:
   sources_used:
   - rss
   - events
+- id: 9f934fe4
+  type: daily-newspaper
+  path: output/daily/2026-10-18.html
+  created_at: '2026-10-18T09:18:36.864197+00:00'
+  sections:
+  - news
+  - events
+  item_count: 0
+  sources_used:
+  - rss
+  - events
