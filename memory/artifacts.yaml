@@ -3113,3 +3113,14 @@ artifacts:
   sources_used:
   - rss
   - events
+- id: b0b4f840
+  type: daily-newspaper
+  path: output/daily/2026-10-25.html
+  created_at: '2026-10-25T09:33:05.552884+00:00'
+  sections:
+  - news
+  - events
+  item_count: 0
+  sources_used:
+  - rss
+  - events
