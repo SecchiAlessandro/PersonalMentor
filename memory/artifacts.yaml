@@ -3443,3 +3443,14 @@ artifacts:
   sources_used:
   - rss
   - events
+- id: c009ab9a
+  type: daily-newspaper
+  path: output/daily/2026-11-24.html
+  created_at: '2026-11-24T15:29:33.502506+00:00'
+  sections:
+  - news
+  - events
+  item_count: 0
+  sources_used:
+  - rss
+  - events
